@@ -33,8 +33,7 @@ export class Model extends EventDispatcher {
         this.dispatchEvent({ type: EVENT_LOADING, item: this });
         //      this.roomLoadingCallbacks.fire();
 
-        var data = JSON.parse(json);
-        this.newRoom(data.floorplan, data.items);
+        this.newRoom(json.floorplan, json.items);
 
         this.dispatchEvent({ type: EVENT_LOADED, item: this });
         //      this.roomLoadedCallbacks.fire();

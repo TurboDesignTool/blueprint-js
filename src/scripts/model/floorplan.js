@@ -27,14 +27,14 @@ export class Floorplan extends EventDispatcher {
         super();
         /**
          * List of elements of Wall instance
-         * 
+         *
          * @property {Wall[]} walls Array of walls
          * @type {Wall[]}
          */
         this.walls = [];
         /**
          * List of elements of Corner instance
-         * 
+         *
          * @property {Corner[]} corners array of corners
          * @type {Corner[]}
          */
@@ -42,7 +42,7 @@ export class Floorplan extends EventDispatcher {
 
         /**
          * List of elements of Room instance
-         * 
+         *
          * @property {Room[]} walls Array of walls
          * @type {Room[]}
          */
@@ -50,7 +50,7 @@ export class Floorplan extends EventDispatcher {
 
         /**
          * An {@link Object} that stores the metadata of rooms like name
-         * 
+         *
          * @property {Object} metaroomsdata stores the metadata of rooms like
          *           name
          * @type {Object}
@@ -86,7 +86,7 @@ export class Floorplan extends EventDispatcher {
         /**
          * The {@link CarbonSheet} that handles the background image to show in
          * the 2D view
-         * 
+         *
          * @property {CarbonSheet} _carbonSheet The carbonsheet instance
          * @type {Object}
          */
@@ -127,7 +127,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the roof planes in the floorplan for intersection testing
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -141,7 +141,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns all the planes for intersection for the walls
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -160,7 +160,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns all the planes for intersection of the floors in all room
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -195,7 +195,7 @@ export class Floorplan extends EventDispatcher {
      * Checks existing walls for any intersections they would make. If there are
      * intersections then introduce new corners and new walls as required at
      * places
-     * 
+     *
      * @param {Corner}
      *            start
      * @param {Corner}
@@ -220,7 +220,7 @@ export class Floorplan extends EventDispatcher {
             var bstart = { x: twall.getStartX(), y: twall.getStartY() };
             var bend = { x: twall.getEndX(), y: twall.getEndY() };
             var iPoint;
-            if (twall.wallType == WallTypes.CURVED) {
+            if (twall.wallType === WallTypes.CURVED) {
                 iPoint = twall.bezier.intersects(line);
                 if (iPoint.length) {
                     iPoint = twall.bezier.get(iPoint[0]);
@@ -242,7 +242,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Creates a new wall.
-     * 
+     *
      * @param {Corner}
      *            start The start corner.
      * @param {Corner}
@@ -268,7 +268,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Creates a new corner.
-     * 
+     *
      * @param {Number}
      *            x The x coordinate.
      * @param {Number}
@@ -322,7 +322,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Removes a wall.
-     * 
+     *
      * @param {Wall}
      *            wall The wall to be removed.
      */
@@ -334,7 +334,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Removes a corner.
-     * 
+     *
      * @param {Corner}
      *            corner The corner to be removed.
      */
@@ -346,7 +346,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the walls.
-     * 
+     *
      * @return {Wall[]}
      */
     getWalls() {
@@ -355,7 +355,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the corners.
-     * 
+     *
      * @return {Corner[]}
      */
     getCorners() {
@@ -364,7 +364,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the rooms.
-     * 
+     *
      * @return {Room[]}
      */
     getRooms() {
@@ -373,7 +373,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the room overlapping the location x, y.
-     * 
+     *
      * @param {Number}
      *            mx
      * @param {Number}
@@ -395,7 +395,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Control of a Curved Wall overlapping the location x, y at a
      * tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -417,7 +417,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the Corner overlapping the location x, y at a tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -438,7 +438,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the Wall overlapping the location x, y at a tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -462,7 +462,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * The metadata object with information about the rooms.
-     * 
+     *
      * @return {Object} metaroomdata an object with room corner ids as key and
      *         names as values
      */
@@ -556,7 +556,7 @@ export class Floorplan extends EventDispatcher {
     loadFloorplan(floorplan) {
         this.reset();
         var corners = {};
-        if (floorplan == null || !('corners' in floorplan) || !('walls' in floorplan)) {
+        if (floorplan === null || !('corners' in floorplan) || !('walls' in floorplan)) {
             return;
         }
         let currentUnit = Configuration.getStringValue(configDimUnit);
@@ -653,7 +653,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Resets the floorplan data to empty
-     * 
+     *
      * @return {void}
      */
     reset() {
@@ -683,7 +683,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the center of the floorplan in the y plane
-     * 
+     *
      * @return {Vector2} center
      * @see https://threejs.org/docs/#api/en/math/Vector2
      */
@@ -693,7 +693,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the bounding volume of the full floorplan
-     * 
+     *
      * @return {Vector3} size
      * @see https://threejs.org/docs/#api/en/math/Vector3
      */
@@ -728,7 +728,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the bounding size or the center location of the full floorplan
-     * 
+     *
      * @param {boolean}
      *            center If true return the center else the size
      * @return {Vector3} size
@@ -849,7 +849,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Find the "rooms" in our planar straight-line graph. Rooms are set of the
      * smallest (by area) possible cycles in this graph.
-     * 
+     *
      * @param corners
      *            The corners of the floorplan.
      * @returns The rooms, each room as an array of corners.

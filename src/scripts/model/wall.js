@@ -143,7 +143,7 @@ export class Wall extends EventDispatcher {
         this._bezier.points[3].y = this.end.location.y;
         this._bezier.update();
         if (this.getStart() || this.getEnd()) {
-            (this.getStart() != null) ? this.getStart().floorplan.update(false): (this.getEnd() != null) ? this.getEnd().floorplan.update(false) : false;
+            (this.getStart() !== null) ? this.getStart().floorplan.update(false): (this.getEnd() !== null) ? this.getEnd().floorplan.update(false) : false;
         }
         //		this._a_vector = this._a.clone().sub(this.start.location);
         //		this._b_vector = this._b.clone().sub(this.start.location);
@@ -257,7 +257,7 @@ export class Wall extends EventDispatcher {
         }
         /**
          * No need for the below statement. Because the corners moved will trigger the event to this instance
-         * Then this instance will also trigger the move event 
+         * Then this instance will also trigger the move event
          */
         // this.dispatchEvent({ type: EVENT_UPDATED, item: this });
     }

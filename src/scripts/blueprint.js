@@ -1,8 +1,8 @@
-import { Configuration, configDimUnit } from "./core/configuration";
-import { dimCentiMeter } from "./core/constants";
-import { Model } from "./model/model";
-import { Viewer3D } from "./viewer3d/Viewer3d";
-import { Viewer2D, floorplannerModes } from "./viewer2d/Viewer2D";
+import { Configuration, configDimUnit } from './core/configuration';
+import { dimCentiMeter } from './core/constants';
+import { Model } from './model/model';
+import { Viewer3D } from './viewer3d/Viewer3d';
+import { Viewer2D, floorplannerModes } from './viewer2d/Viewer2D';
 
 ///** BlueprintJS core application. */
 class BlueprintJS {
@@ -60,12 +60,12 @@ class BlueprintJS {
         }
         if (this.view_now === 3 && !this.options.widget) {
             this.view_now = 2;
-            document.getElementById(this.options.viewer2d.id).style.visibility = "visible";
-            document.getElementById(this.options.viewer3d).style.visibility = "hidden";
+            document.getElementById(this.options.viewer2d.id).style.visibility = 'visible';
+            document.getElementById(this.options.viewer3d).style.visibility = 'hidden';
         } else if (this.view_now === 2 && !this.options.widget) {
             this.view_now = 3;
-            document.getElementById(this.options.viewer2d.id).style.visibility = "hidden";
-            document.getElementById(this.options.viewer3d).style.visibility = "visible";
+            document.getElementById(this.options.viewer2d.id).style.visibility = 'hidden';
+            document.getElementById(this.options.viewer3d).style.visibility = 'visible';
         }
     }
 

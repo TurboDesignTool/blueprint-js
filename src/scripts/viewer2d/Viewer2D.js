@@ -15,7 +15,7 @@ export const floorplannerModes = { MOVE: 0, DRAW: 1 };
 class TemporaryWall extends Graphics {
     constructor() {
         super();
-        this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: "black", align: 'center' });
+        this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: 'black', align: 'center' });
         // this.__textfield.pivot.x = this.__textfield.pivot.y = 0.5;
         this.addChild(this.__textfield);
     }
@@ -33,7 +33,7 @@ class TemporaryWall extends Graphics {
             let pxCornerCo = this.__toPixels(corner.location.clone());
             let pxEndPoint = this.__toPixels(endPoint.clone());
             let vect = endPoint.clone().sub(corner.location);
-            let midPoint = (pxEndPoint.clone().sub(pxCornerCo).multiplyScalar(0.5)).add(pxCornerCo);;
+            let midPoint = (pxEndPoint.clone().sub(pxCornerCo).multiplyScalar(0.5)).add(pxCornerCo);
 
             this.lineStyle(10, 0x008CBA);
             this.moveTo(pxCornerCo.x, pxCornerCo.y);
@@ -244,7 +244,7 @@ export class Viewer2D extends Application {
     }
 
     __drawModeMouseMove(evt) {
-        if (this.__mode == floorplannerModes.DRAW) {
+        if (this.__mode === floorplannerModes.DRAW) {
             let co = evt.data.getLocalPosition(this.__floorplanContainer);
             let cmCo = new Vector2(co.x, co.y);
             let lastNode = undefined;
@@ -270,7 +270,7 @@ export class Viewer2D extends Application {
         for (let i = 0; i < this.__entities2D.length; i++) {
             let entity = this.__entities2D[i];
             if (evt.item !== undefined) {
-                if (evt.item == entity) {
+                if (evt.item === entity) {
                     continue;
                 }
             }

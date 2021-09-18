@@ -591,7 +591,6 @@ export class Floorplan extends EventDispatcher {
         var scope = this;
         floorplan.walls.forEach((wall) => {
             var newWall = scope.newWall(corners[wall.corner1], corners[wall.corner2]);
-
             if (wall.frontTexture) {
                 newWall.frontTexture = wall.frontTexture;
             }
@@ -603,7 +602,7 @@ export class Floorplan extends EventDispatcher {
             if (Version.isVersionHigherThan(floorplan.version, '0.0.2a')) {
                 newWall.a = wall.a;
                 newWall.b = wall.b;
-                if (wall.wallType == 'CURVED') {
+                if (wall.wallType === 'CURVED') {
                     newWall.wallType = WallTypes.CURVED;
                 } else {
                     newWall.wallType = WallTypes.STRAIGHT;

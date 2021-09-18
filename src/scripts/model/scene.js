@@ -120,7 +120,7 @@ export class Scene extends EventDispatcher {
      * @param newItemDefinitions - Object with position and 'edge' attribute if it is a wall item
      */
     addItem(itemType, fileName, metadata, position, rotation, scale, fixed, newItemDefinitions) {
-        if (itemType == undefined) {
+        if (itemType === undefined) {
             itemType = 1;
         }
 
@@ -129,7 +129,7 @@ export class Scene extends EventDispatcher {
         function addToMaterials(materials, newmaterial) {
             for (var i = 0; i < materials.length; i++) {
                 var mat = materials[i];
-                if (mat.name == newmaterial.name) {
+                if (mat.name === newmaterial.name) {
                     return [materials, i];
                 }
             }
@@ -155,7 +155,7 @@ export class Scene extends EventDispatcher {
             var newGeometry = new Geometry();
 
             gltfModel.scene.traverse(function(child) {
-                if (child.type == 'Mesh') {
+                if (child.type === 'Mesh') {
                     var materialindices = [];
                     if (child.material.length) {
                         for (var k = 0; k < child.material.length; k++) {

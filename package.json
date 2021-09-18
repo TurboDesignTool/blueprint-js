@@ -33,7 +33,8 @@
         "event-stream": ">4.0.0",
         "livereload": "^0.7.0",
         "npm-run-all": "^4.0.2",
-        "parcel-bundler": "^1.12.4"
+        "parcel-bundler": "^1.12.4",
+        "parcel-plugin-static-files-copy": "^2.6.0"
     },
     "dependencies": {
         "@calvinscofield/three-objloader": "^1.0.4",
@@ -48,5 +49,9 @@
         "three-gltf-exporter": "0.0.1",
         "three-reflector": "^1.0.2",
         "three-reflector2": "0.0.6"
+    },
+    "staticFiles": {
+        "staticPath": "build",
+        "watcherGlob": "**"
     }
 }

@@ -32,13 +32,8 @@ class BlueprintJS {
          **/
         this.model = new Model(options.textureDir);
         /**
-         * @property {Main} three
-         * @type {Main}
-         **/
-        // this.three = new Main(this.model, options.threeElement, options.threeCanvasElement, {});
-        /**
-         * @property {Main} three
-         * @type {Main}
+         * @property {Viewer3D} three
+         * @type {Viewer3D}
          **/
         this.three = new Viewer3D(this.model, options.viewer3d, this.options);
         if (!options.widget) {
@@ -46,11 +41,10 @@ class BlueprintJS {
              * @property {Floorplanner2D} floorplanner
              * @type {Floorplanner2D}
              **/
-            // this.floorplanner = new Floorplanner2D(options.floorplannerElement, this.model.floorplan);
             this.floorplanner = new Viewer2D(options.viewer2d.id, this.model.floorplan, this.options.viewer2d.viewer2dOptions);
         }
 
-        this.view_now = 3;
+        this.view_now = 2;
         this.switchView();
     }
 
@@ -58,11 +52,11 @@ class BlueprintJS {
         if (this.options.widget) {
             return;
         }
-        if (this.view_now === 3 && !this.options.widget) {
+        if (this.view_now === 3) {
             this.view_now = 2;
             document.getElementById(this.options.viewer2d.id).style.visibility = 'visible';
             document.getElementById(this.options.viewer3d).style.visibility = 'hidden';
-        } else if (this.view_now === 2 && !this.options.widget) {
+        } else if (this.view_now === 2) {
             this.view_now = 3;
             document.getElementById(this.options.viewer2d.id).style.visibility = 'hidden';
             document.getElementById(this.options.viewer3d).style.visibility = 'visible';

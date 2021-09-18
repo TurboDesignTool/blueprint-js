@@ -43,7 +43,6 @@ export class Floorplan3D extends EventDispatcher
 		});
 		this.floors = [];
 		this.edges = [];
-
 		// draw floors
 		this.floorplan.getRooms().forEach((room) => {
 			var threeFloor = new Floor(this.scene, room);

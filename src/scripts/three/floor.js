@@ -25,7 +25,6 @@ export class Floor extends EventDispatcher
 	{
 //		this.room.fireOnFloorChange(redraw);
 		this.room.addEventListener(EVENT_CHANGED, this.changedevent);
-
 		this.floorPlane = this.buildFloor();
 		// roofs look weird, so commented out
 		// this.roofPlane = this.buildRoofUniformHeight();

@@ -53,7 +53,6 @@ export class Viewer3D extends EventDispatcher {
         this.draggables = [];
 
         this.scene.needsUpdate = true;
-
         this.init();
     }
 
@@ -72,7 +71,7 @@ export class Viewer3D extends EventDispatcher {
         // scope.controls.autoRotate = this.options['spin'];
         scope.controls.enableDamping = false;
         scope.controls.dampingFactor = 0.1;
-        scope.controls.maxPolarAngle = Math.PI * 1.0; //Math.PI * 0.5; //Math.PI * 0.35;
+        scope.controls.maxPolarAngle = Math.PI; //Math.PI * 0.5; //Math.PI * 0.35;
         scope.controls.maxDistance = 2500; //2500
         scope.controls.minDistance = 10; //1000; //1000
         scope.controls.screenSpacePanning = true;

@@ -43,7 +43,8 @@
         "no-unused-vars": [
             "warn"
         ],
-        "no-prototype-builtins": [0]
+        "no-prototype-builtins": [0],
+        "no-debugger": [0]
     },
     "overrides": [{
         "files": ["./scripts/styles/*.css"],

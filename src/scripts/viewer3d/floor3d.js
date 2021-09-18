@@ -34,30 +34,34 @@ export class Floor3D extends EventDispatcher {
     }
 
     buildFloor() {
-        var textureSettings = this.room.getTexture();
+        const textureSettings = this.room.getTexture();
         // setup texture
-        //		var floorTexture = ImageUtils.loadTexture(textureSettings.url);
-        var floorTexture = new TextureLoader().load(textureSettings.url);
+        const floorTexture = new TextureLoader().load(textureSettings.url);
         floorTexture.wrapS = RepeatWrapping;
         floorTexture.wrapT = RepeatWrapping;
         floorTexture.repeat.set(1, 1);
 
-        var textureScale = textureSettings.scale;
+        const textureScale = textureSettings.scale;
         // http://stackoverflow.com/questions/19182298/how-to-texture-a-three-js-mesh-created-with-shapegeometry
         // scale down coords to fit 0 -> 1, then rescale
 
-        var points = [];
+        const points = [];
         this.room.interiorCorners.forEach((corner) => {
             points.push(new Vector2(corner.x / textureScale, corner.y / textureScale));
         });
-        var shape = new Shape(points);
-        var geometry = new ShapeGeometry(shape);
-        // var floor = new Mesh(geometry, floorMaterialTop);
-        var floor = new Mesh(geometry, new MeshBasicMaterial({ color: 0xC00C0C0, side: DoubleSide }));
+        const shape = new Shape(points);
+        const geometry = new ShapeGeometry(shape);
+        const floor = new Mesh(geometry, new MeshBasicMaterial({
+                map: floorTexture,
+                color: 0xcccccc,
+                specular: 0x0a0a0a,
+                side: DoubleSide
+            })
+        );
 
         floor.rotation.set(Math.PI / 2, 0, 0);
         floor.scale.set(textureScale, textureScale, textureScale);
-        // floor.receiveShadow = true;
+        floor.receiveShadow = true;
         floor.castShadow = false;
         return floor;
     }

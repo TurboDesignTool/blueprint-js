@@ -124,8 +124,12 @@
       }
     },
     "wallTextures": [],
-    "floorTextures": {},
-    "newFloorTextures": {},
+    "floorTextures": {
+      "url": "rooms/textures/hardwood.png", "scale": 400
+    },
+    "newFloorTextures": {
+      "url": "rooms/textures/hardwood.png", "scale": 400
+    },
     "carbonSheet": {
       "url": "",
       "transparency": 1,

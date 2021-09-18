@@ -786,7 +786,7 @@ export class Floorplan extends EventDispatcher {
      * //Should include for , updatewalls=null, updaterooms=null
      */
     update(updateroomconfiguration = true, updatecorners = null) {
-        if (updatecorners != null) {
+        if (updatecorners !== null) {
             //			console.log('UPDATE CORNER ANGLES ::: ', updatecorners.length);
             updatecorners.forEach((corner) => {
                 corner.updateAngles();

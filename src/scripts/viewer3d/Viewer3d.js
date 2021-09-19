@@ -1,9 +1,23 @@
-import { EventDispatcher, WebGLRenderer, ImageUtils, PerspectiveCamera, AxesHelper } from 'three';
+import {
+    EventDispatcher,
+    WebGLRenderer,
+    ImageUtils,
+    PerspectiveCamera,
+    AxesHelper,
+    Vector3,
+    Vector2,
+    Plane
+} from 'three';
 import { PCFSoftShadowMap } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
-import { EVENT_UPDATED } from '../core/events.js';
+import {
+    EVENT_CAMERA_ACTIVE_STATUS,
+    EVENT_CAMERA_VIEW_CHANGE, EVENT_FLOOR_CLICKED, EVENT_GLTF_READY, EVENT_ITEM_SELECTED, EVENT_ITEM_UNSELECTED,
+    EVENT_NOTHING_CLICKED,
+    EVENT_UPDATED, EVENT_WALL_CLICKED
+} from '../core/events.js';
 // import { EVENT_NEW, EVENT_DELETED } from '../core/events.js';
 
 import { Skybox } from './skybox.js';
@@ -11,7 +25,9 @@ import { Skybox } from './skybox.js';
 import { Edge3D } from './edge3d.js';
 import { Floor3D } from './floor3d.js';
 import { Lights3D } from './lights3d.js';
-
+import {HUD} from '../three/hud';
+import {Controller} from '../three/controller';
+import {VIEW_FRONT, VIEW_ISOMETRY, VIEW_LEFT, VIEW_RIGHT, VIEW_TOP} from '../core/constants';
 export class Viewer3D extends EventDispatcher {
     constructor(model, element, opts) {
         super();
@@ -34,6 +50,8 @@ export class Viewer3D extends EventDispatcher {
         this.options = options;
 
         this.domElement = document.getElementById(element);
+        // todo
+        this.element = document.getElementById(element);
         console.log('QUERY DOM ELEMENT : ', element, this.domElement, element);
         this.perspectivecamera = null;
         this.camera = null;
@@ -60,6 +78,27 @@ export class Viewer3D extends EventDispatcher {
         this.draggables = [];
 
         this.scene.needsUpdate = true;
+
+        this.lastRender = Date.now();
+
+        this.mouseOver = false;
+        this.hasClicked = false;
+
+        this.hud = null;
+
+        this.heightMargin = null;
+        this.widthMargin = null;
+        this.elementHeight = null;
+        this.elementWidth = null;
+        const scope = this;
+        this.updatedevent = () => { scope.centerCamera(); };
+        this.gltfreadyevent = (o) => { scope.gltfReady(o); };
+
+        this.clippingPlaneActive = new Plane(new Vector3(0, 0, 1), 0.0);
+        this.clippingPlaneActive2 = new Plane(new Vector3(0, 0, -1), 0.0);
+        this.globalClippingPlane = [this.clippingPlaneActive, this.clippingPlaneActive2];
+        this.clippingEmpty = Object.freeze([]);
+        this.clippingEnabled = false;
         this.init();
     }
 
@@ -89,6 +128,9 @@ export class Viewer3D extends EventDispatcher {
 
         scope.axes = new AxesHelper(500);
         // scope.scene.add(scope.axes);
+        scope.hud = new HUD(scope, scope.scene);
+        scope.controller = new Controller(scope, scope.model, scope.camera, scope.element, scope.controls, scope.hud);
+
 
         scope.dragcontrols.addEventListener('dragstart', () => { scope.controls.enabled = false; });
         scope.dragcontrols.addEventListener('drag', () => { scope.scene.needsUpdate = true; });
@@ -176,7 +218,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     updateWindowSize() {
-        var scope = this;
+        const scope = this;
 
         scope.heightMargin = scope.domElement.offsetTop;
         scope.widthMargin = scope.domElement.offsetLeft;
@@ -204,4 +246,269 @@ export class Viewer3D extends EventDispatcher {
         this.scene.needsUpdate = false;
     }
 
+    exportForBlender() {
+        this.skybox.setEnabled(false);
+        this.controller.showGroundPlane(false);
+        this.model.exportForBlender();
+    }
+
+    gltfReady(o) {
+        this.dispatchEvent({ type: EVENT_GLTF_READY, item: this, gltf: o.gltf });
+        this.skybox.setEnabled(true);
+        this.controller.showGroundPlane(true);
+    }
+
+    itemIsSelected(item) {
+        this.dispatchEvent({ type: EVENT_ITEM_SELECTED, item: item });
+    }
+
+    itemIsUnselected() {
+        this.dispatchEvent({ type: EVENT_ITEM_UNSELECTED });
+    }
+
+    wallIsClicked(wall) {
+        this.dispatchEvent({ type: EVENT_WALL_CLICKED, item: wall, wall: wall });
+    }
+
+    floorIsClicked(item) {
+        this.dispatchEvent({ type: EVENT_FLOOR_CLICKED, item: item });
+    }
+
+    nothingIsClicked() {
+        this.dispatchEvent({ type: EVENT_NOTHING_CLICKED });
+    }
+
+    spin() {
+        const scope = this;
+        scope.controls.autoRotate = scope.options.spin && !scope.mouseOver && !scope.hasClicked;
+    }
+
+    dataUrl() {
+        const dataUrl = this.renderer.domElement.toDataURL('image/png');
+        return dataUrl;
+    }
+
+    stopSpin() {
+        this.hasClicked = true;
+        this.controls.autoRotate = false;
+    }
+
+    options() {
+        return this.options;
+    }
+
+    getModel() {
+        return this.model;
+    }
+
+    getScene() {
+        return this.scene;
+    }
+
+    getController() {
+        return this.controller;
+    }
+
+    getCamera() {
+        return this.camera;
+    }
+
+
+    /*
+     * This method name conflicts with a variable so changing it to a different
+     * name needsUpdate() { this.needsUpdate = true; }
+     */
+
+    ensureNeedsUpdate() {
+        this.needsUpdate = true;
+    }
+
+    rotatePressed() {
+        this.controller.rotatePressed();
+    }
+
+    rotateReleased() {
+        this.controller.rotateReleased();
+    }
+
+    setCursorStyle(cursorStyle) {
+        this.domElement.style.cursor = cursorStyle;
+    }
+
+    centerCamera() {
+        const scope = this;
+        const yOffset = 150.0;
+        const pan = scope.model.floorplan.getCenter();
+        pan.y = yOffset;
+        scope.controls.target = pan;
+        const distance = scope.model.floorplan.getSize().z * 1.5;
+        const offset = pan.clone().add(new Vector3(0, distance, distance));
+        // scope.controls.setOffset(offset);
+        scope.camera.position.copy(offset);
+        scope.controls.update();
+    }
+
+    // projects the object's center point into x,y screen coords
+    // x,y are relative to top left corner of viewer
+    projectVector(vec3, ignoreMargin) {
+        const scope = this;
+        ignoreMargin = ignoreMargin || false;
+        const widthHalf = scope.elementWidth / 2;
+        const heightHalf = scope.elementHeight / 2;
+        const vector = new Vector3();
+        vector.copy(vec3);
+        vector.project(scope.camera);
+
+        const vec2 = new Vector2();
+        vec2.x = (vector.x * widthHalf) + widthHalf;
+        vec2.y = -(vector.y * heightHalf) + heightHalf;
+        if (!ignoreMargin) {
+            vec2.x += scope.widthMargin;
+            vec2.y += scope.heightMargin;
+        }
+        return vec2;
+    }
+
+    sceneGraph(obj) {
+        console.group(' <%o> ' + obj.name, obj);
+        obj.children.forEach(this.sceneGraph);
+        console.groupEnd();
+    }
+
+    switchWireframe(flag) {
+        this.model.switchWireframe(flag);
+        this.floorplan.switchWireframe(flag);
+        this.render(true);
+    }
+
+    pauseTheRendering(flag) {
+        this.pauseRender = flag;
+    }
+
+    switchView(viewpoint) {
+        const center = this.model.floorplan.getCenter();
+        const size = this.model.floorplan.getSize();
+        const distance = this.controls.object.position.distanceTo(this.controls.target);
+        this.controls.target.copy(center);
+
+        switch (viewpoint) {
+            case VIEW_TOP:
+                center.y = 1000;
+                this.dispatchEvent({ type: EVENT_CAMERA_VIEW_CHANGE, view: VIEW_TOP });
+                break;
+            case VIEW_FRONT:
+                center.z = center.z - (size.z * 0.5) - distance;
+                this.dispatchEvent({ type: EVENT_CAMERA_VIEW_CHANGE, view: VIEW_FRONT });
+                break;
+            case VIEW_RIGHT:
+                center.x = center.x + (size.x * 0.5) + distance;
+                this.dispatchEvent({ type: EVENT_CAMERA_VIEW_CHANGE, view: VIEW_RIGHT });
+                break;
+            case VIEW_LEFT:
+                center.x = center.x - (size.x * 0.5) - distance;
+                this.dispatchEvent({ type: EVENT_CAMERA_VIEW_CHANGE, view: VIEW_LEFT });
+                break;
+            case VIEW_ISOMETRY:
+            default:
+                center.x += distance;
+                center.y += distance;
+                center.z += distance;
+                this.dispatchEvent({ type: EVENT_CAMERA_VIEW_CHANGE, view: VIEW_ISOMETRY });
+        }
+        this.camera.position.copy(center);
+        this.controls.dispatchEvent({ type: EVENT_CAMERA_ACTIVE_STATUS });
+        this.controls.needsUpdate = true;
+        this.controls.update();
+        this.render(true);
+    }
+
+    lockView(locked) {
+        this.controls.enableRotate = locked;
+        this.render(true);
+    }
+
+    // Send in a value between -1 to 1
+    changeClippingPlanes(clipRatio, clipRatio2) {
+        const size = this.model.floorplan.getSize();
+        size.z = size.z + (size.z * 0.25);
+        size.z = size.z * 0.5;
+        this.clippingPlaneActive.constant = (this.model.floorplan.getSize().z * clipRatio);
+        this.clippingPlaneActive2.constant = (this.model.floorplan.getSize().z * clipRatio2);
+
+        if (!this.clippingEnabled) {
+            this.clippingEnabled = true;
+            this.renderer.clippingPlanes = this.globalClippingPlane;
+        }
+        this.controls.dispatchEvent({ type: EVENT_CAMERA_ACTIVE_STATUS });
+        this.controls.needsUpdate = true;
+        this.controls.update();
+        this.render(true);
+    }
+
+    resetClipping() {
+        this.clippingEnabled = false;
+        this.renderer.clippingPlanes = this.clippingEmpty;
+        this.controls.needsUpdate = true;
+        this.controls.update();
+        this.render(true);
+    }
+
+    switchOrthographicMode(flag) {
+        if (flag) {
+            this.camera = this.orthocamera;
+            this.camera.position.copy(this.perspectivecamera.position.clone());
+            this.controls.object = this.camera;
+            this.controller.changeCamera(this.camera);
+            this.controls.needsUpdate = true;
+            this.controls.update();
+            this.render(true);
+            return;
+        }
+
+        this.camera = this.perspectivecamera;
+        this.camera.position.copy(this.orthocamera.position.clone());
+        this.controls.object = this.camera;
+        this.controller.changeCamera(this.camera);
+        this.controls.needsUpdate = true;
+        this.controls.update();
+        this.render(true);
+    }
+
+    switchFPSMode(flag) {
+        this.firstpersonmode = flag;
+        this.fpscontrols.enabled = flag;
+        this.controls.enabled = !flag;
+        this.controller.enabled = !flag;
+        this.controls.dispatchEvent({ type: EVENT_CAMERA_ACTIVE_STATUS });
+
+        if (flag) {
+            this.skybox.toggleEnvironment(true);
+            this.fpscontrols.lock();
+        } else {
+            this.skybox.toggleEnvironment(false);
+            this.fpscontrols.unlock();
+        }
+
+        this.model.switchWireframe(false);
+        this.floorplan.switchWireframe(false);
+        this.render(true);
+    }
+
+    shouldRender() {
+        var scope = this;
+        // Do we need to draw a new frame
+        if (scope.controls.needsUpdate || scope.controller.needsUpdate || scope.needsUpdate || scope.model.scene.needsUpdate) {
+            scope.controls.needsUpdate = false;
+            scope.controller.needsUpdate = false;
+            scope.needsUpdate = false;
+            scope.model.scene.needsUpdate = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    rendervr() {
+
+    }
 }

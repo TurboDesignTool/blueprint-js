@@ -18,7 +18,7 @@ export class Lights3D extends EventDispatcher {
     }
 
     init() {
-        var light = new HemisphereLight(0xffffff, 0x888888, 1.1);
+        const light = new HemisphereLight(0xffffff, 0x888888, 1.1);
         light.position.set(300, this.height, 500);
         this.scene.add(light);
 

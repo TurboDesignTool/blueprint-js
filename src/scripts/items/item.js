@@ -239,9 +239,9 @@ export class Item extends Mesh {
 
     /** */
     resize(height, width, depth) {
-        var x = width / this.getWidth();
-        var y = height / this.getHeight();
-        var z = depth / this.getDepth();
+        const x = width / this.getWidth();
+        const y = height / this.getHeight();
+        const z = depth / this.getDepth();
 
         if (this.resizeProportionally) {
             if (Math.abs(width - this.getWidth()) > 0.1) {
@@ -356,9 +356,9 @@ export class Item extends Mesh {
 
     /** on is a bool */
     updateHighlight() {
-        var on = this.hover || this.selected;
+        const on = this.hover || this.selected;
         this.highlighted = on;
-        var hex = on ? this.emissiveColor : 0x000000;
+        const hex = on ? this.emissiveColor : 0x000000;
         if (this.material) {
             if (this.material.length) {
                 this.material.forEach((material) => {
@@ -418,10 +418,10 @@ export class Item extends Mesh {
     /** */
     rotate(intersection) {
         if (intersection) {
-            var angle = Utils.angle(new Vector2(0, 1), new Vector2(intersection.point.x - this.position.x, intersection.point.z - this.position.z));
-            var snapTolerance = Math.PI / 16.0;
+            let angle = Utils.angle(new Vector2(0, 1), new Vector2(intersection.point.x - this.position.x, intersection.point.z - this.position.z));
+            const snapTolerance = Math.PI / 16.0;
             // snap to intervals near Math.PI/2
-            for (var i = -4; i <= 4; i++) {
+            for (let i = -4; i <= 4; i++) {
                 if (Math.abs(angle - (i * (Math.PI / 2))) < snapTolerance) {
                     angle = i * (Math.PI / 2);
                     break;
@@ -463,13 +463,13 @@ export class Item extends Mesh {
      */
     getCorners(xDim, yDim, position) {
         position = position || this.position;
-        var halfSize = this.halfSize.clone();
-        var c1 = new Vector3(-halfSize.x, 0, -halfSize.z);
-        var c2 = new Vector3(halfSize.x, 0, -halfSize.z);
-        var c3 = new Vector3(halfSize.x, 0, halfSize.z);
-        var c4 = new Vector3(-halfSize.x, 0, halfSize.z);
+        const halfSize = this.halfSize.clone();
+        const c1 = new Vector3(-halfSize.x, 0, -halfSize.z);
+        const c2 = new Vector3(halfSize.x, 0, -halfSize.z);
+        const c3 = new Vector3(halfSize.x, 0, halfSize.z);
+        const c4 = new Vector3(-halfSize.x, 0, halfSize.z);
 
-        var transform = new Matrix4();
+        const transform = new Matrix4();
         // console.log(this.rotation.y);
         transform.makeRotationY(this.rotation.y); // + Math.PI/2)
 
@@ -488,7 +488,7 @@ export class Item extends Mesh {
         // var min = position.clone().sub(halfSize);
         // var max = position.clone().add(halfSize);
 
-        var corners = [{ x: c1.x, y: c1.z }, { x: c2.x, y: c2.z }, { x: c3.x, y: c3.z }, { x: c4.x, y: c4.z }];
+        const corners = [{x: c1.x, y: c1.z}, {x: c2.x, y: c2.z}, {x: c3.x, y: c3.z}, {x: c4.x, y: c4.z}];
         return corners;
     }
 
@@ -529,8 +529,15 @@ export class Item extends Mesh {
     createGlow(color, opacity, ignoreDepth) {
         ignoreDepth = ignoreDepth || false;
         opacity = opacity || 0.2;
-        var glowMaterial = new MeshBasicMaterial({ color: color, blending: AdditiveBlending, opacity: 0.2, transparent: true, depthTest: !ignoreDepth });
-        var glow = new Mesh(this.geometry.clone(), glowMaterial);
+        const glowMaterial = new MeshBasicMaterial({
+            color: color,
+            blending: AdditiveBlending,
+            opacity: 0.2,
+            transparent: true,
+            depthTest: !ignoreDepth
+        });
+
+        const glow = new Mesh(this.geometry.clone(), glowMaterial);
         glow.position.copy(this.position);
         glow.rotation.copy(this.rotation);
         glow.scale.copy(this.scale);
@@ -539,7 +546,7 @@ export class Item extends Mesh {
 
 
     getMetaData() {
-        var matattribs = [];
+        const matattribs = [];
         if (this.material.length) {
             this.material.forEach((mat) => {
                 matattribs.push('#' + mat.color.getHexString());

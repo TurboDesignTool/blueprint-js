@@ -27,13 +27,14 @@ export class Item extends Mesh {
      *            TODO
      * @param scale
      *            TODO
+     * @param loaded_gltf_entity
      */
     constructor(model, metadata, geometry, material, position, rotation, scale, loaded_gltf_entity) {
         super();
 
         this.model = model;
         this.metadata = metadata;
-
+        this._loadedgltfobject = loaded_gltf_entity;
         /** */
         this.errorGlow = new Mesh();
         /** */
@@ -67,19 +68,18 @@ export class Item extends Mesh {
         this.material = material;
         // center in its boundingbox
         this.geometry.computeBoundingBox();
-        this.geometry.applyMatrix(new Matrix4().makeTranslation(-0.5 * (this.geometry.boundingBox.max.x + this.geometry.boundingBox.min.x), -0.5 * (this.geometry.boundingBox.max.y + this.geometry.boundingBox.min.y), -0.5 * (this.geometry.boundingBox.max.z + this.geometry.boundingBox.min.z)));
+        this.geometry.applyMatrix4(new Matrix4().makeTranslation(-0.5 * (this.geometry.boundingBox.max.x + this.geometry.boundingBox.min.x), -0.5 * (this.geometry.boundingBox.max.y + this.geometry.boundingBox.min.y), -0.5 * (this.geometry.boundingBox.max.z + this.geometry.boundingBox.min.z)));
         this.geometry.computeBoundingBox();
 
         /**\
          * How to create keyframe states for S6Viewer using Blender?
          * Store each animation into the Blender's action editor with a name
          * Give the appropriate name in the floorplan json in the 'frame' for each item
-         * 
+         *
          */
-
         let mixer = new AnimationMixer(this._loadedgltfobject.scene);
         let clips = loaded_gltf_entity.animations;
-        if (clips != undefined) {
+        if (clips !== undefined) {
             if (clips.length) {
                 // clips.forEach((clip) => {
                 //     console.log(clip);
@@ -88,7 +88,7 @@ export class Item extends Mesh {
                 // });
                 let frame = this.metadata.frame;
                 let clip = AnimationClip.findByName(clips, frame);
-                if (clip != undefined && clip != null) {
+                if (clip !== undefined && clip !== null) {
                     mixer.clipAction(clip).play();
                     mixer.update(0.0);
                 }
@@ -151,7 +151,7 @@ export class Item extends Mesh {
             this.rotation.y = rotation;
         }
 
-        if (scale != null) {
+        if (scale !== null) {
             this.setScale(scale.x, scale.y, scale.z);
         }
 

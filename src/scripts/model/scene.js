@@ -124,11 +124,11 @@ export class Scene extends EventDispatcher {
             itemType = 1;
         }
 
-        var scope = this;
+        const scope = this;
 
         function addToMaterials(materials, newmaterial) {
-            for (var i = 0; i < materials.length; i++) {
-                var mat = materials[i];
+            for (let i = 0; i < materials.length; i++) {
+                const mat = materials[i];
                 if (mat.name === newmaterial.name) {
                     return [materials, i];
                 }
@@ -137,29 +137,30 @@ export class Scene extends EventDispatcher {
             return [materials, materials.length - 1];
         }
 
-        var loaderCallback = function(geometry, materials, gltf_entity) {
+        const loaderCallback = function (geometry, materials, gltf_entity) {
             //			var item = new (Factory.getClass(itemType))(scope.model, metadata, geometry, new MeshFaceMaterial(materials), position, rotation, scale);
-            var item = new(Factory.getClass(itemType))(scope.model, metadata, geometry, materials, position, rotation, scale, gltf_entity);
+            const item = new (Factory.getClass(itemType))(scope.model, metadata, geometry, materials, position, rotation, scale, gltf_entity);
             item.fixed = fixed || false;
             scope.items.push(item);
             scope.add(item);
             item.initObject();
-            scope.dispatchEvent({ type: EVENT_ITEM_LOADED, item: item });
+            scope.dispatchEvent({type: EVENT_ITEM_LOADED, item: item});
             if (newItemDefinitions) {
                 item.moveToPosition(newItemDefinitions.position, newItemDefinitions.edge);
                 item.placeInRoom();
             }
         };
-        var gltfCallback = function(gltfModel) {
-            var newmaterials = [];
-            var newGeometry = new Geometry();
+        const gltfCallback = function (gltfModel) {
+            let newmaterials = [];
+            const newGeometry = new Geometry();
 
-            gltfModel.scene.traverse(function(child) {
+            gltfModel.scene.traverse(function (child) {
+                let newItems;
                 if (child.type === 'Mesh') {
-                    var materialindices = [];
+                    const materialindices = [];
                     if (child.material.length) {
-                        for (var k = 0; k < child.material.length; k++) {
-                            var newItems = addToMaterials(newmaterials, child.material[k]);
+                        for (let k = 0; k < child.material.length; k++) {
+                            newItems = addToMaterials(newmaterials, child.material[k]);
                             newmaterials = newItems[0];
                             materialindices.push(newItems[1]);
                         }
@@ -170,7 +171,7 @@ export class Scene extends EventDispatcher {
                     }
 
                     if (child.geometry.isBufferGeometry) {
-                        var tGeometry = new Geometry().fromBufferGeometry(child.geometry);
+                        const tGeometry = new Geometry().fromBufferGeometry(child.geometry);
                         tGeometry.faces.forEach((face) => {
                             //							face.materialIndex = face.materialIndex + newmaterials.length;
                             face.materialIndex = materialindices[face.materialIndex];

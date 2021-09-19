@@ -13,7 +13,7 @@ export class RoofItem extends Item
 		this._freePosition = false;
 		if(this.geometry)
 		{
-			this.geometry.applyMatrix(new Matrix4().makeTranslation(-0.5 * (this.geometry.boundingBox.max.x + this.geometry.boundingBox.min.x), -0.5 * (this.geometry.boundingBox.max.y - this.geometry.boundingBox.min.y),-0.5 * (this.geometry.boundingBox.max.z + this.geometry.boundingBox.min.z)));
+			this.geometry.applyMatrix4(new Matrix4().makeTranslation(-0.5 * (this.geometry.boundingBox.max.x + this.geometry.boundingBox.min.x), -0.5 * (this.geometry.boundingBox.max.y - this.geometry.boundingBox.min.y),-0.5 * (this.geometry.boundingBox.max.z + this.geometry.boundingBox.min.z)));
 			this.geometry.computeBoundingBox();
 		}
 		this.halfSize = this.objectHalfSize();

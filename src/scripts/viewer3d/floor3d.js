@@ -54,7 +54,6 @@ export class Floor3D extends EventDispatcher {
         const floor = new Mesh(geometry, new MeshBasicMaterial({
                 map: floorTexture,
                 color: 0xcccccc,
-                specular: 0x0a0a0a,
                 side: DoubleSide
             })
         );

@@ -15,8 +15,15 @@ import { Lights3D } from './lights3d.js';
 export class Viewer3D extends EventDispatcher {
     constructor(model, element, opts) {
         super();
-        var options = { resize: true, pushHref: false, spin: true, spinSpeed: .00002, clickPan: true, canMoveFixedItems: false };
-        for (var opt in options) {
+        const options = {
+            resize: true,
+            pushHref: false,
+            spin: true,
+            spinSpeed: .00002,
+            clickPan: true,
+            canMoveFixedItems: false
+        };
+        for (const opt in options) {
             if (options.hasOwnProperty(opt) && opts.hasOwnProperty(opt)) {
                 options[opt] = opts[opt];
             }
@@ -57,7 +64,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     init() {
-        var scope = this;
+        const scope = this;
         ImageUtils.crossOrigin = '';
 
         scope.camera = new PerspectiveCamera(45, 10, scope.cameraNear, scope.cameraFar);
@@ -106,7 +113,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     addWalls() {
-        var scope = this;
+        const scope = this;
         let i = 0;
 
         // clear scene
@@ -155,7 +162,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     getARenderer() {
-        var renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new WebGLRenderer({antialias: true, alpha: true});
 
         // scope.renderer.autoClear = false;
         renderer.shadowMap.enabled = true;
@@ -187,7 +194,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     render() {
-        var scope = this;
+        const scope = this;
         // scope.controls.update();
         if (!scope.scene.needsUpdate) {
             return;

@@ -52,11 +52,11 @@ export class FloorItem extends Item
 	/** */
 	isValidPosition(vec3)
 	{
-		var corners = this.getCorners('x', 'z', vec3);
+		const corners = this.getCorners('x', 'z', vec3);
 		// check if we are in a room
-		var rooms = this.model.floorplan.getRooms();
-		var isInARoom = false;
-		for (var i = 0; i < rooms.length; i++)
+		const rooms = this.model.floorplan.getRooms();
+		let isInARoom = false;
+		for (let i = 0; i < rooms.length; i++)
 		{
 			if (Utils.pointInPolygon(new Vector2(vec3.x, vec3.z), rooms[i].interiorCorners) && !Utils.polygonPolygonIntersect(corners, rooms[i].interiorCorners))
 			{

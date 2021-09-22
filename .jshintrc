@@ -34,11 +34,11 @@
 	// with different skill levels. Was all true.
 
 	"bitwise" : true, // Prohibit bitwise operators (&, |, ^, etc.).
-	"curly" : true, // Require {} for every new block or scope.
+	"curly" : false, // Require {} for every new block or scope.
 	"eqeqeq" : true, // Require triple equals i.e. `===`.
 	"forin" : true, // Tolerate `for in` loops without `hasOwnPrototype`.
-	"immed" : true, // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
-	"latedef" : true, // Prohibit variable use before definition.
+	"immed" : false, // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+	"latedef" : false, // Prohibit variable use before definition.
 	"newcap" : true, // Require capitalization of all constructor functions e.g. `new F()`.
 	"noarg" : true, // Prohibit use of `arguments.caller` and `arguments.callee`.
 	"noempty" : true, // Prohibit use of empty blocks.
@@ -77,7 +77,7 @@
 	"scripturl" : false, // Tolerate script-targeted URLs.
 	"smarttabs" : false, // Tolerate mixed tabs and spaces when the latter are used for alignmnent only.
 	"shadow" : false, // Allows re-define variables later in code e.g. `var x=1; x=2;`.
-	"sub" : false, // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
+	"sub" : true, // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
 	"supernew" : false, // Tolerate `new function () { ... };` and `new Object;`.
 	"validthis" : false, // Tolerate strict violations when the code is running in strict mode and you use this in a non-constructor function.
 

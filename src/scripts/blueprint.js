@@ -38,8 +38,8 @@ class BlueprintJS {
         this.three = new Viewer3D(this.model, options.viewer3d, this.options);
         if (!options.widget) {
             /**
-             * @property {Floorplanner2D} floorplanner
-             * @type {Floorplanner2D}
+             * @property {Viewer2D} floorplanner
+             * @type {Viewer2D}
              **/
             this.floorplanner = new Viewer2D(options.viewer2d.id, this.model.floorplan, this.options.viewer2d.viewer2dOptions);
         }
@@ -75,6 +75,9 @@ class BlueprintJS {
             return;
         }
         this.floorplanner.switchMode(floorplannerModes.MOVE);
+    }
+    setView2DMoveToCenter() {
+        this.floorplanner.moveToCenter();
     }
 }
 export { BlueprintJS };

@@ -67,18 +67,18 @@ export class Floor3D extends EventDispatcher {
 
     buildRoofVaryingHeight() {
         // setup texture
-        var roofMaterial = new MeshBasicMaterial({ side: FrontSide, color: 0xe5e5e5 });
-        var geometry = new Geometry();
+        const roofMaterial = new MeshBasicMaterial({side: FrontSide, color: 0xe5e5e5});
+        const geometry = new Geometry();
 
         this.room.corners.forEach((corner) => {
-            var vertex = new Vector3(corner.x, corner.elevation, corner.y);
+            const vertex = new Vector3(corner.x, corner.elevation, corner.y);
             geometry.vertices.push(vertex);
         });
-        for (var i = 2; i < geometry.vertices.length; i++) {
-            var face = new Face3(0, i - 1, i);
+        for (let i = 2; i < geometry.vertices.length; i++) {
+            const face = new Face3(0, i - 1, i);
             geometry.faces.push(face);
         }
-        var roof = new Mesh(geometry, roofMaterial);
+        const roof = new Mesh(geometry, roofMaterial);
         // roof.rotation.set(Math.PI / 2, 0, 0);
         // roof.position.y = Configuration.getNumericValue(configWallHeight);
         return roof;
@@ -87,14 +87,14 @@ export class Floor3D extends EventDispatcher {
 
     buildRoofUniformHeight() {
         // setup texture
-        var roofMaterial = new MeshBasicMaterial({ side: FrontSide, color: 0xe5e5e5 });
-        var points = [];
+        const roofMaterial = new MeshBasicMaterial({side: FrontSide, color: 0xe5e5e5});
+        const points = [];
         this.room.interiorCorners.forEach((corner) => {
             points.push(new Vector2(corner.x, corner.y));
         });
-        var shape = new Shape(points);
-        var geometry = new ShapeGeometry(shape);
-        var roof = new Mesh(geometry, roofMaterial);
+        const shape = new Shape(points);
+        const geometry = new ShapeGeometry(shape);
+        const roof = new Mesh(geometry, roofMaterial);
         roof.rotation.set(Math.PI / 2, 0, 0);
         roof.position.y = Configuration.getNumericValue(configWallHeight);
         return roof;

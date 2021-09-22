@@ -24,8 +24,6 @@ let opts = {
     widget: false,
     resize: true,
 };
-
-// document.addEventListener('DOMContentLoaded', function() {
 console.log('ON DOCUMENT READY ');
 blueprint3d = new BlueprintJS(opts);
 Configuration.setValue(configDimUnit, dimMeter);
@@ -43,5 +41,9 @@ document.getElementById('draw-viewer2d').onclick = function() {
 document.getElementById('move-viewer2d').onclick = function() {
     blueprint3d.setViewer2DModeToMove();
 };
-
-// });
+document.getElementById('center-viewer2d').onclick = function() {
+    blueprint3d.setView2DMoveToCenter();
+};
+document.getElementById('top-viewer').onclick = function () {
+    blueprint3d.three.switchView('topview');
+};

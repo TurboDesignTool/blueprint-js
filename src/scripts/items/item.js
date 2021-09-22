@@ -81,11 +81,6 @@ export class Item extends Mesh {
         let clips = loaded_gltf_entity.animations;
         if (clips !== undefined) {
             if (clips.length) {
-                // clips.forEach((clip) => {
-                //     console.log(clip);
-                //     console.log(clip.name, clip.duration);
-                //     // mixer.clipAction(clip).play();
-                // });
                 let frame = this.metadata.frame;
                 let clip = AnimationClip.findByName(clips, frame);
                 if (clip !== undefined && clip !== null) {
@@ -95,7 +90,8 @@ export class Item extends Mesh {
 
             }
         }
-        this.add(this._loadedgltfobject.scene);
+        // why add this??
+        // this.add(this._loadedgltfobject.scene);
 
         if (!this.material.color) {
             this.material.color = new Color('#FFFFFF');
@@ -158,7 +154,7 @@ export class Item extends Mesh {
         if (this.metadata.materialColors) {
             if (this.metadata.materialColors.length) {
                 if (this.material.length) {
-                    for (var i = 0; i < this.metadata.materialColors.length; i++) {
+                    for (let i = 0; i < this.metadata.materialColors.length; i++) {
                         this.material[i].color = new Color(this.metadata.materialColors[i]);
                     }
                 } else {
@@ -270,7 +266,7 @@ export class Item extends Mesh {
 
     // Always send an hexadecimal string value for color - ex. '#FFFFFF'
     setMaterialColor(color, index) {
-        var c = new Color(color);
+        const c = new Color(color);
         if (this.material.length) {
             index = (index) ? index : 0;
             this.material[index].color = c;
@@ -281,7 +277,7 @@ export class Item extends Mesh {
 
     /** */
     setScale(x, y, z) {
-        var scaleVec = new Vector3(x, y, z);
+        const scaleVec = new Vector3(x, y, z);
         this.halfSize.multiply(scaleVec);
         scaleVec.multiply(this.scale);
         this.scale.set(scaleVec.x, scaleVec.y, scaleVec.z);
@@ -289,8 +285,6 @@ export class Item extends Mesh {
         if (this.bhelper) {
             this.bhelper.update();
         }
-
-        //		this.updateCanvasTexture(canvas, context, material, w, h);
         this.updateCanvasTexture(this.canvasWH, this.canvascontextWH, this.canvasMaterialWH, this.getWidth(), this.getHeight(), 'w:', 'h:');
         this.updateCanvasTexture(this.canvasWD, this.canvascontextWD, this.canvasMaterialWD, this.getWidth(), this.getDepth(), 'w:', 'd:');
 
@@ -377,13 +371,13 @@ export class Item extends Mesh {
     /** */
     mouseOver() {
         this.hover = true;
-        this.updateHighlight();
+        // this.updateHighlight();
     }
 
     /** */
     mouseOff() {
         this.hover = false;
-        this.updateHighlight();
+        // this.updateHighlight();
     }
 
     /** */
@@ -392,7 +386,7 @@ export class Item extends Mesh {
         this.selected = true;
         this.bhelper.visible = true;
         this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = true;
-        this.updateHighlight();
+        // this.updateHighlight();
     }
 
     /** */
@@ -400,7 +394,7 @@ export class Item extends Mesh {
         this.selected = false;
         this.bhelper.visible = false;
         this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = false;
-        this.updateHighlight();
+        // this.updateHighlight();
     }
 
     /** intersection has attributes point (vec3) and object (THREE.Mesh) */
@@ -521,7 +515,7 @@ export class Item extends Mesh {
         // var objectBox = new Box3();
         // objectBox.setFromObject(this);
         this.geometry.computeBoundingBox();
-        var objectBox = this.geometry.boundingBox.clone();
+        const objectBox = this.geometry.boundingBox.clone();
         return objectBox.max.clone().sub(objectBox.min).divideScalar(2);
     }
 

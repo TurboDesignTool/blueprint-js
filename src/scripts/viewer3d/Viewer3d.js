@@ -9,7 +9,6 @@ import {
     Plane
 } from 'three';
 import { PCFSoftShadowMap } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
 import {
@@ -28,6 +27,7 @@ import { Lights3D } from './lights3d.js';
 import {HUD} from '../three/hud';
 import {Controller} from '../three/controller';
 import {VIEW_FRONT, VIEW_ISOMETRY, VIEW_LEFT, VIEW_RIGHT, VIEW_TOP} from '../core/constants';
+import {OrbitControls} from '../three/orbitcontrols';
 export class Viewer3D extends EventDispatcher {
     constructor(model, element, opts) {
         super();
@@ -35,7 +35,7 @@ export class Viewer3D extends EventDispatcher {
             resize: true,
             pushHref: false,
             spin: true,
-            spinSpeed: .00002,
+            spinSpeed: 0.00002,
             clickPan: true,
             canMoveFixedItems: false
         };
@@ -50,7 +50,6 @@ export class Viewer3D extends EventDispatcher {
         this.options = options;
 
         this.domElement = document.getElementById(element);
-        // todo
         this.element = document.getElementById(element);
         console.log('QUERY DOM ELEMENT : ', element, this.domElement, element);
         this.perspectivecamera = null;
@@ -114,7 +113,7 @@ export class Viewer3D extends EventDispatcher {
         scope.lights = new Lights3D(scope.scene, scope.floorplan);
         scope.dragcontrols = new DragControls(scope.scene.items, scope.camera, scope.renderer.domElement);
         scope.controls = new OrbitControls(scope.camera, scope.domElement);
-        // scope.controls.autoRotate = this.options['spin'];
+        scope.controls.autoRotate = this.options['spin'];
         scope.controls.enableDamping = false;
         scope.controls.dampingFactor = 0.1;
         scope.controls.maxPolarAngle = Math.PI; //Math.PI * 0.5; //Math.PI * 0.35;
@@ -167,18 +166,13 @@ export class Viewer3D extends EventDispatcher {
             edge3d.remove();
         });
 
-        // for (i = 0; i < scope.walls3d.length; i++) {
-        //     scope.scene.remove(scope.walls3d[i]);
-        // }
-        // scope.walls3d = [];
-
         scope.edges3d = [];
         let wallEdges = scope.floorplan.wallEdges();
         let rooms = scope.floorplan.getRooms();
 
         // draw floors
         for (i = 0; i < rooms.length; i++) {
-            var threeFloor = new Floor3D(scope.scene, rooms[i]);
+            const threeFloor = new Floor3D(scope.scene, rooms[i]);
             scope.floors3d.push(threeFloor);
             threeFloor.addToScene();
         }
@@ -187,13 +181,6 @@ export class Viewer3D extends EventDispatcher {
             let edge3d = new Edge3D(scope.model.scene, wallEdges[i], scope.controls);
             scope.edges3d.push(edge3d);
         }
-
-        // let walls = scope.floorplan.getWalls();
-        // for (i = 0; i < walls.length; i++) {
-        //     let wall3d = new WallView3D(walls[i], scope.floorplan, scope, scope.controls);
-        //     scope.scene.add(wall3d);
-        //     scope.walls3d.push(wall3d);
-        // }
 
         scope.shouldRender = true;
 
@@ -206,14 +193,11 @@ export class Viewer3D extends EventDispatcher {
     getARenderer() {
         const renderer = new WebGLRenderer({antialias: true, alpha: true});
 
-        // scope.renderer.autoClear = false;
         renderer.shadowMap.enabled = true;
         renderer.shadowMapSoft = true;
         renderer.shadowMap.type = PCFSoftShadowMap;
         renderer.setClearColor(0xFFFFFF, 1);
         renderer.localClippingEnabled = false;
-        //		renderer.setPixelRatio(window.devicePixelRatio);
-        // renderer.sortObjects = false;
         return renderer;
     }
 
@@ -342,7 +326,6 @@ export class Viewer3D extends EventDispatcher {
         scope.controls.target = pan;
         const distance = scope.model.floorplan.getSize().z * 1.5;
         const offset = pan.clone().add(new Vector3(0, distance, distance));
-        // scope.controls.setOffset(offset);
         scope.camera.position.copy(offset);
         scope.controls.update();
     }

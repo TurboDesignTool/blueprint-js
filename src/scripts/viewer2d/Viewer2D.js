@@ -58,10 +58,15 @@ class TemporaryWall extends Graphics {
 export class Viewer2D extends Application {
     constructor(canvasHolder, floorplan, options) {
         super({ width: 512, height: 512, });
-        let scope = this;
-
-        var opts = { 'corner-radius': 20, pannable: true, zoomable: true, dimlinecolor: '#3EDEDE', dimarrowcolor: '#000000', dimtextcolor: '#000000', };
-        for (var opt in opts) {
+        const opts = {
+            'corner-radius': 20,
+            pannable: true,
+            zoomable: true,
+            dimlinecolor: '#3EDEDE',
+            dimarrowcolor: '#000000',
+            dimtextcolor: '#000000',
+        };
+        for (const opt in opts) {
             if (opts.hasOwnProperty(opt) && options.hasOwnProperty(opt)) {
                 opts[opt] = options[opt];
             }
@@ -146,7 +151,6 @@ export class Viewer2D extends Application {
         this.__floorplanContainer.on('mouseup', this.__drawModeMouseUpEvent);
         this.__floorplanContainer.on('mousemove', this.__drawModeMouseMoveEvent);
 
-        // this.__floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.__redrawFloorplan(evt));
         this.__floorplan.addEventListener(EVENT_NEW, this.__redrawFloorplanEvent);
         this.__floorplan.addEventListener(EVENT_DELETED, this.__redrawFloorplanEvent);
         this.__floorplan.addEventListener(EVENT_LOADED, this.__redrawFloorplanEvent);
@@ -195,6 +199,10 @@ export class Viewer2D extends Application {
         }
     }
 
+    moveToCenter() {
+        this.__floorplanContainer.moveCenter(0,0);
+    }
+
     __changeCursorMode() {
         let cursor = (this.__mode === floorplannerModes.DRAW) ? 'crosshair' : 'pointer';
         this.renderer.plugins.interaction.cursorStyles.crosshair = cursor;
@@ -207,7 +215,7 @@ export class Viewer2D extends Application {
     }
 
     __drawModeMouseUp(evt) {
-        if (this.__mode == floorplannerModes.DRAW) {
+        if (this.__mode === floorplannerModes.DRAW) {
             let co = evt.data.getLocalPosition(this.__floorplanContainer);
             let cmCo = new Vector2(co.x, co.y);
             cmCo.x = Dimensioning.pixelToCm(cmCo.x);
@@ -223,11 +231,9 @@ export class Viewer2D extends Application {
             // further create a newWall based on the newly inserted corners
             // (one in the above line and the other in the previous mouse action
             // of start drawing a new wall)
-            if (this.__lastNode != null) {
+            if (this.__lastNode !== null) {
                 this.__floorplan.newWall(this.__lastNode, corner);
                 this.__floorplan.newWallsForIntersections(this.__lastNode, corner);
-                // this.__tempWall.visible = false;
-                // this.switchMode(floorplannerModes.MOVE);
             }
             if (corner.mergeWithIntersected() && this.__lastNode != null) {
                 this.__tempWall.visible = false;
@@ -247,7 +253,7 @@ export class Viewer2D extends Application {
         if (this.__mode === floorplannerModes.DRAW) {
             let co = evt.data.getLocalPosition(this.__floorplanContainer);
             let cmCo = new Vector2(co.x, co.y);
-            let lastNode = undefined;
+            let lastNode;
             cmCo.x = Dimensioning.pixelToCm(cmCo.x);
             cmCo.y = Dimensioning.pixelToCm(cmCo.y);
             if (Configuration.getNumericValue(snapToGrid) || this.__snapToGrid) {
@@ -298,7 +304,7 @@ export class Viewer2D extends Application {
 
     __redrawFloorplan() {
 
-        var scope = this;
+        const scope = this;
         let i = 0;
 
         // clear scene
@@ -357,8 +363,6 @@ export class Viewer2D extends Application {
         this.__floorplanContainer.off('zoomed', this.__zoomedEvent);
         this.__floorplanContainer.off('moved', this.__pannedEvent);
         this.__floorplanContainer.off('clicked', this.__selectionMonitorEvent);
-
-        // this.__floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.__redrawFloorplan(evt));
         this.__floorplan.removeEventListener(EVENT_NEW, this.__redrawFloorplanEvent);
         this.__floorplan.removeEventListener(EVENT_DELETED, this.__redrawFloorplanEvent);
         this.__floorplan.removeEventListener(EVENT_LOADED, this.__redrawFloorplanEvent);

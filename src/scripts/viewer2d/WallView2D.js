@@ -8,8 +8,8 @@ import { Configuration, snapToGrid, snapTolerance } from '../core/configuration.
 export class WallDimensions2D extends Graphics {
     constructor(floorplan, options, wall) {
         super();
-        var opts = { dimlinecolor: '#3EDEDE', dimarrowcolor: '#000000', dimtextcolor: '#000000', };
-        for (var opt in opts) {
+        const opts = {dimlinecolor: '#3EDEDE', dimarrowcolor: '#000000', dimtextcolor: '#000000',};
+        for (const opt in opts) {
             if (opts.hasOwnProperty(opt) && options.hasOwnProperty(opt)) {
                 opts[opt] = options[opt];
             }
@@ -52,7 +52,7 @@ export class WallDimensions2D extends Graphics {
 
     __wallOffsetLocation(point2d, offset = 20) {
         let wallOutDirection = this.__wallNormal();
-        if (wallOutDirection == null) {
+        if (wallOutDirection === null) {
             wallOutDirection = new Vector3(0, 1, 0);
         }
         let bestLocation = point2d.add(wallOutDirection.multiplyScalar(offset));
@@ -150,13 +150,6 @@ export class WallView2D extends BaseFloorplanViewElement2D {
         this.__wall.addEventListener(EVENT_DELETED, this.__wallDeletedEvent);
         this.__mouseOut();
     }
-
-    // set selected(flag) {
-    //     super.selected = flag;
-    //     if (!this.__isSelected) {
-    //         this.viewDimensions = false;
-    //     }
-    // }
 
     get viewDimensions() {
         return (this.__info.alpha > 0.9);

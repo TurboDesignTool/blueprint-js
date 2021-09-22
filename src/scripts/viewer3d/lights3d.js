@@ -48,25 +48,23 @@ export class Lights3D extends EventDispatcher {
     }
 
     updateShadowCamera() {
-        var size = this.floorplan.getSize();
-        var d = (Math.max(size.z, size.x) + this.tol) / 2.0;
-        var center = this.floorplan.getCenter();
-        var pos = new Vector3(center.x, this.height, center.z);
+        const size = this.floorplan.getSize();
+        const d = (Math.max(size.z, size.x) + this.tol) / 2.0;
+        const center = this.floorplan.getCenter();
+        const pos = new Vector3(center.x, this.height, center.z);
         this.dirLight.position.copy(pos);
         this.dirLight.target.position.copy(center);
-        //dirLight.updateMatrix();
-        //dirLight.updateWorldMatrix()
         this.dirLight.shadow.camera.left = -d;
         this.dirLight.shadow.camera.right = d;
         this.dirLight.shadow.camera.top = d;
         this.dirLight.shadow.camera.bottom = -d;
         // this is necessary for updates
-        if (this.dirLight.shadowCamera) {
+        if (this.dirLight.shadow.camera.isCamera) {
             this.dirLight.shadow.camera.left = this.dirLight.shadowCameraLeft;
             this.dirLight.shadow.camera.right = this.dirLight.shadowCameraRight;
             this.dirLight.shadow.camera.top = this.dirLight.shadowCameraTop;
             this.dirLight.shadow.camera.bottom = this.dirLight.shadowCameraBottom;
-            this.dirLight.shadowCamera.updateProjectionMatrix();
+            this.dirLight.shadow.camera.updateProjectionMatrix();
         }
     }
 }

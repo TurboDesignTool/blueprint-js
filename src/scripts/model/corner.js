@@ -2,7 +2,6 @@ import { EVENT_ACTION, EVENT_DELETED, EVENT_MOVED, EVENT_CORNER_ATTRIBUTES_CHANG
 import { EventDispatcher, Vector2 } from 'three';
 import { Utils } from '../core/utils.js';
 import { WallTypes } from '../core/constants.js';
-//import {Dimensioning} from '../core/dimensioning.js';
 import { Configuration, configWallHeight, cornerTolerance } from '../core/configuration.js';
 
 
@@ -116,7 +115,7 @@ export class Corner extends EventDispatcher {
     }
 
     set location(xy) {
-        this._co.x = xy.x
+        this._co.x = xy.x;
         this._co.y = xy.y;
         this.x = xy.x;
         this.y = xy.y;
@@ -135,7 +134,6 @@ export class Corner extends EventDispatcher {
         if (this._hasChanged) {
             this._co.x = this._x;
             this.updateAttachedRooms();
-            //			this.floorplan.update(false);
             this.dispatchEvent({ type: EVENT_CORNER_ATTRIBUTES_CHANGED, item: this, info: { from: oldvalue, to: this._x } });
         }
     }
@@ -153,7 +151,6 @@ export class Corner extends EventDispatcher {
         if (this._hasChanged) {
             this._co.y = this._y;
             this.updateAttachedRooms();
-            //			this.floorplan.update(false);
             this.dispatchEvent({ type: EVENT_CORNER_ATTRIBUTES_CHANGED, item: this, info: { from: oldvalue, to: this._y } });
         }
     }
@@ -164,7 +161,7 @@ export class Corner extends EventDispatcher {
         if (value - this._elevation < 1e-6) {
             this._hasChanged = true;
         }
-        this._elevation = Number(value); //Dimensioning.cmFromMeasureRaw(Number(value));
+        this._elevation = Number(value);
         if (this._hasChanged) {
             this.dispatchEvent({ type: EVENT_CORNER_ATTRIBUTES_CHANGED, item: this, info: { from: oldvalue, to: this._elevation } });
         }
@@ -269,8 +266,6 @@ export class Corner extends EventDispatcher {
      * @param {Number} newY The new y position.
      */
     move(newX, newY, mergeWithIntersections = false) {
-        //		this.x = newX;
-        //		this.y = newY;
         this._x = newX;
         this._y = newY;
         this._co.x = newX;
@@ -286,8 +281,6 @@ export class Corner extends EventDispatcher {
         }
 
         this.dispatchEvent({ type: EVENT_MOVED, item: this, position: new Vector2(newX, newY) });
-        //      this.moved_callbacks.fire(this.x, this.y);
-
         this.wallStarts.forEach((wall) => {
             wall.fireMoved();
         });
@@ -315,7 +308,6 @@ export class Corner extends EventDispatcher {
      **/
     remove() {
         this.dispatchEvent({ type: EVENT_DELETED, item: this });
-        //      this.deleted_callbacks.fire(this);
     }
 
     /**
@@ -427,7 +419,6 @@ export class Corner extends EventDispatcher {
         if (!this._hasChanged && !explicit) {
             return;
         }
-        //		console.log('UPDATE ALL ATTACHED ROOMS :: ');
         this.attachedRooms.forEach((room) => {
             room.updateArea();
         });
@@ -568,9 +559,6 @@ export class Corner extends EventDispatcher {
      */
     combineWithCorner(corner) {
         let i = 0;
-        // update position to other corner's
-        //		this.x = corner.x;
-        //		this.y = corner.y;
         this.move(corner.x, corner.y, false);
         // absorb the other corner's wallStarts and wallEnds
         for (i = corner.wallStarts.length - 1; i >= 0; i--) {
@@ -602,7 +590,6 @@ export class Corner extends EventDispatcher {
 
     mergeWithIntersected(updateFloorPlan = true) {
         let i = 0;
-        //console.log('mergeWithIntersected for object: ' + this.type);
         // check corners
         for (i = 0; i < this.floorplan.getCorners().length; i++) {
             let corner = this.floorplan.getCorners()[i];
@@ -630,13 +617,13 @@ export class Corner extends EventDispatcher {
                     newWall.clearAttachedRooms();
                     wall.clearAttachedRooms();
                 } else if (wall.wallType === WallTypes.CURVED) {
-                    // merge this corner into wall by breaking wall into two parts				
+                    // merge this corner into wall by breaking wall into two parts
                     let newWall = this.floorplan.newWall(this, wall.getEnd());
                     wall.setEnd(this);
                     newWall.clearAttachedRooms();
                     wall.clearAttachedRooms();
                 }
-                //The below line is crashing because of recursive. This function mergeWithIntersected is called 
+                //The below line is crashing because of recursive. This function mergeWithIntersected is called
                 //From move(newX, newY) method. Now if we call move(newX, newY) from inside this method
                 //It will lead to recursion. So ensure in the move(newX, newY) method mergeWithIntersected is not called
                 //Hence added a third parameter to move(newX, newY, mergeWithIntersections) that is a boolean value

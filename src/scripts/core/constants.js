@@ -21,4 +21,4 @@ export const VIEW_RIGHT = 'rightview';
 export const VIEW_LEFT = 'leftview';
 export const VIEW_ISOMETRY = 'isometryview';
 
-export const WallTypes = Enum('STRAIGHT', 'CURVED');
+export const WallTypes =  Enum('STRAIGHT', 'CURVED');

@@ -330,14 +330,14 @@ export class Wall extends EventDispatcher {
     }
 
     get startElevation() {
-        if (this.start && this.start != null) {
+        if (this.start) {
             return this.start.elevation;
         }
         return 0.0;
     }
 
     get endElevation() {
-        if (this.end && this.end != null) {
+        if (this.end) {
             return this.end.elevation;
         }
         return 0.0;
@@ -411,7 +411,6 @@ export class Wall extends EventDispatcher {
         this.start.detachWall(this);
         this.end.detachWall(this);
         this.dispatchEvent({ type: EVENT_DELETED, item: this });
-        //this.deleted_callbacks.fire(this);
     }
 
     setStart(corner) {
@@ -475,7 +474,7 @@ export class Wall extends EventDispatcher {
     }
 
     updateAttachedRooms(explicit = false) {
-        if (this.start != null) {
+        if (this.start !== null) {
             this.start.updateAttachedRooms(explicit);
         }
         if (this.end) {

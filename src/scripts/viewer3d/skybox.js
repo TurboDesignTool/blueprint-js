@@ -13,7 +13,12 @@ export class Skybox extends EventDispatcher {
         this.verticalOffset = 400;
         this.exponent = 0.5;
 
-        var uniforms = { topColor: { type: 'c', value: new Color(this.topColor) }, bottomColor: { type: 'c', value: new Color(this.bottomColor) }, offset: { type: 'f', value: this.verticalOffset }, exponent: { type: 'f', value: this.exponent } };
+        const uniforms = {
+            topColor: {type: 'c', value: new Color(this.topColor)},
+            bottomColor: {type: 'c', value: new Color(this.bottomColor)},
+            offset: {type: 'f', value: this.verticalOffset},
+            exponent: {type: 'f', value: this.exponent}
+        };
 
         this.scene = scene;
         this.renderer = renderer;
@@ -36,18 +41,14 @@ export class Skybox extends EventDispatcher {
 
         this.skyGeo = new SphereGeometry(this.sphereRadius, this.widthSegments, this.heightSegments);
         this.sky = new Mesh(this.skyGeo, this.skyMat);
-        //		this.sky.position.x += this.sphereRadius*0.5;
-
         this.ground = new GridHelper(10000, 100, 0x0F0F0F, 0x808080);
         this.ground.position.y = -10;
 
         this.scene.add(this.sky);
         this.scene.add(this.ground);
 
-        var axesHelper = new AxesHelper(1000);
+        const axesHelper = new AxesHelper(1000);
         this.scene.add(axesHelper);
-        // axesHelper.visible = false;
-
         this.init();
     }
 
@@ -59,7 +60,6 @@ export class Skybox extends EventDispatcher {
             this.scene.add(this.sky);
             this.scene.add(this.ground);
         }
-        //		this.sky.visible = this.ground.visible = flag;
     }
 
     toggleEnvironment(flag) {
@@ -81,10 +81,10 @@ export class Skybox extends EventDispatcher {
     }
 
     setEnvironmentMap(url) {
-        var scope = this;
+        const scope = this;
         scope.texture.load(url, function(t) {
-            var textureUniform = { type: 't', value: t };
-            var uniforms = { texture: textureUniform };
+            const textureUniform = {type: 't', value: t};
+            const uniforms = {texture: textureUniform};
             scope.skyMat = new ShaderMaterial({ vertexShader: scope.vertexShader, fragmentShader: scope.fragmentShader, uniforms: uniforms, side: DoubleSide });
             scope.skyMat.name = 'SkyMaterial';
             scope.toggleEnvironment(scope.useEnvironment);

@@ -9,7 +9,6 @@ const GRID_SIZE = 10000;
 export class Grid2D extends Graphics {
     constructor(canvas, options) {
         super();
-        // this.drawRect(0, 0, GRID_SIZE, GRID_SIZE);
         this.__canvasHolder = canvas;
         this.__options = options;
         this.__size = new Vector2(GRID_SIZE, GRID_SIZE);

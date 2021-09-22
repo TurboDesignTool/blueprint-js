@@ -59,7 +59,7 @@ export class RoofItem extends Item
 					}
 			}
 			//No good result so return the closest point of the last triangle in this roof mesh
-			if(result.point == null)
+			if(result.point === null)
 			{
 				result.closestPoint = closestPoint.clone();
 			}
@@ -69,22 +69,22 @@ export class RoofItem extends Item
 
 	closestCeilingPoint()
 	{
-		var roofs = this.model.floorplan.roofPlanes();
-		var roof = null;
-		var globalResult = {distance: Number.MAX_VALUE, point: null};
-		var result = null;
-		for (var i=0;i< roofs.length; i++)
+		const roofs = this.model.floorplan.roofPlanes();
+		let roof = null;
+		const globalResult = {distance: Number.MAX_VALUE, point: null};
+		let result = null;
+		for (let i=0; i< roofs.length; i++)
 		{
 				roof = roofs[i];
 				result = this.roofContainsPoint(roof, this.position);
-				if(result.point !=null && result.distance < globalResult.distance && result.contains)
+				if(result.point !== null && result.distance < globalResult.distance && result.contains)
 				{
 						globalResult.distance = result.distance;
 						globalResult.point = result.point.clone();
 				}
 		}
 		//No good results so assign the closestPoint of the last roof in the above iteration
-		if(globalResult.point == null)
+		if(globalResult.point === null)
 		{
 				return result.closestPoint.clone();
 		}
@@ -96,7 +96,7 @@ export class RoofItem extends Item
 	{
 		if (!this.position_set)
 		{
-			var co = this.closestCeilingPoint();
+			const co = this.closestCeilingPoint();
 			this.moveToPosition(co);
 		}
 	}

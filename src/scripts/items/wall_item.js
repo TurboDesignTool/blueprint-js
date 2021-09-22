@@ -45,11 +45,11 @@ export class WallItem extends Item
 	 */
 	closestWallEdge()
 	{
-		var wallEdges = this.model.floorplan.wallEdges();
-		var wallEdge = null;
-		var minDistance = null;
-		var itemX = this.position.x;
-		var itemZ = this.position.z;
+		const wallEdges = this.model.floorplan.wallEdges();
+		let wallEdge = null;
+		let minDistance = null;
+		const itemX = this.position.x;
+		const itemZ = this.position.z;
 		wallEdges.forEach((edge) => {
 			var distance = edge.distanceTo(itemX, itemZ);
 			if (minDistance === null || distance < minDistance)
@@ -123,8 +123,8 @@ export class WallItem extends Item
 		if (!this.position_set)
 		{
 			// position not set
-			var center = closestWallEdge.interiorCenter();
-			var newPos = new Vector3(center.x, closestWallEdge.wall.height / 2.0, center.y);
+			const center = closestWallEdge.interiorCenter();
+			const newPos = new Vector3(center.x, closestWallEdge.wall.height / 2.0, center.y);
 			this.boundMove(newPos);
 			this.position.copy(newPos);
 			this.redrawWall();
@@ -134,11 +134,9 @@ export class WallItem extends Item
 	/** */
 	moveToPosition(vec3, intersection)
 	{
-		var intersectionEdge = (intersection) ? (intersection.object) ? intersection.object.edge: intersection : this.closestWallEdge();
+		let intersectionEdge = (intersection) ? (intersection.object) ? intersection.object.edge: intersection : this.closestWallEdge();
 		this.changeWallEdge(intersectionEdge);
 		this.boundMove(vec3);
-
-//		this.position.copy(vec3);
 		super.moveToPosition(vec3);
 		this.redrawWall();
 	}
@@ -165,7 +163,7 @@ export class WallItem extends Item
 			}
 		}
 
-		var scope = this;
+		let scope = this;
 
 		function __remove(event)
 		{
@@ -173,21 +171,19 @@ export class WallItem extends Item
 		}
 
 		// handle subscription to wall being removed
-		if (this.currentWallEdge != null)
+		if (this.currentWallEdge !== null)
 		{
-//			this.currentWallEdge.wall.dontFireOnDelete(this.remove.bind(this));
 			this.currentWallEdge.wall.removeEventListener(EVENT_DELETED, __remove);
 		}
-//		wallEdge.wall.fireOnDelete(this.remove.bind(this));
 		wallEdge.wall.addEventListener(EVENT_DELETED, __remove);
 
 		// find angle between wall normals
-		var normal2 = new Vector2();
-		var normal3 = wallEdge.plane.geometry.faces[0].normal;
+		const normal2 = new Vector2();
+		const normal3 = wallEdge.plane.geometry.faces[0].normal;
 		normal2.x = normal3.x;
 		normal2.y = normal3.z;
 
-		var angle = Utils.angle( new Vector2(this.refVec.x, this.refVec.y), new Vector2(normal2.x, normal2.y));
+		const angle = Utils.angle( new Vector2(this.refVec.x, this.refVec.y), new Vector2(normal2.x, normal2.y));
 		this.rotation.y = angle;
 		// update currentWall
 		this.currentWallEdge = wallEdge;
@@ -212,8 +208,8 @@ export class WallItem extends Item
 	/** takes the move vec3, and makes sure object stays bounded on plane */
 	boundMove(vec3)
 	{
-		var tolerance = 1;
-		var edge = this.currentWallEdge;
+		const tolerance = 1;
+		const edge = this.currentWallEdge;
 		vec3.applyMatrix4(edge.interiorTransform);
 		if (vec3.x < this.sizeX / 2.0 + tolerance)
 		{
@@ -235,10 +231,10 @@ export class WallItem extends Item
 				vec3.y = this.sizeY / 2.0 + tolerance;
 			}
 			//Commenting the below condition where it will restrict the movement of the item to an uniform height
-//			else if (vec3.y > edge.height - this.sizeY / 2.0 - tolerance)
-//			{
-//				vec3.y = edge.height - this.sizeY / 2.0 - tolerance;
-//			}
+			else if (vec3.y > edge.height - this.sizeY / 2.0 - tolerance)
+			{
+				vec3.y = edge.height - this.sizeY / 2.0 - tolerance;
+			}
 		}
 		vec3.z = this.getWallOffset();
 		vec3.applyMatrix4(edge.invInteriorTransform);

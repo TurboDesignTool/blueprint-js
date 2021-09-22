@@ -52,14 +52,12 @@ export class Room extends EventDispatcher {
             c.addEventListener(EVENT_MOVED, () => this._roomUpdated());
         }
         let scope = this;
-        for (i = 0; i < this.__walls.length; i++) {
-            let wall = this.__walls[i];
-            // wall.addRoom(this);
+        this.__walls.forEach(wall => {
             wall.addEventListener(EVENT_UPDATED, () => {
                 scope.updateInteriorCorners();
                 scope.dispatchEvent({ type: EVENT_CHANGED, item: scope });
             });
-        }
+        });
         this._roomByCornersId = cornerids.join(',');
     }
 
@@ -125,13 +123,11 @@ export class Room extends EventDispatcher {
     }
 
     getWallOutDirection(wall) {
-        let vect3 = this.getWallDirection(wall); //new Vector3(vect.x, vect.y, 0);
+        let vect3 = this.getWallDirection(wall);
         if (vect3 === null) {
             return null;
         }
-        // console.log('WALL DIRECTION : ', vect3);
         vect3 = vect3.applyAxisAngle(new Vector3(0, 0, 1), Math.PI * 0.5);
-        // console.log('WALL NORMAL DIRECTION : ', vect3);
         return vect3.normalize();
     }
 
@@ -161,7 +157,6 @@ export class Room extends EventDispatcher {
         let plane = new Plane(normal, 0);
         let m = new Matrix4();
         m.makeTranslation(planeLocation.x, planeLocation.y, 0);
-        // plane = plane.applyMatrix4(m);
         plane.setFromNormalAndCoplanarPoint(normal, new Vector3(planeLocation.x, planeLocation.y, 0));
         return plane;
     }
@@ -216,8 +211,8 @@ export class Room extends EventDispatcher {
     }
 
     generateRoofPlane() {
-        if (this.roofPlane && this.roofPlane != null) {
-            if (this.roofPlane.parent != null) {
+        if (this.roofPlane) {
+            if (this.roofPlane.parent !== null) {
                 this.roofPlane.parent.remove(this.roofPlane);
             }
         }
@@ -316,7 +311,7 @@ export class Room extends EventDispatcher {
             secondCorner = this.corners[(i + 1) % this.corners.length];
             wall = firstCorner.wallToOrFrom(secondCorner);
 
-            if (wall != null) {
+            if (wall !== null) {
                 if (wall.wallType === WallTypes.CURVED) {
                     let begin = corner.location.clone().sub(wall.bezier.get(0)).length();
                     let p;
@@ -347,112 +342,6 @@ export class Room extends EventDispatcher {
         this.area = Math.abs(region.area());
         this.areaCenter = region.centroid();
         this._polygonPoints = points;
-        this.dispatchEvent({ type: EVENT_ROOM_ATTRIBUTES_CHANGED, item: this, info: { from: oldarea, to: this.area } });
-    }
-
-    updateArea2() {
-        let scope = this;
-        let isComplexRoom = false;
-        let oldarea = this.area;
-        let points = [];
-        let N = 0;
-        let area = 0;
-        this.areaCenter = new Vector2();
-        this._polygonPoints = [];
-
-        //The below makes this routine too slow
-        //		this.updateWalls();
-        //		this.updateInteriorCorners();
-        //		this.generatePlane();
-        //		this.generateRoofPlane();
-
-
-        for (let i = 0; i < this.corners.length; i++) {
-            let firstCorner = this.corners[i];
-            let secondCorner = this.corners[(i + 1) % this.corners.length];
-            let wall = firstCorner.wallToOrFrom(secondCorner);
-            isComplexRoom |= (wall.wallType === WallTypes.CURVED);
-        }
-
-        let inext, a, b, ax_by, ay_bx, delta;
-        if (!isComplexRoom) {
-            this.corners.forEach((corner) => {
-                let co = new Vector2(corner.x, corner.y);
-                scope.areaCenter.add(co);
-                points.push(co);
-            });
-            this.areaCenter.multiplyScalar(1.0 / points.length);
-            for (let i = 0; i < points.length; i++) {
-                inext = (i + 1) % points.length;
-                a = points[i];
-                b = points[inext];
-                ax_by = (a.x * b.y);
-                ay_bx = (a.y * b.x);
-                delta = ax_by - ay_bx;
-                area += delta;
-            }
-            this.area = Math.abs(area) * 0.5;
-            this._polygonPoints = points;
-            this.dispatchEvent({ type: EVENT_ROOM_ATTRIBUTES_CHANGED, item: this, info: { from: oldarea, to: this.area } });
-            return;
-        }
-
-
-        //		this.corners.forEach((corner) => {
-        //			var co = new Vector2(corner.x,corner.y);
-        //			this.areaCenter.add(co);
-        //			points.push(co);
-        //		});
-
-        N = this.corners.length;
-
-        for (let i = 0; i < this.corners.length; i++) {
-            let firstCorner = this.corners[i];
-            let secondCorner = this.corners[(i + 1) % this.corners.length];
-            let wall = firstCorner.wallToOrFrom(secondCorner);
-            this.areaCenter.add(firstCorner.location);
-
-            if (wall != null) {
-                if (wall.wallType === WallTypes.CURVED) {
-                    points.push(firstCorner.location);
-                    let LUT = wall.bezier.getLUT(20);
-                    for (let j = 1; j < LUT.length - 1; j++) {
-                        let p = LUT[j];
-                        p = new Vector2(p.x, p.y);
-                        points.push(p);
-                    }
-                } else {
-                    points.push(firstCorner.location);
-                }
-            } else {
-                points.push(firstCorner.location);
-            }
-        }
-
-        this.areaCenter.multiplyScalar(1.0 / N);
-
-        let indicesAndAngles = Utils.getCyclicOrder(points, this.areaCenter);
-        points = indicesAndAngles['points'];
-
-        for (let i = 0; i < points.length; i++) {
-            inext = (i + 1) % points.length;
-            a = points[i];
-            b = points[inext];
-            //Another irregular polygon method based on the url below
-            //https://www.mathsisfun.com/geometry/area-irregular-polygons.html
-            //			var width = a.x - b.x;
-            //			var height = (a.y + b.y) * 0.5;
-            //			var delta = Math.abs(width * height);
-            ax_by = (a.x * b.y);
-            ay_bx = (a.y * b.x);
-            delta = ax_by - ay_bx;
-            area += delta;
-        }
-        this._polygonPoints = points;
-        this.area = Math.abs(area) * 0.5;
-        //		if we are using the method in url https://www.mathsisfun.com/geometry/area-irregular-polygons.html
-        //		then we dont have to multiply the area by 0.5;
-        //		this.area = Math.abs(area);
         this.dispatchEvent({ type: EVENT_ROOM_ATTRIBUTES_CHANGED, item: this, info: { from: oldarea, to: this.area } });
     }
 

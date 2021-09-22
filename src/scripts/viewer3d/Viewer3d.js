@@ -71,7 +71,6 @@ export class Viewer3D extends EventDispatcher {
         this.pauseRender = false;
         this.edges3d = [];
         this.floors3d = [];
-        // this.walls3d = [];
         this.draggables = [];
 
         this.scene.needsUpdate = true;
@@ -432,49 +431,8 @@ export class Viewer3D extends EventDispatcher {
         this.render(true);
     }
 
-    switchOrthographicMode(flag) {
-        if (flag) {
-            this.camera = this.orthocamera;
-            this.camera.position.copy(this.perspectivecamera.position.clone());
-            this.controls.object = this.camera;
-            this.controller.changeCamera(this.camera);
-            this.controls.needsUpdate = true;
-            this.controls.update();
-            this.render(true);
-            return;
-        }
-
-        this.camera = this.perspectivecamera;
-        this.camera.position.copy(this.orthocamera.position.clone());
-        this.controls.object = this.camera;
-        this.controller.changeCamera(this.camera);
-        this.controls.needsUpdate = true;
-        this.controls.update();
-        this.render(true);
-    }
-
-    switchFPSMode(flag) {
-        this.firstpersonmode = flag;
-        this.fpscontrols.enabled = flag;
-        this.controls.enabled = !flag;
-        this.controller.enabled = !flag;
-        this.controls.dispatchEvent({ type: EVENT_CAMERA_ACTIVE_STATUS });
-
-        if (flag) {
-            this.skybox.toggleEnvironment(true);
-            this.fpscontrols.lock();
-        } else {
-            this.skybox.toggleEnvironment(false);
-            this.fpscontrols.unlock();
-        }
-
-        this.model.switchWireframe(false);
-        this.floorplan.switchWireframe(false);
-        this.render(true);
-    }
-
     shouldRender() {
-        var scope = this;
+        const scope = this;
         // Do we need to draw a new frame
         if (scope.controls.needsUpdate || scope.controller.needsUpdate || scope.needsUpdate || scope.model.scene.needsUpdate) {
             scope.controls.needsUpdate = false;

@@ -18,10 +18,10 @@ export class Edge extends EventDispatcher
 		this.planes = [];
 		this.phantomPlanes = [];
 		this.basePlanes = []; // always visible
-		
+
 		//Debug wall intersection planes. Edge.plane is the plane used for intersection
-//		this.phantomPlanes.push(this.edge.plane);//Enable this line to see the wall planes
-		
+		this.phantomPlanes.push(this.edge.plane);//Enable this line to see the wall planes
+
 		this.texture = new TextureLoader();
 
 		this.lightMap = new TextureLoader().load('rooms/textures/walllightmap.png');
@@ -30,16 +30,16 @@ export class Edge extends EventDispatcher
 		this.baseColor = 0xdddddd;
 		this.visible = false;
 
-		var scope = this;
+		const scope = this;
 
 		this.redrawevent = ()=>{scope.redraw();};
 		this.visibilityevent = ()=>{scope.updateVisibility();};
 		this.showallevent =  ()=>{scope.showAll();};
-		
+
 		this.visibilityfactor = true;
 		this.init();
-		
-		
+
+
 	}
 
 	remove()
@@ -121,7 +121,7 @@ export class Edge extends EventDispatcher
 
 	switchWireframe(flag)
 	{
-		var scope = this;
+		const scope = this;
 		scope.visible = true;
 		scope.planes.forEach((plane) =>
 		{
@@ -131,54 +131,54 @@ export class Edge extends EventDispatcher
 
 	updateVisibility()
 	{
-		var scope = this;
+		const scope = this;
 		// finds the normal from the specified edge
-		var start = scope.edge.interiorStart();
-		var end = scope.edge.interiorEnd();
-		var x = end.x - start.x;
-		var y = end.y - start.y;
+		const start = scope.edge.interiorStart();
+		const end = scope.edge.interiorEnd();
+		const x = end.x - start.x;
+		const y = end.y - start.y;
 		// rotate 90 degrees CCW
-		var normal = new Vector3(-y, 0, x);
+		const normal = new Vector3(-y, 0, x);
 		normal.normalize();
 
 		// setup camera: scope.controls.object refers to the camera of the scene
-		var position = scope.controls.object.position.clone();
-		var focus = new Vector3((start.x + end.x) / 2.0,0,(start.y + end.y) / 2.0);
-		var direction = position.sub(focus).normalize();
+		const position = scope.controls.object.position.clone();
+		const focus = new Vector3((start.x + end.x) / 2.0, 0, (start.y + end.y) / 2.0);
+		const direction = position.sub(focus).normalize();
 
 		// find dot
-		var dot = normal.dot(direction);
+		const dot = normal.dot(direction);
 		// update visible
 		scope.visible = (dot >= 0);
 		// show or hide planes
 		scope.planes.forEach((plane) => {
 			plane.material.transparent = !scope.visible;
 			plane.material.opacity = (scope.visible)? 1.0 : 0.3;
-//			plane.visible = scope.visible;
+			plane.visible = scope.visible;
 		});
 		scope.updateObjectVisibility();
 	}
 
 	updateObjectVisibility()
 	{
-//		var scope = this;
-//		this.wall.items.forEach((item) => {
-//			item.updateEdgeVisibility(scope.visible, scope.front);
-//		});
-//		this.wall.onItems.forEach((item) => {
-//			item.updateEdgeVisibility(scope.visible, scope.front);
-//		});
+		const scope = this;
+		this.wall.items.forEach((item) => {
+			item.updateEdgeVisibility(scope.visible, scope.front);
+		});
+		this.wall.onItems.forEach((item) => {
+			item.updateEdgeVisibility(scope.visible, scope.front);
+		});
 	}
 
 	updateTexture(callback)
 	{
-		var scope = this;
+		const scope = this;
 		// callback is fired when texture loads
 		callback = callback || function () {scope.scene.needsUpdate = true;};
-		var textureData = this.edge.getTexture();
-		var stretch = textureData.stretch;
-		var url = textureData.url;
-		var scale = textureData.scale;
+		const textureData = this.edge.getTexture();
+		const stretch = textureData.stretch;
+		const url = textureData.url;
+		const scale = textureData.scale;
 		this.texture = new TextureLoader().load(url, callback);
 
 		if (!stretch)
@@ -194,19 +194,17 @@ export class Edge extends EventDispatcher
 
 	updatePlanes()
 	{
-//		var extStartCorner = this.wall.getClosestCorner(this.edge.exteriorStart());
-//		var extEndCorner = this.wall.getClosestCorner(this.edge.exteriorEnd());		
-		
-		var extStartCorner = this.edge.getStart();
-		var extEndCorner = this.edge.getEnd();
 
-		if(extStartCorner == null || extEndCorner == null)
+		const extStartCorner = this.edge.getStart();
+		const extEndCorner = this.edge.getEnd();
+
+		if(extStartCorner === null || extEndCorner === null)
 		{
-			return;			
+			return;
 		}
 
-		var color = 0xFFFFFF;
-		var wallMaterial = new MeshBasicMaterial({
+		const color = 0xFFFFFF;
+		const wallMaterial = new MeshBasicMaterial({
 			color: color,
 			side: FrontSide,
 			map: this.texture,
@@ -215,7 +213,7 @@ export class Edge extends EventDispatcher
 			opacity: 1.0,
 			wireframe: false,
 		});
-		var fillerMaterial = new MeshBasicMaterial({
+		const fillerMaterial = new MeshBasicMaterial({
 			color: this.fillerColor,
 			side: DoubleSide,
 			map: this.texture,
@@ -244,42 +242,37 @@ export class Edge extends EventDispatcher
 		// sides
 		this.planes.push(this.buildSideFillter(this.edge.interiorStart(), this.edge.exteriorStart(), extStartCorner.elevation, this.sideColor));
 		this.planes.push(this.buildSideFillter(this.edge.interiorEnd(), this.edge.exteriorEnd(), extEndCorner.elevation, this.sideColor));
-//		this.planes.push(this.buildSideFillter(this.edge.interiorStart(), this.edge.exteriorStart(), this.wall.startElevation, this.sideColor));
-//		this.planes.push(this.buildSideFillter(this.edge.interiorEnd(), this.edge.exteriorEnd(), extEndCorner.endElevation, this.sideColor));
 	}
 
 	// start, end have x and y attributes (i.e. corners)
 	makeWall(start, end, transform, invTransform, material)
 	{
-		var v1 = this.toVec3(start);
-		var v2 = this.toVec3(end);
-		var v3 = v2.clone();
-		var v4 = v1.clone();
-		
+		const v1 = this.toVec3(start);
+		const v2 = this.toVec3(end);
+		const v3 = v2.clone();
+		const v4 = v1.clone();
+
 		v3.y = this.edge.getEnd().elevation;
 		v4.y = this.edge.getStart().elevation;
-		
-//		v3.y = this.wall.getClosestCorner(end).elevation;
-//		v4.y = this.wall.getClosestCorner(start).elevation;
-		
-		var points = [v1.clone(), v2.clone(), v3.clone(), v4.clone()];
+
+		const points = [v1.clone(), v2.clone(), v3.clone(), v4.clone()];
 
 		points.forEach((p) => {p.applyMatrix4(transform);});
 
-		var spoints = [new Vector2(points[0].x, points[0].y),new Vector2(points[1].x, points[1].y),new Vector2(points[2].x, points[2].y),new Vector2(points[3].x, points[3].y)];
-		var shape = new Shape(spoints);
+		const spoints = [new Vector2(points[0].x, points[0].y), new Vector2(points[1].x, points[1].y), new Vector2(points[2].x, points[2].y), new Vector2(points[3].x, points[3].y)];
+		const shape = new Shape(spoints);
 
 		// add holes for each wall item
 		this.wall.items.forEach((item) => {
-			var pos = item.position.clone();
+			const pos = item.position.clone();
 			pos.applyMatrix4(transform);
-			var halfSize = item.halfSize;
-			var min = halfSize.clone().multiplyScalar(-1);
-			var max = halfSize.clone();
+			const halfSize = item.halfSize;
+			const min = halfSize.clone().multiplyScalar(-1);
+			const max = halfSize.clone();
 			min.add(pos);
 			max.add(pos);
 
-			var holePoints = [new Vector2(min.x, min.y),new Vector2(max.x, min.y),new Vector2(max.x, max.y),new Vector2(min.x, max.y)];
+			const holePoints = [new Vector2(min.x, min.y), new Vector2(max.x, min.y), new Vector2(max.x, max.y), new Vector2(min.x, max.y)];
 			shape.holes.push(new Path(holePoints));
 		});
 
@@ -289,14 +282,14 @@ export class Edge extends EventDispatcher
 		});
 
 		// make UVs
-		var totalDistance = Utils.distance(new Vector2(v1.x, v1.z), new Vector2(v2.x, v2.z));
-		var height = this.wall.height;
+		const totalDistance = Utils.distance(new Vector2(v1.x, v1.z), new Vector2(v2.x, v2.z));
+		const height = this.wall.height;
 		geometry.faceVertexUvs[0] = [];
 
 		geometry.faces.forEach((face) => {
-			var vertA = geometry.vertices[face.a];
-			var vertB = geometry.vertices[face.b];
-			var vertC = geometry.vertices[face.c];
+			const vertA = geometry.vertices[face.a];
+			const vertB = geometry.vertices[face.b];
+			const vertC = geometry.vertices[face.c];
 			geometry.faceVertexUvs[0].push([vertexToUv(vertA),vertexToUv(vertB),vertexToUv(vertC)]);
 		});
 
@@ -311,59 +304,54 @@ export class Edge extends EventDispatcher
 			return new Vector2(x, y);
 		}
 
-		var mesh = new Mesh(geometry, material);
+		const mesh = new Mesh(geometry, material);
 		mesh.name = 'wall';
 		return mesh;
 	}
 
 	buildSideFillter(p1, p2, height, color)
 	{
-		var points = [this.toVec3(p1), this.toVec3(p2), this.toVec3(p2, height), this.toVec3(p1, height) ];
+		const points = [this.toVec3(p1), this.toVec3(p2), this.toVec3(p2, height), this.toVec3(p1, height)];
 
-		var geometry = new Geometry();
+		const geometry = new Geometry();
 		points.forEach((p) => {
 			geometry.vertices.push(p);
 		});
 		geometry.faces.push(new Face3(0, 1, 2));
 		geometry.faces.push(new Face3(0, 2, 3));
 
-		var fillerMaterial = new MeshBasicMaterial({color: color,side: DoubleSide});
-		var filler = new Mesh(geometry, fillerMaterial);
+		const fillerMaterial = new MeshBasicMaterial({color: color, side: DoubleSide});
+		const filler = new Mesh(geometry, fillerMaterial);
 		return filler;
 	}
 
 	buildFillerVaryingHeights(edge, side, color)
 	{
-		var a = this.toVec3(edge.exteriorStart(), this.edge.getStart().elevation);
-		var b = this.toVec3(edge.exteriorEnd(), this.edge.getEnd().elevation);
-		var c = this.toVec3(edge.interiorEnd(), this.edge.getEnd().elevation);
-		var d = this.toVec3(edge.interiorStart(), this.edge.getStart().elevation);
-		
-//		var a = this.toVec3(edge.exteriorStart(), this.wall.getClosestCorner(edge.exteriorStart()).elevation);
-//		var b = this.toVec3(edge.exteriorEnd(), this.wall.getClosestCorner(edge.exteriorEnd()).elevation);
-//		var c = this.toVec3(edge.interiorEnd(), this.wall.getClosestCorner(edge.interiorEnd()).elevation);
-//		var d = this.toVec3(edge.interiorStart(), this.wall.getClosestCorner(edge.interiorStart()).elevation);
-		
-		
-		var fillerMaterial = new MeshBasicMaterial({color: color,side: side});
+		const a = this.toVec3(edge.exteriorStart(), this.edge.getStart().elevation);
+		const b = this.toVec3(edge.exteriorEnd(), this.edge.getEnd().elevation);
+		const c = this.toVec3(edge.interiorEnd(), this.edge.getEnd().elevation);
+		const d = this.toVec3(edge.interiorStart(), this.edge.getStart().elevation);
 
-		var geometry = new Geometry();
+
+		const fillerMaterial = new MeshBasicMaterial({color: color, side: side});
+
+		const geometry = new Geometry();
 		geometry.vertices.push(a,b,c,d);
 		geometry.faces.push(new Face3(0, 1, 2));
 		geometry.faces.push(new Face3(0, 2, 3));
 
-		var filler = new Mesh(geometry, fillerMaterial);
+		const filler = new Mesh(geometry, fillerMaterial);
 		return filler;
 	}
 
 	buildFillerUniformHeight(edge, height, side, color)
 	{
-		var points = [this.toVec2(edge.exteriorStart()), this.toVec2(edge.exteriorEnd()), this.toVec2(edge.interiorEnd()),this.toVec2(edge.interiorStart())];
+		const points = [this.toVec2(edge.exteriorStart()), this.toVec2(edge.exteriorEnd()), this.toVec2(edge.interiorEnd()), this.toVec2(edge.interiorStart())];
 
-		var fillerMaterial = new MeshBasicMaterial({color: color,side: side});
-		var shape = new Shape(points);
-		var geometry = new ShapeGeometry(shape);
-		var filler = new Mesh(geometry, fillerMaterial);
+		const fillerMaterial = new MeshBasicMaterial({color: color, side: side});
+		const shape = new Shape(points);
+		const geometry = new ShapeGeometry(shape);
+		const filler = new Mesh(geometry, fillerMaterial);
 		filler.rotation.set(Math.PI / 2, 0, 0);
 		filler.position.y = height;
 		return filler;

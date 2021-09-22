@@ -22,7 +22,6 @@ export class Floor3D extends EventDispatcher {
         this.room.addEventListener(EVENT_CHANGED, this.changedevent);
         this.floorPlane = this.buildFloor();
         // roofs look weird, so commented out
-        // this.roofPlane = this.buildRoofUniformHeight();
         this.roofPlane = this.buildRoofVaryingHeight();
     }
 
@@ -79,8 +78,6 @@ export class Floor3D extends EventDispatcher {
             geometry.faces.push(face);
         }
         const roof = new Mesh(geometry, roofMaterial);
-        // roof.rotation.set(Math.PI / 2, 0, 0);
-        // roof.position.y = Configuration.getNumericValue(configWallHeight);
         return roof;
     }
 
@@ -103,7 +100,6 @@ export class Floor3D extends EventDispatcher {
     addToScene() {
         this.scene.add(this.floorPlane);
         this.scene.add(this.roofPlane);
-        //scene.add(roofPlane);
         // hack so we can do intersect testing
         this.scene.add(this.room.floorPlane);
         this.scene.add(this.room.roofPlane);
@@ -114,10 +110,5 @@ export class Floor3D extends EventDispatcher {
         this.scene.remove(this.roofPlane);
         this.scene.remove(this.room.floorPlane);
         this.scene.remove(this.room.roofPlane);
-    }
-
-    showRoof(flag) {
-        console.log(flag);
-        // this.roofPlane.visible = flag;
     }
 }

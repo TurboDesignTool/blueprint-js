@@ -113,7 +113,7 @@ export class Floorplan extends EventDispatcher {
      * @return {HalfEdge[]} edges The array of {@link HalfEdge}
      */
     wallEdges() {
-        var edges = [];
+        const edges = [];
         this.walls.forEach((wall) => {
             if (wall.frontEdge) {
                 edges.push(wall.frontEdge);
@@ -132,7 +132,7 @@ export class Floorplan extends EventDispatcher {
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
     roofPlanes() {
-        var planes = [];
+        const planes = [];
         this.rooms.forEach((room) => {
             planes.push(room.roofPlane);
         });
@@ -146,7 +146,7 @@ export class Floorplan extends EventDispatcher {
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
     wallEdgePlanes() {
-        var planes = [];
+        const planes = [];
         this.walls.forEach((wall) => {
             if (wall.frontEdge) {
                 planes.push(wall.frontEdge.plane);
@@ -204,22 +204,22 @@ export class Floorplan extends EventDispatcher {
      */
 
     newWallsForIntersections(start, end) {
-        var intersections = false;
+        let intersections = false;
         // This is a bug in the logic
         // When creating a new wall with a start and end
         // it needs to be checked if it is cutting other walls
         // If it cuts then all those walls have to removed and introduced as
         // new walls along with this new wall
-        var cStart = new Vector2(start.getX(), start.getY());
-        var cEnd = new Vector2(end.getX(), end.getY());
-        var line = { p1: cStart, p2: cEnd };
-        var newCorners = [];
+        const cStart = new Vector2(start.getX(), start.getY());
+        const cEnd = new Vector2(end.getX(), end.getY());
+        const line = {p1: cStart, p2: cEnd};
+        const newCorners = [];
 
-        for (var i = 0; i < this.walls.length; i++) {
-            var twall = this.walls[i];
-            var bstart = { x: twall.getStartX(), y: twall.getStartY() };
-            var bend = { x: twall.getEndX(), y: twall.getEndY() };
-            var iPoint;
+        for (let i = 0; i < this.walls.length; i++) {
+            const twall = this.walls[i];
+            const bstart = {x: twall.getStartX(), y: twall.getStartY()};
+            const bend = {x: twall.getEndX(), y: twall.getEndY()};
+            let iPoint;
             if (twall.wallType === WallTypes.CURVED) {
                 iPoint = twall.bezier.intersects(line);
                 if (iPoint.length) {
@@ -229,7 +229,7 @@ export class Floorplan extends EventDispatcher {
                 iPoint = Utils.lineLineIntersectPoint(cStart, cEnd, bstart, bend);
             }
             if (iPoint) {
-                var nCorner = this.newCorner(iPoint.x, iPoint.y);
+                const nCorner = this.newCorner(iPoint.x, iPoint.y);
                 newCorners.push(nCorner);
                 nCorner.mergeWithIntersected(false);
                 intersections = true;
@@ -243,15 +243,13 @@ export class Floorplan extends EventDispatcher {
     /**
      * Creates a new wall.
      *
-     * @param {Corner}
-     *            start The start corner.
-     * @param {Corner}
-     *            end The end corner.
+     * @param {Corner} start - The start corner.
+     * @param {Corner} end - The end corner.
      * @returns {Wall} The new wall.
      */
     newWall(start, end, a, b) {
-        var scope = this;
-        var wall = new Wall(start, end, a, b);
+        const scope = this;
+        const wall = new Wall(start, end, a, b);
 
         this.walls.push(wall);
         wall.addEventListener(EVENT_DELETED, function(o) { scope.removeWall(o.item); });
@@ -269,21 +267,17 @@ export class Floorplan extends EventDispatcher {
     /**
      * Creates a new corner.
      *
-     * @param {Number}
-     *            x The x coordinate.
-     * @param {Number}
-     *            y The y coordinate.
-     * @param {String}
-     *            id An optional id. If unspecified, the id will be created
-     *            internally.
+     * @param {Number} x - The x coordinate.
+     * @param {Number} y - The y coordinate.
+     * @param {String} id  - An optional id. If unspecified, the id will be created internally.
      * @returns {Corner} The new corner.
      */
     newCorner(x, y, id) {
-        var scope = this;
-        var corner = new Corner(this, x, y, id);
+        const scope = this;
+        const corner = new Corner(this, x, y, id);
 
-        for (var i = 0; i < this.corners.length; i++) {
-            var existingCorner = this.corners[i];
+        for (let i = 0; i < this.corners.length; i++) {
+            const existingCorner = this.corners[i];
             if (existingCorner.distanceFromCorner(corner) < cornerTolerance) {
                 this.dispatchEvent({ type: EVENT_NEW, item: this, newItem: existingCorner });
                 return existingCorner;
@@ -323,8 +317,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Removes a wall.
      *
-     * @param {Wall}
-     *            wall The wall to be removed.
+     * @param {Wall} wall - The wall to be removed.
      */
     removeWall(wall) {
         Utils.removeValue(this.walls, wall);
@@ -335,8 +328,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Removes a corner.
      *
-     * @param {Corner}
-     *            corner The corner to be removed.
+     * @param {Corner} corner - The corner to be removed.
      */
     removeCorner(corner) {
         Utils.removeValue(this.corners, corner);

@@ -1,7 +1,5 @@
 import { EventDispatcher, Color } from 'three';
 import { Geometry } from 'three';
-// import {JSONLoader} from 'three'
-// import GLTFLoader from 'three-gltf-loader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Scene as ThreeScene } from 'three';
 import { Utils } from '../core/utils.js';
@@ -21,22 +19,11 @@ export class Scene extends EventDispatcher {
         super();
         this.model = model;
         this.textureDir = textureDir;
-
-        //		var grid = new GridHelper(4000, 200);
-
         this.scene = new ThreeScene();
         this.scene.background = new Color(0xffffff);
-        //		this.scene.fog = new Fog(0xFAFAFA, 0.001, 6000);
         this.items = [];
         this.needsUpdate = false;
-        // init item loader
-        // this.loader = new JSONLoader();
-        // this.loader.setCrossOrigin('');
-
         this.gltfloader = new GLTFLoader();
-        // this.gltfloader.setCrossOrigin('');
-        //		this.add(grid);
-
     }
 
     /** Adds a non-item, basically a mesh, to the scene.

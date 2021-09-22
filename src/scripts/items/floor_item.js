@@ -18,7 +18,7 @@ export class FloorItem extends Item
 	{
 		if (!this.position_set)
 		{
-			var center = this.model.floorplan.getCenter();
+			const center = this.model.floorplan.getCenter();
 			this.position.x = center.x;
 			this.position.z = center.z;
 			this.position.y = 0.5 * (this.geometry.boundingBox.max.y - this.geometry.boundingBox.min.y);
@@ -38,13 +38,11 @@ export class FloorItem extends Item
 		if (!this.isValidPosition(vec3))
 		{
 			this.showError(vec3);
-			return;
 		}
 		else
 		{
 			this.hideError();
 			vec3.y = this.position.y; // keep it on the floor!
-//			this.position.copy(vec3);
 			super.moveToPosition(vec3);
 		}
 	}
@@ -72,20 +70,18 @@ export class FloorItem extends Item
 		}
 
 		// check if we are outside all other objects
-		/*
       if (this.obstructFloorMoves) {
-          var objects = this.model.items.getItems();
-          for (var i = 0; i < objects.length; i++) {
+		  const objects = this.model.items.getItems();
+		  for (let i = 0; i < objects.length; i++) {
               if (objects[i] === this || !objects[i].obstructFloorMoves) {
                   continue;
               }
-              if (!utils.polygonOutsidePolygon(corners, objects[i].getCorners('x', 'z')) ||
-                  utils.polygonPolygonIntersect(corners, objects[i].getCorners('x', 'z'))) {
-                  //console.log('object not outside other objects');
+              if (!Utils.polygonOutsidePolygon(corners, objects[i].getCorners('x', 'z')) ||
+				  Utils.polygonPolygonIntersect(corners, objects[i].getCorners('x', 'z'))) {
                   return false;
               }
           }
-      }*/
+      }
 		return true;
 	}
 }

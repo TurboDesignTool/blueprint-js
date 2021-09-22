@@ -237,7 +237,6 @@ export class Viewer3D extends EventDispatcher {
 
     render() {
         const scope = this;
-        // scope.controls.update();
         if (!scope.scene.needsUpdate) {
             return;
         }

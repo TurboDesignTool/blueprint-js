@@ -43,8 +43,6 @@ export class HUD extends EventDispatcher
 
 	init()
 	{
-//		this.three.itemSelectedCallbacks.add(itemSelected);
-//		this.three.itemUnselectedCallbacks.add(itemUnselected);
 		this.three.addEventListener(EVENT_ITEM_SELECTED, this.itemselectedevent);
 		this.three.addEventListener(EVENT_ITEM_UNSELECTED, this.itemunselectedevent);
 	}
@@ -108,9 +106,6 @@ export class HUD extends EventDispatcher
 		{
 			scope.activeObject.children.forEach((obj) => {obj.material.color.set(scope.getColor());});
 		}
-
-		// debugger;
-		// scope.three.needsUpdate();
 		scope.three.ensureNeedsUpdate();
 	}
 

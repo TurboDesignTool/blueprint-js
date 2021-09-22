@@ -70,9 +70,9 @@ export class Controller extends EventDispatcher {
         if (!item.position_set) {
             scope.setSelectedObject(item);
             scope.switchState(states.DRAGGING);
-            var pos = item.position.clone();
+            const pos = item.position.clone();
             pos.y = 0;
-            var vec = scope.three.projectVector(pos);
+            const vec = scope.three.projectVector(pos);
             scope.clickPressed(vec);
         }
         item.position_set = true;
@@ -165,7 +165,6 @@ export class Controller extends EventDispatcher {
                 this.updateIntersections();
                 this.checkWallsAndFloors();
             }
-
             switch (this.state) {
                 case states.SELECTED:
                     if (this.rotateMouseOver) {
@@ -215,7 +214,6 @@ export class Controller extends EventDispatcher {
             if (!this.mouseDown) {
                 this.updateIntersections();
             }
-
             switch (this.state) {
                 case states.UNSELECTED:
                     this.updateMouseover();
@@ -229,6 +227,8 @@ export class Controller extends EventDispatcher {
                     this.clickDragged();
                     this.hud.update();
                     this.needsUpdate = true;
+                    // Update position
+                    this.setSelectedObject(this.intersectedObject);
                     break;
             }
         }
@@ -432,17 +432,15 @@ export class Controller extends EventDispatcher {
         if (this.state === states.UNSELECTED) {
             this.switchState(states.SELECTED);
         }
-        if (this.selectedObject != null) {
+        if (this.selectedObject !== null) {
             this.selectedObject.setUnselected();
         }
         if (object !== null) {
             this.selectedObject = object;
             this.selectedObject.setSelected();
-            // three.itemSelectedCallbacks.fire(object);
             this.three.itemIsSelected(object);
         } else {
             this.selectedObject = null;
-            // three.itemUnselectedCallbacks.fire();
             this.three.itemIsUnselected();
         }
         this.needsUpdate = true;

@@ -138,7 +138,6 @@ export class Scene extends EventDispatcher {
         }
 
         const loaderCallback = function (geometry, materials, gltf_entity) {
-            //			var item = new (Factory.getClass(itemType))(scope.model, metadata, geometry, new MeshFaceMaterial(materials), position, rotation, scale);
             const item = new (Factory.getClass(itemType))(scope.model, metadata, geometry, materials, position, rotation, scale, gltf_entity);
             item.fixed = fixed || false;
             scope.items.push(item);
@@ -173,14 +172,12 @@ export class Scene extends EventDispatcher {
                     if (child.geometry.isBufferGeometry) {
                         const tGeometry = new Geometry().fromBufferGeometry(child.geometry);
                         tGeometry.faces.forEach((face) => {
-                            //							face.materialIndex = face.materialIndex + newmaterials.length;
                             face.materialIndex = materialindices[face.materialIndex];
                         });
                         child.updateMatrix();
                         newGeometry.merge(tGeometry, child.matrix);
                     } else {
                         child.geometry.faces.forEach((face) => {
-                            //							face.materialIndex = face.materialIndex + newmaterials.length;
                             face.materialIndex = materialindices[face.materialIndex];
                         });
                         child.updateMatrix();
@@ -189,7 +186,6 @@ export class Scene extends EventDispatcher {
                 }
             });
             loaderCallback(newGeometry, newmaterials, gltfModel);
-            // loaderCallback(gltfModel.scene, newmaterials, true);
         };
         this.dispatchEvent({ type: EVENT_ITEM_LOADING });
         this.gltfloader.load(fileName, gltfCallback, null, null);

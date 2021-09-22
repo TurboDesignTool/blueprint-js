@@ -35,7 +35,7 @@ export class Lights3D extends EventDispatcher {
 
         this.dirLight.shadow.camera.far = this.height + this.tol;
         this.dirLight.shadow.bias = -0.0001;
-        this.dirLight.shadowDarkness = 0.2;
+        // this.dirLight.shadowDarkness = 0.2;
         this.dirLight.visible = true;
         this.dirLight.shadowCameraVisible = false;
 

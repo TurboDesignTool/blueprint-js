@@ -31,18 +31,14 @@ export class Model extends EventDispatcher {
         // TODO: better documentation on serialization format.
         // TODO: a much better serialization format.
         this.dispatchEvent({ type: EVENT_LOADING, item: this });
-        //      this.roomLoadingCallbacks.fire();
-
         this.newRoom(json.floorplan, json.items);
-
         this.dispatchEvent({ type: EVENT_LOADED, item: this });
-        //      this.roomLoadedCallbacks.fire();
     }
 
     exportForBlender() {
-        var scope = this;
-        var gltfexporter = new GLTFExporter();
-        var meshes = [];
+        const scope = this;
+        const gltfexporter = new GLTFExporter();
+        const meshes = [];
         this.scene.getScene().traverse(function(child) {
             if (child instanceof Mesh) {
                 if (child.material) {
@@ -58,16 +54,16 @@ export class Model extends EventDispatcher {
         });
 
         gltfexporter.parse(meshes, function(result) {
-            var output = JSON.stringify(result, null, 2);
+            const output = JSON.stringify(result, null, 2);
             scope.dispatchEvent({ type: EVENT_GLTF_READY, item: this, gltf: output });
         });
     }
 
     exportSerialized() {
-        var items_arr = [];
-        var objects = this.scene.getItems();
-        for (var i = 0; i < objects.length; i++) {
-            var obj = objects[i];
+        const items_arr = [];
+        const objects = this.scene.getItems();
+        for (let i = 0; i < objects.length; i++) {
+            const obj = objects[i];
             //			items_arr[i] = {item_name: obj.metadata.itemName,item_type: obj.metadata.itemType,model_url: obj.metadata.modelUrl,xpos: obj.position.x,ypos: obj.position.y,zpos: obj.position.z,rotation: obj.rotation.y,scale_x: obj.scale.x,scale_y: obj.scale.y,scale_z: obj.scale.z,fixed: obj.fixed};
             items_arr[i] = obj.getMetaData();
         }
@@ -94,28 +90,5 @@ export class Model extends EventDispatcher {
             const scale = new Vector3(item.scale_x, item.scale_y, item.scale_z);
             this.scene.addItem(item.item_type, item.model_url, metadata, position, item.rotation, scale, item.fixed);
         });
-        // items.forEach((item) => {
-        //     const position = new Vector3(
-        //         item.xpos, item.ypos, item.zpos);
-        //     const metadata = {
-        //         itemName: item.item_name,
-        //         resizable: item.resizable,
-        //         itemType: item.item_type,
-        //         modelUrl: item.model_url
-        //     };
-        //     const scale = new Vector3(
-        //         item.scale_x,
-        //         item.scale_y,
-        //         item.scale_z
-        //     );
-        //     this.scene.addItem(
-        //         item.item_type,
-        //         item.model_url,
-        //         metadata,
-        //         position,
-        //         item.rotation,
-        //         scale,
-        //         item.fixed);
-        // });
     }
 }

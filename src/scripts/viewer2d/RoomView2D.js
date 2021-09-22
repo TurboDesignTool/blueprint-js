@@ -29,7 +29,6 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
     __drawUpdatedLabel() {
         let roomCenter = this.__room.areaCenter;
         let area = Math.round(this.__room.area * 100) / 100;
-        // let measure = Dimensioning.cmToMeasure(parseInt(area), 2);
         let measure = Dimensioning.cmToMeasure(area.toFixed(1), 2);
         let offset = 15;
         this.__roomNameField.position.x = this.__roomAreaField.position.x = Dimensioning.cmToPixel(roomCenter.x);

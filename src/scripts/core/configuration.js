@@ -31,17 +31,16 @@ export var config = { dimUnit: dimCentiMeter, wallHeight: 250, wallThickness: 20
 export var wallInformation = { exterior: false, interior: false, midline: true, labels: true, exteriorlabel: 'e:', interiorlabel: 'i:', midlinelabel: 'm:' };
 
 
-/** 
+/**
  * The tolerance in cms between corners, otherwise below this tolerance they will snap together as one corner*/
 export const cornerTolerance = 20;
 
-/** Global configuration to customize the whole system.  
+/** Global configuration to customize the whole system.
  * This is a singleton instance;
  */
 export class Configuration extends EventDispatcher {
     constructor() {
         /** Configuration data loaded from/stored to extern. */
-        //		this.data = {dimUnit: dimCentiMeter, wallHeight: 250, wallThickness: 10};
         super();
     }
 
@@ -53,13 +52,11 @@ export class Configuration extends EventDispatcher {
     }
 
     static getData() {
-        //		return {dimUnit: dimCentiMeter,wallHeight: 250, wallThickness: 10};
         return config;
     }
 
     /** Set a configuration parameter. */
     static setValue(key, value) {
-        //		this.data[key] = value;
         config[key] = value;
         Configuration.getInstance().dispatchEvent({ type: EVENT_CHANGED, item: Configuration.getInstance(), 'key': key, 'value': value });
     }
@@ -68,7 +65,6 @@ export class Configuration extends EventDispatcher {
     static getStringValue(key) {
         switch (key) {
             case configDimUnit:
-                //			return String(this.data[key]);
                 return String(Configuration.getData()[key]);
             default:
                 throw new Error('Invalid string configuration parameter: ' + key);
@@ -90,7 +86,6 @@ export class Configuration extends EventDispatcher {
             case boundsY:
             case snapTolerance:
             case gridSpacing:
-                //			return Number(this.data[key]);
                 return Number(Configuration.getData()[key]);
             default:
                 throw new Error('Invalid numeric configuration parameter: ' + key);

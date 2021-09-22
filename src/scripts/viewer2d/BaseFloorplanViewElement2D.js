@@ -30,8 +30,6 @@ export class BaseFloorplanViewElement2D extends Graphics {
         this.on('mouseup', this.__mouseUpEvent).on('touchend', this.__mouseUpEvent);
         this.on('mousemove', this.__mouseMoveEvent).on('touchmove', this.__mouseMoveEvent);
         this.on('mouseover', this.__mouseOverEvent).on('mouseout', this.__mouseOutEvent);
-        // this.on('click', this.__mouseClickEvent);
-
         this.__keyboard.addEventListener(EVENT_KEY_RELEASED, this.__keyListenerEvent);
         this.__keyboard.addEventListener(EVENT_KEY_PRESSED, this.__keyListenerEvent);
     }

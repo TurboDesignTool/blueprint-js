@@ -17,10 +17,8 @@ import {
     EVENT_NOTHING_CLICKED,
     EVENT_UPDATED, EVENT_WALL_CLICKED
 } from '../core/events.js';
-// import { EVENT_NEW, EVENT_DELETED } from '../core/events.js';
 
 import { Skybox } from './skybox.js';
-// import { WallView3D } from './WallView3d.js';
 import { Edge3D } from './edge3d.js';
 import { Floor3D } from './floor3d.js';
 import { Lights3D } from './lights3d.js';
@@ -126,7 +124,7 @@ export class Viewer3D extends EventDispatcher {
         scope.controls.update();
 
         scope.axes = new AxesHelper(500);
-        // scope.scene.add(scope.axes);
+        scope.scene.add(scope.axes);
         scope.hud = new HUD(scope, scope.scene);
         scope.controller = new Controller(scope, scope.model, scope.camera, scope.element, scope.controls, scope.hud);
 
@@ -148,7 +146,6 @@ export class Viewer3D extends EventDispatcher {
             scope.render();
         }
         scope.floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.addWalls(evt));
-        // scope.addWalls();
         this.controls.addEventListener('change', () => { scope.scene.needsUpdate = true; });
         animate();
     }

@@ -44,7 +44,8 @@
             "warn"
         ],
         "no-prototype-builtins": [0],
-        "no-debugger": [0]
+        "no-debugger": [0],
+        "no-case-declarations": [0]
     },
     "overrides": [{
         "files": ["./scripts/styles/*.css"],

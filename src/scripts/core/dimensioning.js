@@ -79,19 +79,19 @@ export class Dimensioning {
     static cmToMeasureRaw(cm, power = 1) {
         switch (Configuration.getStringValue(configDimUnit)) {
             case dimFeetAndInch: // dimFeetAndInch returns only the feet
-                var allInFeet = (cm * Math.pow(0.032808416666669996953, power));
+                const allInFeet = (cm * Math.pow(0.032808416666669996953, power));
                 return allInFeet;
             case dimInch:
-                var inches = Math.round(decimals * (cm * Math.pow(0.393700, power))) / decimals;
+                const inches = Math.round(decimals * (cm * Math.pow(0.393700, power))) / decimals;
                 return inches;
             case dimMilliMeter:
-                var mm = Math.round(decimals * (cm * Math.pow(10, power))) / decimals;
+                const mm = Math.round(decimals * (cm * Math.pow(10, power))) / decimals;
                 return mm;
             case dimCentiMeter:
                 return Math.round(decimals * cm) / decimals;
             case dimMeter:
             default:
-                var m = Math.round(decimals * (cm * Math.pow(0.01, power))) / decimals;
+                const m = Math.round(decimals * (cm * Math.pow(0.01, power))) / decimals;
                 return m;
         }
     }
@@ -103,22 +103,22 @@ export class Dimensioning {
     static cmToMeasure(cm, power = 1) {
         switch (Configuration.getStringValue(configDimUnit)) {
             case dimFeetAndInch:
-                var allInFeet = (cm * Math.pow(0.032808416666669996953, power));
-                var floorFeet = Math.floor(allInFeet);
-                var remainingFeet = allInFeet - floorFeet;
-                var remainingInches = Math.round(remainingFeet * 12);
+                const allInFeet = (cm * Math.pow(0.032808416666669996953, power));
+                const floorFeet = Math.floor(allInFeet);
+                const remainingFeet = allInFeet - floorFeet;
+                const remainingInches = Math.round(remainingFeet * 12);
                 return floorFeet + '\'' + remainingInches + '';
             case dimInch:
-                var inches = Math.round(decimals * (cm * Math.pow(0.393700, power))) / decimals;
+                const inches = Math.round(decimals * (cm * Math.pow(0.393700, power))) / decimals;
                 return inches + '\'';
             case dimMilliMeter:
-                var mm = Math.round(decimals * (cm * Math.pow(10, power))) / decimals;
+                const mm = Math.round(decimals * (cm * Math.pow(10, power))) / decimals;
                 return '' + mm + 'mm';
             case dimCentiMeter:
                 return '' + Math.round(decimals * cm) / decimals + 'cm';
             case dimMeter:
             default:
-                var m = Math.round(decimals * (cm * Math.pow(0.01, power))) / decimals;
+                const m = Math.round(decimals * (cm * Math.pow(0.01, power))) / decimals;
                 return '' + m + 'm';
         }
     }

@@ -12,9 +12,9 @@ export class Utils
 	 */
 	static pointDistanceFromLine(point, start, end)
 	{
-		var tPoint = Utils.closestPointOnLine(point, start, end);
-		var tDx = point.x - tPoint.x;
-		var tDy = point.y - tPoint.y;
+		const tPoint = Utils.closestPointOnLine(point, start, end);
+		const tDx = point.x - tPoint.x;
+		const tDy = point.y - tPoint.y;
 		return Math.sqrt(tDx * tDx + tDy * tDy);
 	}
 
@@ -27,18 +27,18 @@ export class Utils
 	static closestPointOnLine(point, start, end)
 	{
 		// Inspired by: http://stackoverflow.com/a/6853926
-		var tA = point.x - start.x;
-		var tB = point.y - start.y;
-		var tC = end.x - start.x;
-		var tD = end.y - start.y;
+		const tA = point.x - start.x;
+		const tB = point.y - start.y;
+		const tC = end.x - start.x;
+		const tD = end.y - start.y;
 
-		var tDot = tA * tC + tB * tD;
-		var tLenSq = tC * tC + tD * tD;
-		var tParam = tDot / tLenSq;
+		const tDot = tA * tC + tB * tD;
+		const tLenSq = tC * tC + tD * tD;
+		const tParam = tDot / tLenSq;
 
-		var tXx, tYy;
+		let tXx, tYy;
 
-		if (tParam < 0 || (start.x == end.x && start.y == end.y))
+		if (tParam < 0 || (start.x === end.x && start.y === end.y))
 		{
 			tXx = start.x;
 			tYy = start.y;
@@ -71,16 +71,16 @@ export class Utils
 	 */
 	static angle(start, end)
 	{
-		var tDot = start.x * end.x + start.y * end.y;
-		var tDet = start.x * end.y - start.y * end.x;
-		var tAngle = -Math.atan2(tDet, tDot);
+		const tDot = start.x * end.x + start.y * end.y;
+		const tDet = start.x * end.y - start.y * end.x;
+		const tAngle = -Math.atan2(tDet, tDot);
 		return tAngle;
 	}
 
 	/** shifts angle to be 0 to 2pi */
 	static angle2pi(start, end)
 	{
-		var tTheta = Utils.angle(start, end);
+		let tTheta = Utils.angle(start, end);
 		if (tTheta < 0)
 		{
 			tTheta += 2.0 * Math.PI;
@@ -91,23 +91,24 @@ export class Utils
 	/** shifts angle to be 0 to 2pi */
 	static getCyclicOrder(points, start=undefined)
 	{
+		let i;
 		if(!start)
 		{
 			start = new Vector2(0, 0);
 		}
-		var angles = [];
-		for (var i=0;i<points.length;i++)
+		const angles = [];
+		for (i = 0; i<points.length; i++)
 		{
-			var point = points[i];
-			var vect = point.clone().sub(start);
-			var radians = Math.atan2(vect.y, vect.x);
-			var degrees = THREEMath.radToDeg(radians);
+			const point = points[i];
+			const vect = point.clone().sub(start);
+			const radians = Math.atan2(vect.y, vect.x);
+			let degrees = THREEMath.radToDeg(radians);
 			degrees = (degrees > 0 ) ? degrees : (degrees+360) % 360;
 			angles.push(degrees);
 		}
-		var indices = Utils.argsort(angles);
-		var sortedAngles = [];
-		var sortedPoints = [];
+		const indices = Utils.argsort(angles);
+		const sortedAngles = [];
+		const sortedPoints = [];
 		for (i=0;i<indices.length;i++)
 		{
 			sortedAngles.push(angles[indices[i]]);
@@ -118,7 +119,7 @@ export class Utils
 
 	static argsort(numericalValues, direction=1)
 	{
-		var indices = Array.from(new Array(numericalValues.length),(val,index)=>index);
+		const indices = Array.from(new Array(numericalValues.length), (val, index) => index);
 		return indices
 		  .map((item, index) => [numericalValues[index], item]) // add the clickCount to sort by
 		  .sort(([count1], [count2]) => (count1 - count2)*direction) // sort by the clickCount data
@@ -139,7 +140,7 @@ export class Utils
 			return p.x;
 		})));
 
-		var tNewPoints = Utils.map(points, function (p) {
+		const tNewPoints = Utils.map(points, function (p) {
 			return {
 				x: p.x - tSubX,
 				y: p.y - tSubY
@@ -148,12 +149,12 @@ export class Utils
 
 		// determine CW/CCW, based on:
 			// http://stackoverflow.com/questions/1165647
-		var tSum = 0;
-		for (var tI = 0; tI < tNewPoints.length; tI++)
+		let tSum = 0;
+		for (let tI = 0; tI < tNewPoints.length; tI++)
 		{
-			var tC1 = tNewPoints[tI];
-			var tC2;
-			if (tI == tNewPoints.length - 1)
+			const tC1 = tNewPoints[tI];
+			let tC2;
+			if (tI === tNewPoints.length - 1)
 			{
 				tC2 = tNewPoints[0];
 			}
@@ -492,4 +493,13 @@ export class Region
 }
 
 
-
+export class WindowUtils {
+	static openImageWindow(url, title) {
+		const img = new Image();
+		img.src = url;
+		const newWin = window.open('', '_blank');
+		newWin.document.write(img.outerHTML);
+		newWin.document.title = title;
+		newWin.document.close();
+	}
+}

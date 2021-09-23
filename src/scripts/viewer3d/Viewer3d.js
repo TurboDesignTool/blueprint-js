@@ -26,6 +26,7 @@ import {HUD} from '../three/hud';
 import {Controller} from '../three/controller';
 import {VIEW_FRONT, VIEW_ISOMETRY, VIEW_LEFT, VIEW_RIGHT, VIEW_TOP} from '../core/constants';
 import {OrbitControls} from '../three/orbitcontrols';
+import {WindowUtils} from '../core/utils';
 export class Viewer3D extends EventDispatcher {
     constructor(model, element, opts) {
         super();
@@ -187,7 +188,7 @@ export class Viewer3D extends EventDispatcher {
     }
 
     getARenderer() {
-        const renderer = new WebGLRenderer({antialias: true, alpha: true});
+        const renderer = new WebGLRenderer({antialias: true, alpha: true, preserveDrawingBuffer: true});
 
         renderer.shadowMap.enabled = true;
         renderer.shadowMapSoft = true;
@@ -447,5 +448,9 @@ export class Viewer3D extends EventDispatcher {
 
     rendervr() {
 
+    }
+    exportImg() {
+        let imgData = this.renderer.domElement.toDataURL('image/jpeg');
+        WindowUtils.openImageWindow(imgData, '111');
     }
 }

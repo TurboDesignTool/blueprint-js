@@ -9,6 +9,7 @@ import { RoomView2D } from './RoomView2D';
 import { Dimensioning } from '../core/dimensioning';
 import { KeyboardListener2D } from './KeyboardManager2D';
 import { Configuration, snapToGrid, snapTolerance } from '../core/configuration';
+import {WindowUtils} from '../core/utils';
 
 export const floorplannerModes = { MOVE: 0, DRAW: 1 };
 
@@ -96,7 +97,7 @@ export class Viewer2D extends Application {
         this.__drawModeMouseMoveEvent = this.__drawModeMouseMove.bind(this);
 
         this.__redrawFloorplanEvent = this.__redrawFloorplan.bind(this);
-        this.__windowResizeEvent = this._handleWindowResize.bind(this);
+        this.__windowResizeEvent = this.__handleWindowResize.bind(this);
 
         this.__floorplanContainer = new Viewport({
             screenWidth: window.innerWidth,
@@ -347,11 +348,11 @@ export class Viewer2D extends Application {
             cornerView.interactive = (this.__mode === floorplannerModes.MOVE);
             cornerView.addFloorplanListener(EVENT_2D_SELECTED, this.__selectionMonitorEvent);
         }
-        this._handleWindowResize();
+        this.__handleWindowResize();
     }
 
     /** */
-    _handleWindowResize() {
+    __handleWindowResize() {
         let w = window.innerWidth;
         let h = window.innerHeight;
         this.renderer.resize(w, h);
@@ -368,5 +369,8 @@ export class Viewer2D extends Application {
         this.__floorplan.removeEventListener(EVENT_LOADED, this.__redrawFloorplanEvent);
         window.removeEventListener('resize', this.__windowResizeEvent);
         window.removeEventListener('orientationchange', this.__windowResizeEvent);
+    }
+    exportImg() {
+        WindowUtils.openImageWindow(this.renderer.plugins.extract.base64(this.__floorplanContainer), '111');
     }
 }

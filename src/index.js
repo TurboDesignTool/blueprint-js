@@ -47,3 +47,9 @@ document.getElementById('center-viewer2d').onclick = function() {
 document.getElementById('top-viewer').onclick = function () {
     blueprint3d.three.switchView('topview');
 };
+document.getElementById('export3D-img').onclick = function () {
+    blueprint3d.three.exportImg();
+};
+document.getElementById('export2D-img').onclick = function () {
+    blueprint3d.floorplanner.exportImg();
+};

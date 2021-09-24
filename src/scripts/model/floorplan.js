@@ -366,16 +366,14 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the room overlapping the location x, y.
      *
-     * @param {Number}
-     *            mx
-     * @param {Number}
-     *            my
+     * @param {Number} mx
+     * @param {Number} my
      * @return {Room}
      */
     overlappedRoom(mx, my) {
-        for (var i = 0; i < this.rooms.length; i++) {
-            var room = this.rooms[i];
-            var flag = room.pointInRoom(new Vector2(mx, my));
+        for (let i = 0; i < this.rooms.length; i++) {
+            const room = this.rooms[i];
+            const flag = room.pointInRoom(new Vector2(mx, my));
             if (flag) {
                 return room;
             }
@@ -388,19 +386,16 @@ export class Floorplan extends EventDispatcher {
      * Gets the Control of a Curved Wall overlapping the location x, y at a
      * tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Corner}
      */
     overlappedControlPoint(wall, x, y, tolerance) {
         tolerance = tolerance || defaultFloorPlanTolerance * 5;
-        if (wall.a.distanceTo(new Vector2(x, y)) < tolerance && wall.wallType == WallTypes.CURVED) {
+        if (wall.a.distanceTo(new Vector2(x, y)) < tolerance && wall.wallType === WallTypes.CURVED) {
             return wall.a;
-        } else if (wall.b.distanceTo(new Vector2(x, y)) < tolerance && wall.wallType == WallTypes.CURVED) {
+        } else if (wall.b.distanceTo(new Vector2(x, y)) < tolerance && wall.wallType === WallTypes.CURVED) {
             return wall.b;
         }
 
@@ -410,17 +405,14 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Corner overlapping the location x, y at a tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Corner}
      */
     overlappedCorner(x, y, tolerance) {
         tolerance = tolerance || defaultFloorPlanTolerance;
-        for (var i = 0; i < this.corners.length; i++) {
+        for (let i = 0; i < this.corners.length; i++) {
             if (this.corners[i].distanceFrom(new Vector2(x, y)) < tolerance) {
                 return this.corners[i];
             }
@@ -431,20 +423,15 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Wall overlapping the location x, y at a tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Wall}
      */
     overlappedWall(x, y, tolerance) {
         tolerance = tolerance || defaultFloorPlanTolerance;
-        for (var i = 0; i < this.walls.length; i++) {
-            var newtolerance = tolerance; // (tolerance+
-            // ((this.walls[i].wallType ==
-            // WallTypes.CURVED)*tolerance*10));
+        for (let i = 0; i < this.walls.length; i++) {
+            const newtolerance = tolerance;
             if (this.walls[i].distanceFrom(new Vector2(x, y)) < newtolerance) {
                 return this.walls[i];
             }
@@ -455,19 +442,13 @@ export class Floorplan extends EventDispatcher {
     /**
      * The metadata object with information about the rooms.
      *
-     * @return {Object} metaroomdata an object with room corner ids as key and
-     *         names as values
+     * @return {Object} metaroomdata - an object with room corner ids as key andnames as values
      */
     getMetaRoomData() {
-        var metaRoomData = {};
+        const metaRoomData = {};
         this.rooms.forEach((room) => {
-            var metaroom = {};
-            // var cornerids = [];
-            // room.corners.forEach((corner)=>{
-            // cornerids.push(corner.id);
-            // });
-            // var ids = cornerids.join(',');
-            var ids = room.roomByCornersId;
+            const metaroom = {};
+            const ids = room.roomByCornersId;
             metaroom['name'] = room.name;
             metaRoomData[ids] = metaroom;
         });
@@ -475,20 +456,18 @@ export class Floorplan extends EventDispatcher {
     }
 
     // Save the floorplan as a json object file
-    /**
-     * @return {void}
-     */
     saveFloorplan() {
-        var floorplans = { version: Version.getTechnicalVersion(), corners: {}, walls: [], rooms: {}, wallTextures: [], floorTextures: {}, newFloorTextures: {}, carbonSheet: {} };
-        var cornerIds = [];
-        // writing all the corners based on the corners array
-        // is having a bug. This is because some walls have corners
-        // that aren't part of the corners array anymore. This is a quick fix
-        // by adding the corners to the json file based on the corners in the walls
-        // this.corners.forEach((corner) => {
-        // floorplans.corners[corner.id] = {'x': corner.x,'y': corner.y};
-        // });
-
+        const floorplans = {
+            version: Version.getTechnicalVersion(),
+            corners: {},
+            walls: [],
+            rooms: {},
+            wallTextures: [],
+            floorTextures: {},
+            newFloorTextures: {},
+            carbonSheet: {}
+        };
+        const cornerIds = [];
         this.walls.forEach((wall) => {
             if (wall.getStart() && wall.getEnd()) {
                 floorplans.walls.push({
@@ -508,17 +487,6 @@ export class Floorplan extends EventDispatcher {
         cornerIds.forEach((corner) => {
             floorplans.corners[corner.id] = { 'x': Dimensioning.cmToMeasureRaw(corner.x), 'y': Dimensioning.cmToMeasureRaw(corner.y), 'elevation': Dimensioning.cmToMeasureRaw(corner.elevation) };
         });
-
-        // this.rooms.forEach((room)=>{
-        // var metaroom = {};
-        // var cornerids = [];
-        // room.corners.forEach((corner)=>{
-        // cornerids.push(corner.id);
-        // });
-        // var ids = cornerids.join(',');
-        // metaroom['name'] = room.name;
-        // floorplans.rooms[ids] = metaroom;
-        // });
         floorplans.rooms = this.metaroomsdata;
 
         if (this.carbonSheet) {
@@ -932,7 +900,7 @@ export class Floorplan extends EventDispatcher {
         // find tightest loops, for each corner, for each adjacent
         // TODO: optimize this, only check corners with > 2 adjacents, or
         // isolated cycles
-        var loops = [];
+        const loops = [];
 
         corners.forEach((firstCorner) => {
             firstCorner.adjacentCorners().forEach((secondCorner) => {
@@ -941,9 +909,9 @@ export class Floorplan extends EventDispatcher {
         });
 
         // remove duplicates
-        var uniqueLoops = _removeDuplicateRooms(loops);
+        const uniqueLoops = _removeDuplicateRooms(loops);
         // remove CW loops
-        var uniqueCCWLoops = Utils.removeIf(uniqueLoops, Utils.isClockwise);
+        const uniqueCCWLoops = Utils.removeIf(uniqueLoops, Utils.isClockwise);
         return uniqueCCWLoops;
     }
 }

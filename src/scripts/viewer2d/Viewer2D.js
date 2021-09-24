@@ -1,4 +1,4 @@
-import { Application, Graphics, Text } from 'pixi.js';
+import { Application, Graphics, Text, Container } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import { Vector2 } from 'three';
 import { EVENT_NEW, EVENT_DELETED, EVENT_LOADED, EVENT_2D_SELECTED, EVENT_NEW_ROOMS_ADDED, EVENT_UPDATED, EVENT_KEY_RELEASED, EVENT_KEY_PRESSED } from '../core/events';
@@ -9,7 +9,7 @@ import { RoomView2D } from './RoomView2D';
 import { Dimensioning } from '../core/dimensioning';
 import { KeyboardListener2D } from './KeyboardManager2D';
 import { Configuration, snapToGrid, snapTolerance } from '../core/configuration';
-import {WindowUtils} from '../core/utils';
+import {FileUtils, WindowUtils} from '../core/utils';
 
 export const floorplannerModes = { MOVE: 0, DRAW: 1 };
 
@@ -17,7 +17,6 @@ class TemporaryWall extends Graphics {
     constructor() {
         super();
         this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: 'black', align: 'center' });
-        // this.__textfield.pivot.x = this.__textfield.pivot.y = 0.5;
         this.addChild(this.__textfield);
     }
 
@@ -132,7 +131,7 @@ export class Viewer2D extends Application {
         this.stage.addChild(this.__floorplanContainer);
         this.__canvasHolder.appendChild(this.view);
 
-        this.__floorplanContainer.drag().pinch().wheel();
+        this.__floorplanContainer.drag().pinch().wheel().decelerate();
 
         if (!this.__options.pannable) {
             this.__floorplanContainer.plugins.pause('drag');
@@ -236,7 +235,7 @@ export class Viewer2D extends Application {
                 this.__floorplan.newWall(this.__lastNode, corner);
                 this.__floorplan.newWallsForIntersections(this.__lastNode, corner);
             }
-            if (corner.mergeWithIntersected() && this.__lastNode != null) {
+            if (corner.mergeWithIntersected() && this.__lastNode !== null) {
                 this.__tempWall.visible = false;
                 this.__lastNode = null;
                 this.switchMode(floorplannerModes.MOVE);
@@ -306,7 +305,7 @@ export class Viewer2D extends Application {
     __redrawFloorplan() {
 
         const scope = this;
-        let i = 0;
+        let i;
 
         // clear scene
         scope.__entities2D.forEach((entity) => {
@@ -371,6 +370,12 @@ export class Viewer2D extends Application {
         window.removeEventListener('orientationchange', this.__windowResizeEvent);
     }
     exportImg() {
-        WindowUtils.openImageWindow(this.renderer.plugins.extract.base64(this.__floorplanContainer), '111');
+        const c = new Container();
+        this.__entities2D.forEach(_ => {
+            if ( _.__corner || _.__room || _.__wall) {
+                c.addChild(_.create());
+            }
+        });
+        WindowUtils.openImageWindow(this.renderer.plugins.extract.base64(c), '111');
     }
 }

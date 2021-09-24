@@ -3,7 +3,9 @@ import { dimCentiMeter } from './core/constants';
 import { Model } from './model/model';
 import { Viewer3D } from './viewer3d/Viewer3d';
 import { Viewer2D, floorplannerModes } from './viewer2d/Viewer2D';
-
+import * as PIXI from 'pixi.js';
+// For dev
+window.PIXI = PIXI;
 ///** BlueprintJS core application. */
 class BlueprintJS {
     /**
@@ -44,7 +46,7 @@ class BlueprintJS {
             this.floorplanner = new Viewer2D(options.viewer2d.id, this.model.floorplan, this.options.viewer2d.viewer2dOptions);
         }
 
-        this.view_now = 2;
+        this.view_now = 3;
         this.switchView();
     }
 

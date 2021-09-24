@@ -28,8 +28,6 @@ export class Model extends EventDispatcher {
     }
 
     loadSerialized(json) {
-        // TODO: better documentation on serialization format.
-        // TODO: a much better serialization format.
         this.dispatchEvent({ type: EVENT_LOADING, item: this });
         this.newRoom(json.floorplan, json.items);
         this.dispatchEvent({ type: EVENT_LOADED, item: this });

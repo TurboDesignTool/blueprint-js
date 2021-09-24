@@ -503,3 +503,15 @@ export class WindowUtils {
 		newWin.document.close();
 	}
 }
+
+export class FileUtils {
+	// 下载图片
+	static download(url, name) {
+		const target = document.createElement('a');
+		target.href = url;
+		target.download = name;
+		const event = document.createEvent('MouseEvents');
+		event.initEvent('click', true, true);
+		target.dispatchEvent(event);
+	}
+}

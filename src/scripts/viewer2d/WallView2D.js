@@ -265,4 +265,7 @@ export class WallView2D extends BaseFloorplanViewElement2D {
         this.__wall.remove();
         this.__wall = null;
     }
+    create() {
+        return new WallView2D(this.__floorplan, this.__options, this.__wall);
+    }
 }

@@ -1,7 +1,7 @@
 import { BaseFloorplanViewElement2D } from './BaseFloorplanViewElement2D.js';
 import { Dimensioning } from '../core/dimensioning.js';
 import { EVENT_MOVED } from '../core/events.js';
-import { Point } from 'pixi.js';
+import { Point, Graphics } from 'pixi.js';
 import { Configuration, snapTolerance, snapToGrid } from '../core/configuration.js';
 
 
@@ -78,5 +78,9 @@ export class CornerView2D extends BaseFloorplanViewElement2D {
     removeFromFloorplan() {
         this.remove();
         this.__corner.removeAll();
+    }
+
+    create() {
+        return new CornerView2D(this.__floorplan, this.__options, this.__corner);
     }
 }

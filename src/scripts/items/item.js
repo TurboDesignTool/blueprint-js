@@ -381,14 +381,16 @@ export class Item extends Mesh {
         this.setScale(1, 1, 1);
         this.selected = true;
         this.bhelper.visible = true;
-        this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = true;
+        this.canvasPlaneWH.visible = true;
+        this.canvasPlaneWD.visible = true;
     }
 
     /** */
     setUnselected() {
         this.selected = false;
         this.bhelper.visible = false;
-        this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = false;
+        this.canvasPlaneWH.visible = false;
+        this.canvasPlaneWD.visible = false;
     }
 
     /** intersection has attributes point (vec3) and object (THREE.Mesh) */

@@ -173,6 +173,7 @@ export class Controller extends EventDispatcher {
                         }
                     } else {
                         this.itemRemoved(this.selectedObject);
+                        this.three.itemIsUnselected();
                     }
                     break;
                 case states.UNSELECTED:

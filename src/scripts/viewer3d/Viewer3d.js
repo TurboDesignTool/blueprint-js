@@ -107,7 +107,7 @@ export class Viewer3D extends EventDispatcher {
 
         scope.renderer = scope.getARenderer();
         scope.domElement.appendChild(scope.renderer.domElement);
-
+        // 光照
         scope.lights = new Lights3D(scope.scene, scope.floorplan);
         scope.dragcontrols = new DragControls(scope.scene.items, scope.camera, scope.renderer.domElement);
         scope.controls = new OrbitControls(scope.camera, scope.domElement);
@@ -118,13 +118,14 @@ export class Viewer3D extends EventDispatcher {
         scope.controls.maxDistance = 2500; //2500
         scope.controls.minDistance = 10; //1000; //1000
         scope.controls.screenSpacePanning = true;
-
+        // 网格背景
         scope.skybox = new Skybox(scope.scene, scope.renderer);
         scope.camera.position.set(0, 600, 1500);
         scope.controls.update();
 
         scope.axes = new AxesHelper(500);
         scope.scene.add(scope.axes);
+        // 选中皮肤
         scope.hud = new HUD(scope, scope.scene);
         scope.controller = new Controller(scope, scope.model, scope.camera, scope.element, scope.controls, scope.hud);
 
@@ -177,6 +178,7 @@ export class Viewer3D extends EventDispatcher {
         for (i = 0; i < wallEdges.length; i++) {
             let edge3d = new Edge3D(scope.model.scene, wallEdges[i], scope.controls);
             scope.edges3d.push(edge3d);
+            edge3d.addToScene();
         }
 
         scope.shouldRender = true;
@@ -450,7 +452,6 @@ export class Viewer3D extends EventDispatcher {
 
     }
     exportImg() {
-        let imgData = this.renderer.domElement.toDataURL('image/jpeg');
-        WindowUtils.openImageWindow(imgData, '111');
+        WindowUtils.openImageWindow(this.dataUrl(), '111');
     }
 }

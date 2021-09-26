@@ -19,6 +19,8 @@ export class Wall extends EventDispatcher {
      * Constructs a new wall.
      * @param start Start corner.
      * @param end End corner.
+     * @param aa
+     * @param bb
      */
     constructor(start, end, aa, bb) {
         super();
@@ -98,13 +100,6 @@ export class Wall extends EventDispatcher {
 
         /** Actions to be applied explicitly. */
         this.action_callbacks = null;
-
-        //		this.start.addEventListener(EVENT_MOVED, ()=>{
-        //			scope.updateControlVectors();
-        //		});
-        //		this.end.addEventListener(EVENT_MOVED, ()=>{
-        //			scope.updateControlVectors();
-        //		});
         this.addCornerMoveListener(this.start);
         this.addCornerMoveListener(this.end);
     }

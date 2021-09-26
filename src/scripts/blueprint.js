@@ -46,7 +46,7 @@ class BlueprintJS {
             this.floorplanner = new Viewer2D(options.viewer2d.id, this.model.floorplan, this.options.viewer2d.viewer2dOptions);
         }
 
-        this.view_now = 3;
+        this.view_now = 2;
         this.switchView();
     }
 

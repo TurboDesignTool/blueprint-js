@@ -33,8 +33,8 @@ export class Dimensioning {
             return Math.round(decimals * value) / decimals;
         }
         /** Converts cm to dimensioning number.
-         * @param cm Centi meter value to be converted.
          * @returns Number representation.
+         * @param measure
          */
     static cmFromMeasureRaw(measure) {
         switch (Configuration.getStringValue(configDimUnit)) {
@@ -53,8 +53,8 @@ export class Dimensioning {
     }
 
     /** Converts cm to dimensioning string.
-     * @param cm Centi meter value to be converted.
      * @returns String representation.
+     * @param measure
      */
     static cmFromMeasure(measure) {
         switch (Configuration.getStringValue(configDimUnit)) {
@@ -74,6 +74,7 @@ export class Dimensioning {
 
     /** Converts cm to dimensioning string.
      * @param cm Centi meter value to be converted.
+     * @param power
      * @returns String representation.
      */
     static cmToMeasureRaw(cm, power = 1) {
@@ -98,6 +99,7 @@ export class Dimensioning {
 
     /** Converts cm to dimensioning string.
      * @param cm Centi meter value to be converted.
+     * @param  power
      * @returns String representation.
      */
     static cmToMeasure(cm, power = 1) {

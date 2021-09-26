@@ -90,8 +90,6 @@ export class Item extends Mesh {
 
             }
         }
-        // why add this??
-        // this.add(this._loadedgltfobject.scene);
 
         if (!this.material.color) {
             this.material.color = new Color('#FFFFFF');
@@ -139,8 +137,8 @@ export class Item extends Mesh {
         this.canvasPlaneWD.position.set(0, this.getHeight() * 0.5 + 0.3, 0);
         this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = false;
 
-        this.add(this.canvasPlaneWH);
-        this.add(this.canvasPlaneWD);
+        // this.add(this.canvasPlaneWH);
+        // this.add(this.canvasPlaneWD);
         this.resizeProportionally = true;
 
         if (rotation) {
@@ -371,13 +369,11 @@ export class Item extends Mesh {
     /** */
     mouseOver() {
         this.hover = true;
-        // this.updateHighlight();
     }
 
     /** */
     mouseOff() {
         this.hover = false;
-        // this.updateHighlight();
     }
 
     /** */
@@ -386,7 +382,6 @@ export class Item extends Mesh {
         this.selected = true;
         this.bhelper.visible = true;
         this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = true;
-        // this.updateHighlight();
     }
 
     /** */
@@ -394,7 +389,6 @@ export class Item extends Mesh {
         this.selected = false;
         this.bhelper.visible = false;
         this.canvasPlaneWH.visible = this.canvasPlaneWD.visible = false;
-        // this.updateHighlight();
     }
 
     /** intersection has attributes point (vec3) and object (THREE.Mesh) */

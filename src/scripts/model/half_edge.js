@@ -222,9 +222,6 @@ export class HalfEdge extends EventDispatcher {
         let v3 = v2.clone();
         let v4 = v1.clone();
 
-        // v3.y = this.wall.height;
-        // v4.y = this.wall.height;
-
         v3.y = this.wall.startElevation;
         v4.y = this.wall.endElevation;
 

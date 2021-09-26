@@ -102,7 +102,7 @@ export class Edge extends EventDispatcher
 
 	showAll()
 	{
-		var scope = this;
+		const scope = this;
 		scope.visible = true;
 		scope.planes.forEach((plane) =>
 		{
@@ -183,8 +183,8 @@ export class Edge extends EventDispatcher
 
 		if (!stretch)
 		{
-			var height = this.wall.height;
-			var width = this.edge.interiorDistance();
+			const height = this.wall.height;
+			const width = this.edge.interiorDistance();
 			this.texture.wrapT = RepeatWrapping;
 			this.texture.wrapS = RepeatWrapping;
 			this.texture.repeat.set(width / scale, height / scale);
@@ -276,7 +276,7 @@ export class Edge extends EventDispatcher
 			shape.holes.push(new Path(holePoints));
 		});
 
-		var geometry = new ShapeGeometry(shape);
+		const geometry = new ShapeGeometry(shape);
 		geometry.vertices.forEach((v) => {
 			v.applyMatrix4(invTransform);
 		});
@@ -299,8 +299,8 @@ export class Edge extends EventDispatcher
 
 		function vertexToUv(vertex)
 		{
-			var x = Utils.distance(new Vector2(v1.x, v1.z), new Vector2(vertex.x, vertex.z)) / totalDistance;
-			var y = vertex.y / height;
+			const x = Utils.distance(new Vector2(v1.x, v1.z), new Vector2(vertex.x, vertex.z)) / totalDistance;
+			const y = vertex.y / height;
 			return new Vector2(x, y);
 		}
 

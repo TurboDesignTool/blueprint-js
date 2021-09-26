@@ -64,8 +64,7 @@ export class Scene extends EventDispatcher {
 
     /** Removes all items. */
     clearItems() {
-        // var items_copy = this.items ;
-        var scope = this;
+        const scope = this;
         this.items.forEach((item) => {
             scope.removeItem(item, true);
         });
@@ -75,13 +74,12 @@ export class Scene extends EventDispatcher {
     /**
      * Removes an item.
      * @param item The item to be removed.
-     * @param dontRemove If not set, also remove the item from the items list.
+     * @param keepInList dontRemove If not set, also remove the item from the items list.
      */
     removeItem(item, keepInList) {
         keepInList = keepInList || false;
         // use this for item meshes
         this.dispatchEvent({ type: EVENT_ITEM_REMOVED, item: item });
-        //this.itemRemovedCallbacks.fire(item);
         item.removed();
         this.scene.remove(item);
         if (!keepInList) {

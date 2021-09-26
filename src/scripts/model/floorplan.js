@@ -196,10 +196,8 @@ export class Floorplan extends EventDispatcher {
      * intersections then introduce new corners and new walls as required at
      * places
      *
-     * @param {Corner}
-     *            start
-     * @param {Corner}
-     *            end
+     * @param {Corner} start
+     * @param {Corner} end
      * @return {boolean} intersects
      */
 
@@ -292,14 +290,14 @@ export class Floorplan extends EventDispatcher {
         });
         corner.addEventListener(EVENT_CORNER_ATTRIBUTES_CHANGED, function(o) {
             scope.dispatchEvent(o);
-            var updatecorners = o.item.adjacentCorners();
+            const updatecorners = o.item.adjacentCorners();
             updatecorners.push(o.item);
             scope.update(false, updatecorners);
             //			scope.update(false);//For debug reasons
         });
         corner.addEventListener(EVENT_MOVED, function(o) {
             scope.dispatchEvent(o);
-            var updatecorners = o.item.adjacentCorners();
+            const updatecorners = o.item.adjacentCorners();
             updatecorners.push(o.item);
             scope.update(false, updatecorners);
             //			scope.update(false);//For debug reasons
@@ -776,7 +774,7 @@ export class Floorplan extends EventDispatcher {
 
             room.addEventListener(EVENT_ROOM_NAME_CHANGED, (e) => { scope.roomNameChanged(e); });
             room.addEventListener(EVENT_ROOM_ATTRIBUTES_CHANGED, function(o) {
-                var room = o.item;
+                const room = o.item;
                 scope.dispatchEvent(o);
                 if (scope.metaroomsdata[room.roomByCornersId]) {
                     scope.metaroomsdata[room.roomByCornersId]['name'] = room.name;

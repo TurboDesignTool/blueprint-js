@@ -119,13 +119,12 @@ export class Controller extends EventDispatcher {
 
     checkWallsAndFloors() {
         // double click on a wall or floor brings up texture change modal
-        if (this.state === states.UNSELECTED && this.mouseoverObject == null) {
+        if (this.state === states.UNSELECTED && this.mouseoverObject === null) {
             // check walls
             const wallEdgePlanes = this.model.floorplan.wallEdgePlanes();
             const wallIntersects = this.getIntersections(this.mouse, wallEdgePlanes, true);
             if (wallIntersects.length > 0) {
                 const wall = wallIntersects[0].object.edge;
-                // three.wallClicked.fire(wall);
                 this.three.wallIsClicked(wall);
                 return;
             }
@@ -135,11 +134,9 @@ export class Controller extends EventDispatcher {
             const floorIntersects = this.getIntersections(this.mouse, floorPlanes, false);
             if (floorIntersects.length > 0) {
                 const room = floorIntersects[0].object.room;
-                // this.three.floorClicked.fire(room);
                 this.three.floorIsClicked(room);
                 return;
             }
-            // three.nothingClicked.fire();
             this.three.nothingIsClicked();
         }
     }
@@ -174,6 +171,8 @@ export class Controller extends EventDispatcher {
                         if (!this.intersectedObject.fixed) {
                             this.switchState(states.DRAGGING);
                         }
+                    } else {
+                        this.itemRemoved(this.selectedObject);
                     }
                     break;
                 case states.UNSELECTED:
@@ -237,7 +236,6 @@ export class Controller extends EventDispatcher {
     mouseUpEvent() {
         if (this.enabled) {
             this.mouseDown = false;
-
             switch (this.state) {
                 case states.DRAGGING:
                     this.selectedObject.clickReleased();
@@ -402,7 +400,6 @@ export class Controller extends EventDispatcher {
 
         const direction = vector.sub(this.camera.position).normalize();
         let raycaster = new Raycaster(this.camera.position, direction);
-        // raycaster.linePrecision = linePrecision;
         raycaster.params.Line.threshold = linePrecision;
 
         raycaster = new Raycaster();
@@ -446,7 +443,6 @@ export class Controller extends EventDispatcher {
         this.needsUpdate = true;
     }
 
-    // TODO: there MUST be simpler logic for expressing this
     updateMouseover() {
         if (this.intersectedObject !== null) {
             if (this.mouseoverObject !== null) {
@@ -455,8 +451,6 @@ export class Controller extends EventDispatcher {
                     this.mouseoverObject = this.intersectedObject;
                     this.mouseoverObject.mouseOver();
                     this.needsUpdate = true;
-                } else {
-                    // do nothing, mouseover already set
                 }
             } else {
                 this.mouseoverObject = this.intersectedObject;

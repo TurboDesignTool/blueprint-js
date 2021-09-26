@@ -264,6 +264,7 @@ export class Corner extends EventDispatcher {
     /** Moves corner to new position.
      * @param {Number} newX The new x position.
      * @param {Number} newY The new y position.
+     * @param mergeWithIntersections
      */
     move(newX, newY, mergeWithIntersections = false) {
         this._x = newX;

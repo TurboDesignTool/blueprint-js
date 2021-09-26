@@ -31,7 +31,7 @@ export class HUD extends EventDispatcher
 
 		this.color = '#ffffff';
 		this.hoverColor = '#f1c40f';
-
+		// 旋转箭头
 		this.activeObject = null;
 
 		const scope = this;

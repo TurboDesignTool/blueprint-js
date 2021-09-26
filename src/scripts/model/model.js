@@ -41,7 +41,7 @@ export class Model extends EventDispatcher {
             if (child instanceof Mesh) {
                 if (child.material) {
                     if (child.material.length || child.material.visible) {
-                        var op = (child.material.transparent) ? child.material.opacity : undefined;
+                        const op = (child.material.transparent) ? child.material.opacity : undefined;
                         meshes.push(child);
                         if (op) {
                             child.material.opacity = op;
@@ -62,11 +62,10 @@ export class Model extends EventDispatcher {
         const objects = this.scene.getItems();
         for (let i = 0; i < objects.length; i++) {
             const obj = objects[i];
-            //			items_arr[i] = {item_name: obj.metadata.itemName,item_type: obj.metadata.itemType,model_url: obj.metadata.modelUrl,xpos: obj.position.x,ypos: obj.position.y,zpos: obj.position.z,rotation: obj.rotation.y,scale_x: obj.scale.x,scale_y: obj.scale.y,scale_z: obj.scale.z,fixed: obj.fixed};
             items_arr[i] = obj.getMetaData();
         }
 
-        var room = { floorplan: (this.floorplan.saveFloorplan()), items: items_arr };
+        const room = {floorplan: (this.floorplan.saveFloorplan()), items: items_arr};
         return JSON.stringify(room);
     }
 

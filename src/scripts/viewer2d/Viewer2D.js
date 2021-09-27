@@ -90,7 +90,7 @@ export class Viewer2D extends Application {
             resize: true,
         };
 
-        for (var opt in opts) {
+        for (const opt in opts) {
             if (opts.hasOwnProperty(opt) && options.hasOwnProperty(opt)) {
                 opts[opt] = options[opt];
             }
@@ -240,7 +240,6 @@ export class Viewer2D extends Application {
         if(this.__boundaryRegion2D){
             this.__boundaryRegion2D.remove();
         }
-
         if(this.__floorplan.boundary){
             if(this.__floorplan.boundary.isValid){
                 this.__boundaryRegion2D = new BoundaryView2D(this.__floorplan, this.__options, this.__floorplan.boundary);

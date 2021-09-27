@@ -13,18 +13,23 @@ import { ParametricsInterface } from './scripts/ParametricsInterface.js';
 
 import * as floor_textures_json from './floor_textures.json';
 import * as wall_textures_json from './wall_textures.json';
-// import * as default_room_json from './parametrics_items.json';
-// import * as default_room_json from './empty_room.json';
+import * as parametrics_items_json from './parametrics_items.json';
+import * as empty_room_json from './empty_room.json';
 import * as default_room_json from './empty_room_saved.json';
-// import * as default_room_json from './designWithBoundary.json';
-// import * as default_room_json from './designWithoutBoundary.json';
-// import * as default_room_json from './LShape.json';
+import * as designWithBoundary_json from './designWithBoundary.json';
+import * as designWithoutBoundary_json from './designWithoutBoundary.json';
+import * as LShape_json from './LShape.json';
 
 const fps = FPS.of({x: 0, y: 0});
 fps.start();
 
 
 let default_room = JSON.stringify(default_room_json);
+let empty_room = JSON.stringify(empty_room_json);
+let parametrics_items = JSON.stringify(parametrics_items_json);
+let designWithBoundary = JSON.stringify(designWithBoundary_json);
+let designWithoutBoundary = JSON.stringify(designWithoutBoundary_json);
+let LShape = JSON.stringify(LShape_json);
 let startY = 0;
 let panelWidths = 200;
 let floor_textures = floor_textures_json['default'];
@@ -52,6 +57,7 @@ let settingsSelectedWall3D = null;
 
 let settingsViewer3d = null;
 let uxInterface = null;
+let presetInterface = null;
 
 let parametricContextInterface = null;
 let doorsData = {
@@ -207,6 +213,10 @@ function switchViewer2DToMove() {
 
 function switchViewer2DToTransform() {
     blueprint3d.switchViewer2DToTransform();
+}
+
+function loadPresetBluePrint3DDesign(json) {
+    blueprint3d.model.loadSerialized(json);
 }
 
 function loadBlueprint3DDesign(filedata) {
@@ -408,7 +418,6 @@ blueprint3d.model.loadSerialized(default_room);
 
 if (!opts.widget) {
     uxInterface = QuickSettings.create(0, 0, 'BlueprintJS', app_parent);
-
     settingsViewer2d = QuickSettings.create(0, 0, 'Viewer 2D', app_parent);
     settingsSelectedCorner = QuickSettings.create(panelWidths, 0, 'Corner', app_parent);
     settingsSelectedWall = QuickSettings.create(panelWidths, 0, 'Wall', app_parent);
@@ -427,8 +436,24 @@ if (!opts.widget) {
     uxInterface.addButton('Export as GLTF', saveBlueprint3D);
     uxInterface.addButton('Export Project (blueprint-py)', exportDesignAsPackage);
     uxInterface.addButton('Reset', blueprint3d.model.reset.bind(blueprint3d.model));
-
+    uxInterface.addButton('Empty Design', function() {
+        loadPresetBluePrint3DDesign(empty_room);
+    });
+    uxInterface.addButton('Parametrics Items Design', function() {
+        loadPresetBluePrint3DDesign(parametrics_items);
+    });
+    uxInterface.addButton('Boundary Design', function() {
+        loadPresetBluePrint3DDesign(designWithBoundary);
+    });
+    uxInterface.addButton('WithoutBoundary Design', function() {
+        loadPresetBluePrint3DDesign(designWithoutBoundary);
+    });
+    uxInterface.addButton('LShape Design', function() {
+        loadPresetBluePrint3DDesign(LShape);
+    });
     uxInterface.addFileChooser('Load Locked Design', 'Load Locked Design', '.blueprint3d', loadLockedBlueprint3DDesign);
+
+
 
     settingsViewer2d.addButton('Draw Mode', switchViewer2DToDraw);
     settingsViewer2d.addButton('Move Mode', switchViewer2DToMove);

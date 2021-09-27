@@ -21,7 +21,7 @@ export default class Boundary extends EventDispatcher {
         this.__externalDesignEvent = this.__externalDesignBoundaries.bind(this);
 
 
-        for (var opt in this.__metadata) {
+        for (const opt in this.__metadata) {
             if (this.__metadata.hasOwnProperty(opt) && boundaryMetaData.hasOwnProperty(opt)) {
                 this.__metadata[opt] = boundaryMetaData[opt];
             }

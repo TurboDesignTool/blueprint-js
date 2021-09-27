@@ -25,6 +25,8 @@ export class Wall extends EventDispatcher {
      * Constructs a new wall.
      * @param start Start corner.
      * @param end End corner.
+     * @param aa
+     * @param bb
      */
     constructor(start, end, aa, bb) {
         super();
@@ -373,7 +375,7 @@ export class Wall extends EventDispatcher {
         }
         /**
          * No need for the below statement. Because the corners moved will trigger the event to this instance
-         * Then this instance will also trigger the move event 
+         * Then this instance will also trigger the move event
          */
         // this.dispatchEvent({ type: EVENT_UPDATED, item: this });
     }

@@ -255,30 +255,28 @@ export class Floorplan extends EventDispatcher {
      * intersections then introduce new corners and new walls as required at
      * places
      *
-     * @param {Corner}
-     *            start
-     * @param {Corner}
-     *            end
+     * @param {Corner} start
+     * @param {Corner} end
      * @return {boolean} intersects
      */
 
     newWallsForIntersections(start, end) {
-        var intersections = false;
+        let intersections = false;
         // This is a bug in the logic
         // When creating a new wall with a start and end
         // it needs to be checked if it is cutting other walls
         // If it cuts then all those walls have to removed and introduced as
         // new walls along with this new wall
-        var cStart = new Vector2(start.getX(), start.getY());
-        var cEnd = new Vector2(end.getX(), end.getY());
-        var line = { p1: cStart, p2: cEnd };
-        var newCorners = [];
+        const cStart = new Vector2(start.getX(), start.getY());
+        const cEnd = new Vector2(end.getX(), end.getY());
+        const line = {p1: cStart, p2: cEnd};
+        const newCorners = [];
 
-        for (var i = 0; i < this.walls.length; i++) {
-            var twall = this.walls[i];
-            var bstart = { x: twall.getStartX(), y: twall.getStartY() };
-            var bend = { x: twall.getEndX(), y: twall.getEndY() };
-            var iPoint;
+        for (let i = 0; i < this.walls.length; i++) {
+            const twall = this.walls[i];
+            const bstart = {x: twall.getStartX(), y: twall.getStartY()};
+            const bend = {x: twall.getEndX(), y: twall.getEndY()};
+            let iPoint;
             if (twall.wallType === WallTypes.CURVED) {
                 iPoint = twall.bezier.intersects(line);
                 if (iPoint.length) {
@@ -288,7 +286,7 @@ export class Floorplan extends EventDispatcher {
                 iPoint = Utils.lineLineIntersectPoint(cStart, cEnd, bstart, bend);
             }
             if (iPoint) {
-                var nCorner = this.newCorner(iPoint.x, iPoint.y);
+                const nCorner = this.newCorner(iPoint.x, iPoint.y);
                 newCorners.push(nCorner);
                 nCorner.mergeWithIntersected(false);
                 intersections = true;
@@ -301,22 +299,17 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Creates a new wall.
-     *
-     * @param {Corner}
-     *            start The start corner.
-     * @param {Corner}
-     *            end The end corner.
      * @returns {Wall} The new wall.
+     * @param {Corner} start - The start corner
+     * @param {Corner} end - The end corner
+     * @param a
+     * @param b
      */
     newWall(start, end, a, b) {
-        var scope = this;
-        var wall = new Wall(start, end, a, b);
+        const scope = this;
+        const wall = new Wall(start, end, a, b);
 
         this.walls.push(wall);
-        // wall.addEventListener(EVENT_DELETED, function(o) { scope.removeWall(o.item); });
-        // wall.addEventListener(EVENT_WALL_ATTRIBUTES_CHANGED, function(o) {
-        //     scope.dispatchEvent(o);
-        // });
 
         wall.addEventListener(EVENT_DELETED, this.__wallDeletedEvent);
         wall.addEventListener(EVENT_WALL_ATTRIBUTES_CHANGED, this.__wallAttributesChangedEvent);
@@ -331,21 +324,17 @@ export class Floorplan extends EventDispatcher {
     /**
      * Creates a new corner.
      *
-     * @param {Number}
-     *            x The x coordinate.
-     * @param {Number}
-     *            y The y coordinate.
-     * @param {String}
-     *            id An optional id. If unspecified, the id will be created
-     *            internally.
+     * @param {Number} x The x coordinate.
+     * @param {Number} y The y coordinate.
+     * @param {String} id An optional id. If unspecified, the id will be created internally.
      * @returns {Corner} The new corner.
      */
     newCorner(x, y, id) {
-        var scope = this;
-        var corner = new Corner(this, x, y, id);
+        const scope = this;
+        const corner = new Corner(this, x, y, id);
 
-        for (var i = 0; i < this.corners.length; i++) {
-            var existingCorner = this.corners[i];
+        for (let i = 0; i < this.corners.length; i++) {
+            const existingCorner = this.corners[i];
             if (existingCorner.distanceFromCorner(corner) < cornerTolerance) {
                 this.dispatchEvent({ type: EVENT_NEW, item: this, newItem: existingCorner });
                 return existingCorner;
@@ -380,9 +369,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Removes a corner.
-     *
-     * @param {Corner}
-     *            corner The corner to be removed.
+     * @param {Corner} corner The corner to be removed.
      */
     removeCorner(corner) {
         Utils.removeValue(this.corners, corner);
@@ -420,16 +407,14 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the room overlapping the location x, y.
      *
-     * @param {Number}
-     *            mx
-     * @param {Number}
-     *            my
+     * @param {Number} mx
+     * @param {Number} my
      * @return {Room}
      */
     overlappedRoom(mx, my) {
-        for (var i = 0; i < this.rooms.length; i++) {
-            var room = this.rooms[i];
-            var flag = room.pointInRoom(new Vector2(mx, my));
+        for (let i = 0; i < this.rooms.length; i++) {
+            const room = this.rooms[i];
+            const flag = room.pointInRoom(new Vector2(mx, my));
             if (flag) {
                 return room;
             }
@@ -442,12 +427,9 @@ export class Floorplan extends EventDispatcher {
      * Gets the Control of a Curved Wall overlapping the location x, y at a
      * tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Corner}
      */
     overlappedControlPoint(wall, x, y, tolerance) {
@@ -464,17 +446,14 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Corner overlapping the location x, y at a tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Corner}
      */
     overlappedCorner(x, y, tolerance) {
         tolerance = tolerance || defaultFloorPlanTolerance;
-        for (var i = 0; i < this.corners.length; i++) {
+        for (let i = 0; i < this.corners.length; i++) {
             if (this.corners[i].distanceFrom(new Vector2(x, y)) < tolerance) {
                 return this.corners[i];
             }
@@ -485,20 +464,15 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Wall overlapping the location x, y at a tolerance.
      *
-     * @param {Number}
-     *            x
-     * @param {Number}
-     *            y
-     * @param {Number}
-     *            tolerance
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} tolerance
      * @return {Wall}
      */
     overlappedWall(x, y, tolerance) {
         tolerance = tolerance || defaultFloorPlanTolerance;
-        for (var i = 0; i < this.walls.length; i++) {
-            var newtolerance = tolerance; // (tolerance+
-            // ((this.walls[i].wallType ==
-            // WallTypes.CURVED)*tolerance*10));
+        for (let i = 0; i < this.walls.length; i++) {
+            const newtolerance = tolerance;
             if (this.walls[i].distanceFrom(new Vector2(x, y)) < newtolerance) {
                 return this.walls[i];
             }
@@ -509,19 +483,13 @@ export class Floorplan extends EventDispatcher {
     /**
      * The metadata object with information about the rooms.
      *
-     * @return {Object} metaroomdata an object with room corner ids as key and
-     *         names as values
+     * @return {Object} metaroomdata an object with room corner ids as key and names as values
      */
     getMetaRoomData() {
-        var metaRoomData = {};
+        const metaRoomData = {};
         this.rooms.forEach((room) => {
-            var metaroom = {};
-            // var cornerids = [];
-            // room.corners.forEach((corner)=>{
-            // cornerids.push(corner.id);
-            // });
-            // var ids = cornerids.join(',');
-            var ids = room.roomByCornersId;
+            const metaroom = {};
+            const ids = room.roomByCornersId;
             metaroom['name'] = room.name;
             metaRoomData[ids] = metaroom;
         });
@@ -712,112 +680,6 @@ export class Floorplan extends EventDispatcher {
         this.dispatchEvent({ type: EVENT_LOADED, item: this });
     }
 
-    // Load the floorplan from a previously saved json object file
-    /**
-     * @param {JSON} floorplan
-     * @return {void}
-     * @emits {EVENT_LOADED}
-     */
-    loadLockedFloorplan(floorplan) {
-        if (floorplan === null || !('corners' in floorplan) || !('walls' in floorplan)) {
-            return;
-        }
-        let currentUnit = Configuration.getStringValue(configDimUnit);
-        if (floorplan.units) {
-            switch (floorplan.units) {
-                case dimInch:
-                    Configuration.setValue(configDimUnit, dimInch);
-                    break;
-                case dimFeetAndInch:
-                    Configuration.setValue(configDimUnit, dimFeetAndInch);
-                    break;
-                case dimMeter:
-                    Configuration.setValue(configDimUnit, dimMeter);
-                    break;
-                case dimCentiMeter:
-                    Configuration.setValue(configDimUnit, dimCentiMeter);
-                    break;
-                case dimMilliMeter:
-                    Configuration.setValue(configDimUnit, dimMilliMeter);
-                    break;
-            }
-        }
-
-
-        let externalNewCorners = {};
-
-        for (let id in floorplan.corners) {
-            let cornerData = floorplan.corners[id];
-            let corner = new Corner(this, Dimensioning.cmFromMeasureRaw(cornerData.x), Dimensioning.cmFromMeasureRaw(cornerData.y));
-            corner.elevation = Dimensioning.cmFromMeasureRaw(cornerData.elevation);
-            corner.isLocked = true;
-            externalNewCorners[id] = corner;
-            this.__externalCorners.push(corner);
-        }
-        floorplan.walls.forEach((wall) => {
-            let corner1 = externalNewCorners[wall.corner1];
-            let corner2 = externalNewCorners[wall.corner2];
-            let newWall = new Wall(corner1, corner2);
-            newWall.isLocked = true;
-            if (wall.frontTexture) {
-                if (wall.frontTexture.colormap) {
-                    newWall.frontTexture = wall.frontTexture;
-                } else {
-                    newWall.frontTexture = defaultWallTexture;
-                }
-
-            }
-            if (wall.backTexture) {
-                if (wall.backTexture.colormap) {
-                    newWall.backTexture = wall.backTexture;
-                } else {
-                    newWall.backTexture = defaultWallTexture;
-                }
-
-            }
-            if (wall.thickness) {
-                newWall.thickness = Dimensioning.cmFromMeasureRaw(wall.thickness);
-            }
-            // Adding of a, b, wallType (straight, curved) for walls happened
-            // with introduction of 0.0.2a
-            if (Version.isVersionHigherThan(floorplan.version, '0.0.2a')) {
-                newWall.a = wall.a;
-                newWall.b = wall.b;
-                if (wall.wallType === 'CURVED') {
-                    newWall.wallType = WallTypes.CURVED;
-                } else {
-                    newWall.wallType = WallTypes.STRAIGHT;
-                }
-            }
-            this.__externalWalls.push(newWall);
-        });
-
-
-
-        for (let roomKey in floorplan.rooms) {
-            let cornerIds = roomKey.split(',');
-            let roomCorners = [];
-            let isValidRoom = true;
-            for (let j = 0; j < cornerIds.length; j++) {
-                let cornerId = cornerIds[j];
-                if (!externalNewCorners[cornerId]) {
-                    isValidRoom = false;
-                    break;
-                }
-                roomCorners.push(externalNewCorners[cornerId]);
-            }
-            if (isValidRoom) {
-                let newRoom = new Room(this, roomCorners);
-                newRoom.updateArea();
-                newRoom.isLocked = true;
-                this.__externalRooms.push(newRoom);
-            }
-        }
-
-        Configuration.setValue(configDimUnit, currentUnit);
-        this.dispatchEvent({ type: EVENT_EXTERNAL_FLOORPLAN_LOADED, item: this });
-    }
-
     /**
      * @deprecated
      */
@@ -854,12 +716,11 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Resets the floorplan data to empty
-     *
      * @return {void}
      */
     reset() {
-        var tmpCorners = this.corners.slice(0);
-        var tmpWalls = this.walls.slice(0);
+        const tmpCorners = this.corners.slice(0);
+        const tmpWalls = this.walls.slice(0);
         tmpCorners.forEach((corner) => {
             corner.remove();
         });
@@ -877,10 +738,8 @@ export class Floorplan extends EventDispatcher {
     }
 
     /**
-     * @param {Object}
-     *            event
-     * @listens {EVENT_ROOM_NAME_CHANGED} When a room name is changed and
-     *          updates to metaroomdata
+     * @param {Object} event
+     * @listens {EVENT_ROOM_NAME_CHANGED} When a room name is changed and updates to metaroomdata
      */
     roomNameChanged(e) {
         if (this.metaroomsdata) {
@@ -936,8 +795,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Returns the bounding size or the center location of the full floorplan
      *
-     * @param {boolean}
-     *            center If true return the center else the size
+     * @param {boolean} center If true return the center else the size
      * @return {Vector3} size
      * @see https://threejs.org/docs/#api/en/math/Vector3
      */
@@ -953,12 +811,7 @@ export class Floorplan extends EventDispatcher {
             xMax = Math.max(xMax, corner.x);
             zMin = Math.min(zMin, corner.y);
             zMax = Math.max(zMax, corner.y);
-            // if (corner.x < xMin) xMin = corner.x;
-            // if (corner.x > xMax) xMax = corner.x;
-            // if (corner.y < zMin) zMin = corner.y;
-            // if (corner.y > zMax) zMax = corner.y;
         });
-        // console.log(xMin, xMax, zMin, zMax);
         let ret;
         if (xMin === infinity || xMax === -infinity || zMin === infinity || zMax === -infinity) {
             ret = new Vector3();
@@ -983,14 +836,6 @@ export class Floorplan extends EventDispatcher {
         // give them edges
         let orphanWalls = [];
         this.walls.forEach((wall) => {
-            // if (!wall.backEdge) {
-            //     let back = new HalfEdge(null, wall, false);
-            //     back.generatePlane();
-            // }
-            // if (!wall.frontEdge) {
-            //     let front = new HalfEdge(null, wall, true);
-            //     front.generatePlane();
-            // }
             if (!wall.backEdge && !wall.frontEdge) {
                 let back = new HalfEdge(null, wall, false);
                 let front = new HalfEdge(null, wall, true);
@@ -1010,8 +855,7 @@ export class Floorplan extends EventDispatcher {
         if (!this.__updatesOn) {
             return;
         }
-        if (updatecorners != null) {
-            //			console.log('UPDATE CORNER ANGLES ::: ', updatecorners.length);
+        if (updatecorners !== null) {
             updatecorners.forEach((corner) => {
                 corner.updateAngles();
             });
@@ -1021,7 +865,7 @@ export class Floorplan extends EventDispatcher {
             return;
         }
 
-        var scope = this;
+        const scope = this;
         this.walls.forEach((wall) => {
             wall.resetFrontBack();
         });
@@ -1032,27 +876,22 @@ export class Floorplan extends EventDispatcher {
             room.destroy();
         });
 
-
-        // this.rooms.forEach((room)=>{room.removeEventListener(EVENT_ROOM_NAME_CHANGED,
-        // scope.roomNameChanged)});
-
-        var roomCorners = this.findRooms(this.corners);
+        const roomCorners = this.findRooms(this.corners);
         this.rooms = [];
 
 
         this.corners.forEach((corner) => {
             corner.clearAttachedRooms();
-            //			corner.updateAngles();
         });
 
         roomCorners.forEach((corners) => {
-            var room = new Room(scope, corners);
+            const room = new Room(scope, corners);
             room.updateArea();
             scope.rooms.push(room);
 
             room.addEventListener(EVENT_ROOM_NAME_CHANGED, (e) => { scope.roomNameChanged(e); });
             room.addEventListener(EVENT_ROOM_ATTRIBUTES_CHANGED, function(o) {
-                var room = o.item;
+                const room = o.item;
                 scope.dispatchEvent(o);
                 if (scope.metaroomsdata[room.roomByCornersId]) {
                     scope.metaroomsdata[room.roomByCornersId]['name'] = room.name;
@@ -1094,34 +933,33 @@ export class Floorplan extends EventDispatcher {
      * smallest (by area) possible cycles in this graph. The room corners are always
      * ordered in clockwise direction
      *
-     * @param corners
-     *            The corners of the floorplan.
+     * @param corners The corners of the floorplan.
      * @returns The rooms, each room as an array of corners.
-     * @param {Corners[]}
-     *            corners
+     * @param {Corners[]} corners
      * @return {Corners[][]} loops
      */
     findRooms(corners) {
 
         function _calculateTheta(previousCorner, currentCorner, nextCorner) {
-            var theta = Utils.angle2pi(new Vector2(previousCorner.x - currentCorner.x, previousCorner.y - currentCorner.y), new Vector2(nextCorner.x - currentCorner.x, nextCorner.y - currentCorner.y));
+            const theta = Utils.angle2pi(new Vector2(previousCorner.x - currentCorner.x, previousCorner.y - currentCorner.y), new Vector2(nextCorner.x - currentCorner.x, nextCorner.y - currentCorner.y));
             return theta;
         }
 
         function _removeDuplicateRooms(roomArray) {
-            var results = [];
-            var lookup = {};
-            var hashFunc = function(corner) {
+            const results = [];
+            const lookup = {};
+            const hashFunc = function (corner) {
                 return corner.id;
             };
-            var sep = '-';
-            for (var i = 0; i < roomArray.length; i++) {
+            const sep = '-';
+            for (let i = 0; i < roomArray.length; i++) {
                 // rooms are cycles, shift it around to check uniqueness
-                var add = true;
-                var room = roomArray[i];
-                for (var j = 0; j < room.length; j++) {
-                    var roomShift = Utils.cycle(room, j);
-                    var str = Utils.map(roomShift, hashFunc).join(sep);
+                let add = true;
+                const room = roomArray[i];
+                let str;
+                for (let j = 0; j < room.length; j++) {
+                    const roomShift = Utils.cycle(room, j);
+                    str = Utils.map(roomShift, hashFunc).join(sep);
                     if (lookup.hasOwnProperty(str)) {
                         add = false;
                     }
@@ -1139,14 +977,14 @@ export class Floorplan extends EventDispatcher {
          * connectivities
          */
         function _findTightestCycle(firstCorner, secondCorner) {
-            var stack = [];
-            var next = { corner: secondCorner, previousCorners: [firstCorner] };
-            var visited = {};
+            const stack = [];
+            let next = {corner: secondCorner, previousCorners: [firstCorner]};
+            const visited = {};
             visited[firstCorner.id] = true;
 
             while (next) {
                 // update previous corners, current corner, and visited corners
-                var currentCorner = next.corner;
+                const currentCorner = next.corner;
                 visited[currentCorner.id] = true;
 
                 // did we make it back to the startCorner?
@@ -1154,10 +992,10 @@ export class Floorplan extends EventDispatcher {
                     return next.previousCorners;
                 }
 
-                var addToStack = [];
-                var adjacentCorners = next.corner.adjacentCorners();
-                for (var i = 0; i < adjacentCorners.length; i++) {
-                    var nextCorner = adjacentCorners[i];
+                const addToStack = [];
+                const adjacentCorners = next.corner.adjacentCorners();
+                for (let i = 0; i < adjacentCorners.length; i++) {
+                    const nextCorner = adjacentCorners[i];
 
                     // is this where we came from?
                     // give an exception if its the first corner and we aren't
@@ -1170,11 +1008,11 @@ export class Floorplan extends EventDispatcher {
                     addToStack.push(nextCorner);
                 }
 
-                var previousCorners = next.previousCorners.slice(0);
+                const previousCorners = next.previousCorners.slice(0);
                 previousCorners.push(currentCorner);
                 if (addToStack.length > 1) {
                     // visit the ones with smallest theta first
-                    var previousCorner = next.previousCorners[next.previousCorners.length - 1];
+                    const previousCorner = next.previousCorners[next.previousCorners.length - 1];
                     addToStack.sort(function(a, b) { return (_calculateTheta(previousCorner, currentCorner, b) - _calculateTheta(previousCorner, currentCorner, a)); });
                 }
 
@@ -1194,7 +1032,7 @@ export class Floorplan extends EventDispatcher {
         // find tightest loops, for each corner, for each adjacent
         // TODO: optimize this, only check corners with > 2 adjacents, or
         // isolated cycles
-        var loops = [];
+        const loops = [];
 
         corners.forEach((firstCorner) => {
             firstCorner.adjacentCorners().forEach((secondCorner) => {
@@ -1203,15 +1041,14 @@ export class Floorplan extends EventDispatcher {
         });
 
         // remove duplicates
-        var uniqueLoops = _removeDuplicateRooms(loops);
+        const uniqueLoops = _removeDuplicateRooms(loops);
         // remove CW loops
-        var uniqueCCWLoops = Utils.removeIf(uniqueLoops, Utils.isClockwise);
+        const uniqueCCWLoops = Utils.removeIf(uniqueLoops, Utils.isClockwise);
         return uniqueCCWLoops;
     }
 
     /**
-     * @param {CarbonSheet}
-     *            val
+     * @param {CarbonSheet} val
      */
     set carbonSheet(val) {
         this._carbonSheet = val;

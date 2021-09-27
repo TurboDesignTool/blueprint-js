@@ -36,7 +36,6 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
     __drawUpdatedLabel() {
         let roomCenter = this.__room.areaCenter;
         let area = Math.round(this.__room.area * 100) / 100;
-        // let measure = Dimensioning.cmToMeasure(parseInt(area), 2);
         let measure = Dimensioning.cmToMeasure(area.toFixed(1), 2);
         let offset = 15;
         this.__roomNameField.position.x = this.__roomAreaField.position.x = Dimensioning.cmToPixel(roomCenter.x);
@@ -59,10 +58,6 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
         let points = [];
         this.clear();
         this.beginFill(color, alpha);
-
-        // this.__room.interiorCorners.forEach((corner) => {
-        //     points.push(new Vector2(corner.x, corner.y));
-        // });
         this.__room.corners.forEach((corner) => {
             points.push(new Vector2(corner.x, corner.y));
         });
@@ -83,7 +78,7 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
         this.__drawPolygon(0x00BA8C, 1.0);
     }
     __drawHoveredOnState() {
-        this.__drawPolygon(0x008CBA, 1.0);
+        // this.__drawPolygon(0x008CBA, 1.0);
     }
     __drawHoveredOffState() {
         this.__drawPolygon(0xFEDAFF, 1.0);

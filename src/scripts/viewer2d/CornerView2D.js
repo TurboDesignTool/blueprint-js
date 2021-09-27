@@ -5,16 +5,11 @@ import { Point } from 'pixi.js';
 import { Configuration, snapTolerance, snapToGrid, dragOnlyX, dragOnlyY } from '../core/configuration.js';
 import { isMobile } from 'detect-touch-device';
 
-
-
-// import {pointPolygon, pointBox} from 'intersects';
-
-
 export class CornerView2D extends BaseFloorplanViewElement2D {
     constructor(floorplan, options, corner) {
         super(floorplan, options);
         this.__options['corner-radius'] = 12.5;
-        for (var opt in options) {
+        for (const opt in options) {
             if (this.__options.hasOwnProperty(opt) && options.hasOwnProperty(opt)) {
                 this.__options[opt] = options[opt];
             }
@@ -22,13 +17,12 @@ export class CornerView2D extends BaseFloorplanViewElement2D {
 
         this.__corner = corner;
         this.pivot.x = this.pivot.y = 0.5;
-        
+
         this.__cornerUpdateEvent = this.__updateWithModel.bind(this);
         this.__cornerDeletedEvent = this.__cornerDeleted.bind(this);
 
         this.interactive = corner.isLocked;
         this.buttonMode = corner.isLocked;
-
         if (corner.isLocked) {
             this.__deactivate();
         }
@@ -47,12 +41,6 @@ export class CornerView2D extends BaseFloorplanViewElement2D {
         let insideRadius = useRadius * 0.55;
         let xOut = 0;//useRadius * 0.5;//
         let yOut = 0;//useRadius * 0.5;//
-        // if (isMobile) {
-        //     useRadius = radius * 2.5;
-        //     // this.beginFill(borderColor, alpha);
-        //     // this.drawCircle(0, 0, useRadius);
-        //     // this.endFill();
-        // }
         this.beginFill(borderColor, alpha);
         this.drawCircle(xOut, yOut, useRadius);
         this.endFill();
@@ -92,7 +80,7 @@ export class CornerView2D extends BaseFloorplanViewElement2D {
         super.__dragMove(evt);
         if (this.__isDragging) {
             let co = evt.data.getLocalPosition(this.parent);
-            let cmCo = new Point(co.x, co.y);            
+            let cmCo = new Point(co.x, co.y);
 
             cmCo.x = Dimensioning.pixelToCm(cmCo.x);
             cmCo.y = Dimensioning.pixelToCm(cmCo.y);

@@ -1,8 +1,8 @@
-import { EventDispatcher } from "three";
-import inside from 'point-in-polygon'
-import alpha_shape from 'alpha-shape'
+import { EventDispatcher } from 'three';
+import inside from 'point-in-polygon';
+import alpha_shape from 'alpha-shape';
 
-import { EVENT_BOUNDARY_UPDATE, EVENT_EXTERNAL_FLOORPLAN_LOADED } from "../core/events"
+import { EVENT_BOUNDARY_UPDATE, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events';
 
 export default class Boundary extends EventDispatcher {
     constructor(floorplan, boundaryMetaData = {}) {
@@ -52,7 +52,7 @@ export default class Boundary extends EventDispatcher {
         let flag = true;
         let i = 0, j = 0;
         for (i = 0; i < this.__boundaryRegionsRAW.length; i++) {
-            if (i == excludeBoundaryIndex) {
+            if (i === excludeBoundaryIndex) {
                 continue;
             }
             let pts = this.__boundaryRegionsRAW[i];
@@ -79,7 +79,7 @@ export default class Boundary extends EventDispatcher {
 
     clearBoundaryRegions() {
         this.__boundaryRegions = [];
-        this.__boundaryRegionsRAW = []
+        this.__boundaryRegionsRAW = [];
     }
 
     addBoundaryRegion(points) {

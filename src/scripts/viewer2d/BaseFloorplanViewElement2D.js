@@ -35,7 +35,6 @@ export class BaseFloorplanViewElement2D extends Graphics {
         this.on('mouseup', this.__mouseUpEvent).on('touchend', this.__mouseUpEvent);
         this.on('mousemove', this.__mouseMoveEvent).on('touchmove', this.__mouseMoveEvent);
         this.on('mouseover', this.__mouseOverEvent).on('mouseout', this.__mouseOutEvent);
-        // this.on('click', this.__mouseClickEvent);
 
         this.__keyboard.addEventListener(EVENT_KEY_RELEASED, this.__keyListenerEvent);
         this.__keyboard.addEventListener(EVENT_KEY_PRESSED, this.__keyListenerEvent);
@@ -105,7 +104,7 @@ export class BaseFloorplanViewElement2D extends Graphics {
         this.__isDragging = true;
         if(evt){
             evt.stopPropagation();
-        }        
+        }
     }
 
     __dragEnd(evt) {
@@ -123,7 +122,7 @@ export class BaseFloorplanViewElement2D extends Graphics {
          * triggered from within this view class. For example, this view
          * class keeps listening to the delete key pressed. In such a case
          * it is the job of this view class to call the "remove()" method of the
-         * associated method. 
+         * associated method.
          */
     __removeFromFloorplan() {
         //Stub the sub-classes need to implement this functionality

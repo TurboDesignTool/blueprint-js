@@ -63,7 +63,7 @@ export class Viewer2D extends Application {
     constructor(canvasHolder, floorplan, options) {
         const { pixiAppOptions, pixiViewportOptions } = options;
         const pixiDefalultAppOpts = {
-            width: 512, 
+            width: 512,
             height: 512,
             resolution: window.devicePixelRatio || 2,
             antialias: true,
@@ -73,19 +73,19 @@ export class Viewer2D extends Application {
         super(Object.assign(pixiDefalultAppOpts, pixiAppOptions));
         this.__eventDispatcher = new EventDispatcher();
 
-        let opts = { 
-            'corner-radius': 20, 
+        let opts = {
+            'corner-radius': 20,
             'boundary-point-radius': 5.0,
             'boundary-line-thickness': 1.0,
             'boundary-point-color':'#D3D3D3',
             'boundary-line-color':'#F3F3F3',
-            pannable: true, 
-            zoomable: true, 
-            dimlinecolor: '#3EDEDE', 
-            dimarrowcolor: '#000000', 
-            dimtextcolor: '#000000', 
-            scale: true, 
-            rotate: true, 
+            pannable: true,
+            zoomable: true,
+            dimlinecolor: '#3EDEDE',
+            dimarrowcolor: '#000000',
+            dimtextcolor: '#000000',
+            scale: true,
+            rotate: true,
             translate: true,
             resize: true,
         };
@@ -151,7 +151,7 @@ export class Viewer2D extends Application {
 
         this.__snapToGrid = false;
         this.__keyboard = new KeyboardListener2D();
-        this.__keyListenerEvent = this.__keyListener.bind(this);        
+        this.__keyListenerEvent = this.__keyListener.bind(this);
 
         let origin = new Graphics();
         this.__floorplanElementsHolder = new Graphics();
@@ -174,7 +174,7 @@ export class Viewer2D extends Application {
 
         this.__floorplanContainer.addChild(this.__grid2d);
         this.__floorplanContainer.addChild(this.__boundaryHolder);
-        // this.__floorplanContainer.addChild(this.__tempWall);
+        this.__floorplanContainer.addChild(this.__tempWall);
         this.__floorplanContainer.addChild(origin);
         this.__floorplanContainer.addChild(this.__floorplanElementsHolder);
         this.__floorplanContainer.addChild(this.__groupTransformer);
@@ -188,7 +188,7 @@ export class Viewer2D extends Application {
         this.__canvasHolder.appendChild(this.view);
 
         this.__floorplanContainer.drag().pinch().wheel();
-        
+
         if (!this.__options.pannable) {
             this.__floorplanContainer.plugins.pause('drag');
         }
@@ -217,8 +217,6 @@ export class Viewer2D extends Application {
         //Use touches and drags across the screen then emulate drawing the temporary wall
         this.__floorplanContainer.on('touchmove', this.__drawModeMouseMoveEvent);
 
-        // this.__floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.__redrawFloorplan(evt));
-
         this.__floorplan.addEventListener(EVENT_LOADED, this.__floorplanLoadedEvent);
 
         this.__floorplan.addEventListener(EVENT_MODE_RESET, this.__resetFloorplanEvent);
@@ -239,7 +237,6 @@ export class Viewer2D extends Application {
     }
 
     __drawBoundary(){
-        // return;
         if(this.__boundaryRegion2D){
             this.__boundaryRegion2D.remove();
         }
@@ -248,7 +245,7 @@ export class Viewer2D extends Application {
             if(this.__floorplan.boundary.isValid){
                 this.__boundaryRegion2D = new BoundaryView2D(this.__floorplan, this.__options, this.__floorplan.boundary);
                 this.__boundaryHolder.addChild(this.__boundaryRegion2D);
-            }            
+            }
         }
     }
 
@@ -445,7 +442,7 @@ export class Viewer2D extends Application {
     __center(){
         let floorplanCenter = this.__floorplan.getCenter();
         let zoom = this.__floorplanContainer.scale.x;
-        let windowSize = new Vector2(this.__currentWidth, this.__currentHeight); 
+        let windowSize = new Vector2(this.__currentWidth, this.__currentHeight);
         let bounds = Dimensioning.cmToPixel(Configuration.getNumericValue(viewBounds)) * zoom;
         // console.log(windowSize.x, windowSize.y);
         let x = (windowSize.x * 0.5)-(floorplanCenter.x*0.5);// - (bounds*0.5);
@@ -462,7 +459,7 @@ export class Viewer2D extends Application {
         let bounds = Dimensioning.cmToPixel(Configuration.getNumericValue(viewBounds));// * zoom;
         let maxZoomOut = Math.max(window.innerWidth, window.innerHeight) / bounds;
         zoom = (zoom < maxZoomOut) ? maxZoomOut : (zoom > 60) ? 60 : zoom;
-        
+
         this.__floorplanContainer.scale.x = this.__floorplanContainer.scale.y = zoom;
         this.__tempWallHolder.scale.x = this.__tempWallHolder.scale.y = zoom;
 
@@ -476,17 +473,17 @@ export class Viewer2D extends Application {
         let xy = new Vector2(this.__floorplanContainer.x, this.__floorplanContainer.y);
         let topleft = new Vector2((-(bounds*0.5)), (-(bounds*0.5)));
         let bottomright = new Vector2(((bounds*0.5)), ((bounds*0.5)));
-        
+
         // let windowSize = new Vector2(window.innerWidth, window.innerHeight);
-        let windowSize = new Vector2(this.__currentWidth, this.__currentHeight);        
-      
+        let windowSize = new Vector2(this.__currentWidth, this.__currentHeight);
+
         let xValue = Math.min(-topleft.x, xy.x);
         let yValue = Math.min(-topleft.y, xy.y);
 
         xValue = Math.max(windowSize.x-bottomright.x, xValue);
         yValue = Math.max(windowSize.y-bottomright.y, yValue);
-        
-        
+
+
         this.__floorplanContainer.x = this.__tempWallHolder.x = xValue;
         this.__floorplanContainer.y = this.__tempWallHolder.y = yValue;
         // console.log('---------------------------------------------');
@@ -603,7 +600,7 @@ export class Viewer2D extends Application {
 
         let w = (this.__options.resize)? window.innerWidth - widthMargin : this.__canvasHolder.clientWidth;
         let h = (this.__options.resize)? window.innerHeight - heightMargin : this.__canvasHolder.clientHeight;
-        
+
         this.__currentWidth = w;
         this.__currentHeight = h;
 
@@ -632,7 +629,6 @@ export class Viewer2D extends Application {
         this.__floorplanContainer.off('moved', this.__pannedEvent);
         this.__floorplanContainer.off('clicked', this.__selectionMonitorEvent);
 
-        // this.__floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.__redrawFloorplan(evt));
         this.__floorplan.removeEventListener(EVENT_NEW, this.__redrawFloorplanEvent);
         this.__floorplan.removeEventListener(EVENT_DELETED, this.__redrawFloorplanEvent);
         this.__floorplan.removeEventListener(EVENT_LOADED, this.__redrawFloorplanEvent);

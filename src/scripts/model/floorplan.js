@@ -29,14 +29,14 @@ export class Floorplan extends EventDispatcher {
         super();
         /**
          * List of elements of Wall instance
-         * 
+         *
          * @property {Wall[]} walls Array of walls
          * @type {Wall[]}
          */
         this.walls = [];
         /**
          * List of elements of Corner instance
-         * 
+         *
          * @property {Corner[]} corners array of corners
          * @type {Corner[]}
          */
@@ -44,7 +44,7 @@ export class Floorplan extends EventDispatcher {
 
         /**
          * List of elements of Room instance
-         * 
+         *
          * @property {Room[]} walls Array of walls
          * @type {Room[]}
          */
@@ -63,7 +63,7 @@ export class Floorplan extends EventDispatcher {
 
         /**
          * An {@link Object} that stores the metadata of rooms like name
-         * 
+         *
          * @property {Object} metaroomsdata stores the metadata of rooms like
          *           name
          * @type {Object}
@@ -99,7 +99,7 @@ export class Floorplan extends EventDispatcher {
         /**
          * The {@link CarbonSheet} that handles the background image to show in
          * the 2D view
-         * 
+         *
          * @property {CarbonSheet} _carbonSheet The carbonsheet instance
          * @type {Object}
          */
@@ -180,7 +180,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the roof planes in the floorplan for intersection testing
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -194,7 +194,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns all the planes for intersection of the floors in all room
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -206,7 +206,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns all the planes for intersection for the walls
-     * 
+     *
      * @return {Mesh[]} planes
      * @see <https://threejs.org/docs/#api/en/objects/Mesh>
      */
@@ -254,7 +254,7 @@ export class Floorplan extends EventDispatcher {
      * Checks existing walls for any intersections they would make. If there are
      * intersections then introduce new corners and new walls as required at
      * places
-     * 
+     *
      * @param {Corner}
      *            start
      * @param {Corner}
@@ -301,7 +301,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Creates a new wall.
-     * 
+     *
      * @param {Corner}
      *            start The start corner.
      * @param {Corner}
@@ -330,7 +330,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Creates a new corner.
-     * 
+     *
      * @param {Number}
      *            x The x coordinate.
      * @param {Number}
@@ -368,7 +368,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Removes a wall.
-     * 
+     *
      * @param {Wall}
      *            wall The wall to be removed.
      */
@@ -380,7 +380,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Removes a corner.
-     * 
+     *
      * @param {Corner}
      *            corner The corner to be removed.
      */
@@ -392,7 +392,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the walls.
-     * 
+     *
      * @return {Wall[]}
      */
     getWalls() {
@@ -401,7 +401,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the corners.
-     * 
+     *
      * @return {Corner[]}
      */
     getCorners() {
@@ -410,7 +410,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the rooms.
-     * 
+     *
      * @return {Room[]}
      */
     getRooms() {
@@ -419,7 +419,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the room overlapping the location x, y.
-     * 
+     *
      * @param {Number}
      *            mx
      * @param {Number}
@@ -441,7 +441,7 @@ export class Floorplan extends EventDispatcher {
     /**
      * Gets the Control of a Curved Wall overlapping the location x, y at a
      * tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -463,7 +463,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the Corner overlapping the location x, y at a tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -484,7 +484,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Gets the Wall overlapping the location x, y at a tolerance.
-     * 
+     *
      * @param {Number}
      *            x
      * @param {Number}
@@ -508,7 +508,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * The metadata object with information about the rooms.
-     * 
+     *
      * @return {Object} metaroomdata an object with room corner ids as key and
      *         names as values
      */
@@ -529,19 +529,19 @@ export class Floorplan extends EventDispatcher {
     }
 
     // Save the floorplan as a json object file
-    /**
-     * @return {void}
-     */
     saveFloorplan() {
-        var floorplans = { version: Version.getTechnicalVersion(), corners: {}, walls: [], rooms: {}, wallTextures: [], floorTextures: {}, newFloorTextures: {}, carbonSheet: {} };
-        var cornerIds = [];
-        // writing all the corners based on the corners array
-        // is having a bug. This is because some walls have corners
-        // that aren't part of the corners array anymore. This is a quick fix
-        // by adding the corners to the json file based on the corners in the walls
-        // this.corners.forEach((corner) => {
-        // floorplans.corners[corner.id] = {'x': corner.x,'y': corner.y};
-        // });
+        const floorplans = {
+            version: Version.getTechnicalVersion(),
+            title: this.__title,
+            corners: {},
+            walls: [],
+            rooms: {},
+            wallTextures: [],
+            floorTextures: {},
+            newFloorTextures: {},
+            carbonSheet: {}
+        };
+        const cornerIds = [];
 
         this.walls.forEach((wall) => {
             if (wall.getStart() && wall.getEnd()) {
@@ -563,17 +563,6 @@ export class Floorplan extends EventDispatcher {
         cornerIds.forEach((corner) => {
             floorplans.corners[corner.id] = { 'x': Dimensioning.cmToMeasureRaw(corner.x), 'y': Dimensioning.cmToMeasureRaw(corner.y), 'elevation': Dimensioning.cmToMeasureRaw(corner.elevation) };
         });
-
-        // this.rooms.forEach((room)=>{
-        // var metaroom = {};
-        // var cornerids = [];
-        // room.corners.forEach((corner)=>{
-        // cornerids.push(corner.id);
-        // });
-        // var ids = cornerids.join(',');
-        // metaroom['name'] = room.name;
-        // floorplans.rooms[ids] = metaroom;
-        // });
         floorplans.rooms = this.metaroomsdata;
 
         if (this.carbonSheet) {
@@ -594,16 +583,17 @@ export class Floorplan extends EventDispatcher {
                 for (let i =0;i < this.__boundary.points.length;i++){
                     let cmPoint = this.__boundary.points[i];
                     let measurePoint = {
-                        x: Dimensioning.cmToMeasureRaw(cmPoint.x), 
+                        x: Dimensioning.cmToMeasureRaw(cmPoint.x),
                         y: Dimensioning.cmToMeasureRaw(cmPoint.y),
                         elevation: Dimensioning.cmToMeasureRaw(cmPoint.elevation),
                     };
                     measurePoints.push(measurePoint);
                 }
-
-                boundaryData.points = measurePoints;
-                boundaryData.style = this.__boundary.style;
-                floorplans.boundary = boundaryData;
+                if (measurePoints.length) {
+                    boundaryData.points = measurePoints;
+                    boundaryData.style = this.__boundary.style;
+                    floorplans.boundary = boundaryData;
+                }
             }
         }
 
@@ -615,8 +605,7 @@ export class Floorplan extends EventDispatcher {
 
     // Load the floorplan from a previously saved json object file
     /**
-     * @param {JSON}
-     *            floorplan
+     * @param {JSON} floorplan
      * @return {void}
      * @emits {EVENT_LOADED}
      */
@@ -702,7 +691,7 @@ export class Floorplan extends EventDispatcher {
                 for (let i =0;i < floorplan.boundary.points.length;i++){
                     let point = floorplan.boundary.points[i];
                     let cmPoint = {
-                        x: Dimensioning.cmFromMeasureRaw(point.x), 
+                        x: Dimensioning.cmFromMeasureRaw(point.x),
                         y: Dimensioning.cmFromMeasureRaw(point.y),
                         elevation: Dimensioning.cmFromMeasureRaw(point.elevation),
                     };
@@ -714,19 +703,18 @@ export class Floorplan extends EventDispatcher {
                 this.__boundary.metadata = floorplan.boundary;
             }
         }
+        this.__title = floorplan.title;
 
         this.__updatesOn = true;
         this.metaroomsdata = floorplan.rooms;
         this.update();
         Configuration.setValue(configDimUnit, currentUnit);
         this.dispatchEvent({ type: EVENT_LOADED, item: this });
-        // this.roomLoadedCallbacks.fire();
     }
 
     // Load the floorplan from a previously saved json object file
     /**
-     * @param {JSON}
-     *            floorplan
+     * @param {JSON} floorplan
      * @return {void}
      * @emits {EVENT_LOADED}
      */
@@ -826,27 +814,8 @@ export class Floorplan extends EventDispatcher {
             }
         }
 
-        // if('boundary' in floorplan){
-        //     if(floorplan.boundary.points){
-        //         let cmPoints = [];
-        //         for (let i =0;i < floorplan.boundary.points.length;i++){
-        //             let point = floorplan.boundary.points[i];
-        //             let cmPoint = {
-        //                 x: Dimensioning.cmFromMeasureRaw(point.x), 
-        //                 y: Dimensioning.cmFromMeasureRaw(point.y),
-        //                 elevation: Dimensioning.cmFromMeasureRaw(point.elevation),
-        //             };
-        //             cmPoints.push(cmPoint);
-        //         }
-
-        //         floorplan.boundary.points = cmPoints;
-        //         this.__boundary = new Boundary(this, floorplan.boundary);
-        //     }
-        // }
-
         Configuration.setValue(configDimUnit, currentUnit);
         this.dispatchEvent({ type: EVENT_EXTERNAL_FLOORPLAN_LOADED, item: this });
-        // this.roomLoadedCallbacks.fire();
     }
 
     /**
@@ -885,7 +854,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Resets the floorplan data to empty
-     * 
+     *
      * @return {void}
      */
     reset() {
@@ -921,7 +890,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the center of the floorplan in the y plane
-     * 
+     *
      * @return {Vector2} center
      * @see https://threejs.org/docs/#api/en/math/Vector2
      */
@@ -931,7 +900,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the bounding volume of the full floorplan
-     * 
+     *
      * @return {Vector3} size
      * @see https://threejs.org/docs/#api/en/math/Vector3
      */
@@ -966,7 +935,7 @@ export class Floorplan extends EventDispatcher {
 
     /**
      * Returns the bounding size or the center location of the full floorplan
-     * 
+     *
      * @param {boolean}
      *            center If true return the center else the size
      * @return {Vector3} size
@@ -989,7 +958,7 @@ export class Floorplan extends EventDispatcher {
             // if (corner.y < zMin) zMin = corner.y;
             // if (corner.y > zMax) zMax = corner.y;
         });
-        // console.log(xMin, xMax, zMin, zMax);        
+        // console.log(xMin, xMax, zMin, zMax);
         let ret;
         if (xMin === infinity || xMax === -infinity || zMin === infinity || zMax === -infinity) {
             ret = new Vector3();
@@ -1027,7 +996,7 @@ export class Floorplan extends EventDispatcher {
                 let front = new HalfEdge(null, wall, true);
                 wall.orphan = true;
                 back.generatePlane();
-                front.generatePlane();                
+                front.generatePlane();
                 orphanWalls.push(wall);
             }
         });
@@ -1124,7 +1093,7 @@ export class Floorplan extends EventDispatcher {
      * Find the "rooms" in our planar straight-line graph. Rooms are set of the
      * smallest (by area) possible cycles in this graph. The room corners are always
      * ordered in clockwise direction
-     * 
+     *
      * @param corners
      *            The corners of the floorplan.
      * @returns The rooms, each room as an array of corners.

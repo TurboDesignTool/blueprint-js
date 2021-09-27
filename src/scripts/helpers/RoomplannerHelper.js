@@ -1,7 +1,7 @@
-import { TEXTURE_PROPERTY_COLOR } from "../core/constants";
-import { Dimensioning } from "../core/dimensioning";
-import { EVENT_CORNER_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_WALL_2D_CLICKED, EVENT_ROOM_2D_CLICKED, EVENT_NO_ITEM_SELECTED, EVENT_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED } from "../core/events";
-import { InWallFloorItem } from "../items/in_wall_floor_item";
+import { TEXTURE_PROPERTY_COLOR } from '../core/constants';
+import { Dimensioning } from '../core/dimensioning';
+import { EVENT_CORNER_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_WALL_2D_CLICKED, EVENT_ROOM_2D_CLICKED, EVENT_NO_ITEM_SELECTED, EVENT_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED } from '../core/events';
+import { InWallFloorItem } from '../items/in_wall_floor_item';
 
 export class RoomPlannerHelper {
     constructor(model, floorplan, roomplanner) {
@@ -62,13 +62,13 @@ export class RoomPlannerHelper {
         }
 
         let itemMetaData = {
-            itemName: "Parametric Door",
+            itemName: 'Parametric Door',
             isParametric: true,
-            baseParametricType: "DOOR",
+            baseParametricType: 'DOOR',
             subParametricData: {
                 type: doorType,
-                frameColor: "#E7E7E7",
-                doorColor: "#E7E7E7",
+                frameColor: '#E7E7E7',
+                doorColor: '#E7E7E7',
                 doorHandleColor: '#F0F0F0',
                 glassColor: '#87CEEB',
                 frameWidth: 100,
@@ -76,8 +76,8 @@ export class RoomPlannerHelper {
                 frameSize: 5,
                 frameThickness: 20,
                 doorRatio: 0.5,
-                openDirection: "RIGHT",
-                handleType: "HANDLE_01"
+                openDirection: 'RIGHT',
+                handleType: 'HANDLE_01'
             },
             itemType: 7,
             position: [
@@ -192,5 +192,5 @@ export class RoomPlannerHelper {
         if(this.__selectedRoom){
             this.__selectedRoom.setTextureMapAttribute(TEXTURE_PROPERTY_COLOR, color);
         }
-    } 
+    }
 }

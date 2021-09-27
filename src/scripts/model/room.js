@@ -63,7 +63,6 @@ export class Room extends EventDispatcher {
 
         for (i = 0; i < this.__walls.length; i++) {
             let wall = this.__walls[i];
-            // wall.addRoom(this);
             wall.addEventListener(EVENT_UPDATED, this.__wallsChangedEvent);
         }
         this._roomByCornersId = cornerids.join(',');
@@ -159,7 +158,6 @@ export class Room extends EventDispatcher {
         let plane = new Plane(normal, 0);
         let m = new Matrix4();
         m.makeTranslation(planeLocation.x, planeLocation.y, 0);
-        // plane = plane.applyMatrix4(m);
         plane.setFromNormalAndCoplanarPoint(normal, new Vector3(planeLocation.x, planeLocation.y, 0));
         return plane;
     }
@@ -287,15 +285,13 @@ export class Room extends EventDispatcher {
             let face = new Face3(0, i - 1, i);
             geometry.faces.push(face);
         }
-        // geometry.computeBoundingBox();
-        // geometry.computeFaceNormals();
 
         if (!this.roofPlane) {
             let buffGeometry = new BufferGeometry().fromGeometry(geometry);
             this.roofPlane = new Mesh(buffGeometry, new MeshBasicMaterial({ side: DoubleSide, visible: false }));
         } else {
             this.roofPlane.geometry.dispose();
-            this.roofPlane.geometry = new BufferGeometry().fromGeometry(geometry); //this.roofPlane.geometry.fromGeometry(geometry);            
+            this.roofPlane.geometry = new BufferGeometry().fromGeometry(geometry); //this.roofPlane.geometry.fromGeometry(geometry);
         }
         this.roofPlane.geometry.computeBoundingBox();
         this.roofPlane.geometry.computeFaceNormals();
@@ -393,7 +389,7 @@ export class Room extends EventDispatcher {
             secondCorner = this.corners[(i + 1) % this.corners.length];
             wall = firstCorner.wallToOrFrom(secondCorner);
 
-            if (wall != null) {
+            if (wall !== null) {
                 if (wall.wallType === WallTypes.CURVED) {
                     let begin = corner.location.clone().sub(wall.bezier.get(0)).length();
                     let p;
@@ -442,12 +438,6 @@ export class Room extends EventDispatcher {
         this.areaCenter = new Vector2();
         this._polygonPoints = [];
 
-        //The below makes this routine too slow
-        //		this.updateWalls();
-        //		this.updateInteriorCorners();
-        //		this.generateFloorPlane();
-        //		this.generateRoofPlane();
-
 
         for (let i = 0; i < this.corners.length; i++) {
             let firstCorner = this.corners[i];
@@ -478,13 +468,6 @@ export class Room extends EventDispatcher {
             this.dispatchEvent({ type: EVENT_ROOM_ATTRIBUTES_CHANGED, item: this, info: { from: oldarea, to: this.area } });
             return;
         }
-
-
-        //		this.corners.forEach((corner) => {
-        //			var co = new Vector2(corner.x,corner.y);
-        //			this.areaCenter.add(co);
-        //			points.push(co);
-        //		});
 
         N = this.corners.length;
 
@@ -532,7 +515,7 @@ export class Room extends EventDispatcher {
         }
         this._polygonPoints = points;
         this.area = Math.abs(area) * 0.5;
-        //		if we are using the method in url https://www.mathsisfun.com/geometry/area-irregular-polygons.html 
+        //		if we are using the method in url https://www.mathsisfun.com/geometry/area-irregular-polygons.html
         //		then we dont have to multiply the area by 0.5;
         //		this.area = Math.abs(area);
         this.dispatchEvent({ type: EVENT_ROOM_ATTRIBUTES_CHANGED, item: this, info: { from: oldarea, to: this.area } });

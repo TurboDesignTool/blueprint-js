@@ -1,11 +1,11 @@
-import { Configuration, configDimUnit } from "./core/configuration";
-import { dimCentiMeter } from "./core/constants";
-import { Model } from "./model/model";
-import { Viewer3D } from "./viewer3d/Viewer3d";
-import { Viewer2D, floorplannerModes } from "./viewer2d/Viewer2D";
-import { ConfigurationHelper } from "./helpers/ConfigurationHelper";
-import { FloorPlannerHelper } from "./helpers/FloorplannerHelper";
-import { RoomPlannerHelper } from "./helpers/RoomplannerHelper";
+import { Configuration, configDimUnit } from './core/configuration';
+import { dimCentiMeter } from './core/constants';
+import { Model } from './model/model';
+import { Viewer3D } from './viewer3d/Viewer3d';
+import { Viewer2D, floorplannerModes } from './viewer2d/Viewer2D';
+import { ConfigurationHelper } from './helpers/ConfigurationHelper';
+import { FloorPlannerHelper } from './helpers/FloorplannerHelper';
+import { RoomPlannerHelper } from './helpers/RoomplannerHelper';
 
 ///** BlueprintJS core application. */
 class BlueprintJS {
@@ -37,18 +37,13 @@ class BlueprintJS {
          **/
         this.model = new Model(options.textureDir);
         /**
-         * @property {Main} three
-         * @type {Main}
-         **/
-        // this.three = new Main(this.model, options.threeElement, options.threeCanvasElement, {});
-        /**
-         * @property {Main} three
-         * @type {Main}
+         * @property {Viewer3D} three
+         * @type {Viewer3D}
          **/
         let viewer3dOptions = this.options.viewer3d.viewer3dOptions || {};
 
         // console.log('OPTIONS ::: ', this.options);
-        viewer3dOptions.resize = (this.options.resize) ? true : false;
+        viewer3dOptions.resize = !!(this.options.resize);
         this.roomplanner = new Viewer3D(this.model, options.viewer3d.id, viewer3dOptions);
 
         this.configurationHelper = new ConfigurationHelper();
@@ -56,12 +51,11 @@ class BlueprintJS {
         this.roomplanningHelper = new RoomPlannerHelper(this.model, this.model.floorplan, this.roomplanner);
         if (!options.widget) {
             /**
-             * @property {Floorplanner2D} floorplanner
-             * @type {Floorplanner2D}
+             * @property {Viewer2D} floorplanner
+             * @type {Viewer2D}
              **/
-            // this.floorplanner = new Floorplanner2D(options.floorplannerElement, this.model.floorplan);
             let viewer2dOptions = this.options.viewer2d.viewer2dOptions || {};
-            viewer2dOptions.resize = (this.options.resize) ? true : false;
+            viewer2dOptions.resize = !!(this.options.resize);
             this.floorplanner = new Viewer2D(options.viewer2d.id, this.model.floorplan, viewer2dOptions);
             this.floorplanningHelper = new FloorPlannerHelper(this.model.floorplan, this.floorplanner);
         }
@@ -77,13 +71,13 @@ class BlueprintJS {
         this.floorplanner.switchMode(floorplannerModes.MOVE);
         if (this.view_now === 3 && !this.options.widget) {
             this.view_now = 2;
-            document.getElementById(this.options.viewer2d.id).style.visibility = "visible";
-            document.getElementById(this.options.viewer3d.id).style.visibility = "hidden";
+            document.getElementById(this.options.viewer2d.id).style.visibility = 'visible';
+            document.getElementById(this.options.viewer3d.id).style.visibility = 'hidden';
             this.roomplanner.enabled = false;
         } else if (this.view_now === 2 && !this.options.widget) {
             this.view_now = 3;
-            document.getElementById(this.options.viewer2d.id).style.visibility = "hidden";
-            document.getElementById(this.options.viewer3d.id).style.visibility = "visible";
+            document.getElementById(this.options.viewer2d.id).style.visibility = 'hidden';
+            document.getElementById(this.options.viewer3d.id).style.visibility = 'visible';
             this.roomplanner.enabled = true;
         }
     }

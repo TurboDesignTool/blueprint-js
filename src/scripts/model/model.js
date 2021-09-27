@@ -9,7 +9,6 @@ import { Factory } from '../items/factory.js';
  */
 export class Model extends EventDispatcher {
     /** Constructs a new model.
-     * @param textureDir The directory containing the textures.
      */
     constructor() {
         super();
@@ -22,18 +21,14 @@ export class Model extends EventDispatcher {
     }
 
     loadSerialized(json) {
-        // TODO: better documentation on serialization format.
-        // TODO: a much better serialization format.
         this.dispatchEvent({ type: EVENT_LOADING, item: this });
-        //      this.roomLoadingCallbacks.fire();
-
-        var data = JSON.parse(json);
+        const data = JSON.parse(json);
         this.newDesign(data.floorplan, data.items);
         this.dispatchEvent({ type: EVENT_LOADED, item: this, });
     }
 
     loadLockedSerialized(json) {
-        var data = JSON.parse(json);
+        const data = JSON.parse(json);
         this.floorplan.loadLockedFloorplan(data.floorplan);
         this.dispatchEvent({ type: EVENT_EXTERNAL_FLOORPLAN_LOADED, item: this, });
     }
@@ -42,10 +37,9 @@ export class Model extends EventDispatcher {
         let floorplanJSON = this.floorplan.saveFloorplan();
         let roomItemsJSON = [];
         this.__roomItems.forEach((item) => {
-            // item.updateMetadataExplicit();
             roomItemsJSON.push(item.metadata);
         });
-        var room = { floorplan: floorplanJSON, items: roomItemsJSON };
+        const room = {floorplan: floorplanJSON, items: roomItemsJSON};
         return JSON.stringify(room);
     }
 

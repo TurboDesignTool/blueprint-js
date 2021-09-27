@@ -43,7 +43,10 @@
           "normalmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_normal.jpg",
           "roughnessmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_roughness.jpg",
           "ambientmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_ambientocclusion.jpg",
-          "color": "#FFFFFF"
+          "color": "#FFFFFF",
+          "emissive": "#000000",
+          "reflective": 0.5,
+          "shininess": 0.5
         },
         "wallType": "STRAIGHT",
         "a": {
@@ -75,7 +78,10 @@
           "normalmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_normal.jpg",
           "roughnessmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_roughness.jpg",
           "ambientmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_ambientocclusion.jpg",
-          "color": "#FFFFFF"
+          "color": "#FFFFFF",
+          "emissive": "#000000",
+          "reflective": 0.5,
+          "shininess": 0.5
         },
         "wallType": "STRAIGHT",
         "a": {
@@ -107,7 +113,10 @@
           "normalmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_normal.jpg",
           "roughnessmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_roughness.jpg",
           "ambientmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_ambientocclusion.jpg",
-          "color": "#FFFFFF"
+          "color": "#FFFFFF",
+          "emissive": "#000000",
+          "reflective": 0.5,
+          "shininess": 0.5
         },
         "wallType": "STRAIGHT",
         "a": {
@@ -139,7 +148,10 @@
           "normalmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_normal.jpg",
           "roughnessmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_roughness.jpg",
           "ambientmap": "textures/Wall/Concrete-Wall-002/Concrete_Wall_002_ambientocclusion.jpg",
-          "color": "#FFFFFF"
+          "color": "#FFFFFF",
+          "emissive": "#000000",
+          "reflective": 0.5,
+          "shininess": 0.5
         },
         "wallType": "STRAIGHT",
         "a": {
@@ -167,7 +179,10 @@
         "ambientmap": "textures/Floor/Terrazzo_Tiles_001/Terrazzo_Tiles_001_ambientOcclusion.jpg",
         "normalmap": "textures/Floor/Terrazzo_Tiles_001/Terrazzo_Tiles_001_normal.jpg",
         "colormap": "textures/Floor/Terrazzo_Tiles_001/Terrazzo_Tiles_001_basecolor.jpg",
-        "color": "#FFFFFF"
+        "color": "#FFFFFF",
+        "emissive": "#000000",
+        "reflective": 0.5,
+        "shininess": 0.5
       }
     },
     "carbonSheet": {},

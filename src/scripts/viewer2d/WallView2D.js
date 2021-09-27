@@ -9,8 +9,8 @@ import { isMobile } from 'detect-touch-device';
 export class WallDimensions2D extends Graphics {
     constructor(floorplan, options, wall) {
         super();
-        var opts = { dimlinecolor: '#3EDEDE', dimarrowcolor: '#000000', dimtextcolor: '#000000', };
-        for (var opt in opts) {
+        const opts = {dimlinecolor: '#3EDEDE', dimarrowcolor: '#000000', dimtextcolor: '#000000',};
+        for (const opt in opts) {
             if (opts.hasOwnProperty(opt) && options.hasOwnProperty(opt)) {
                 opts[opt] = options[opt];
             }
@@ -73,7 +73,6 @@ export class WallDimensions2D extends Graphics {
     }
 
     __drawDimensionLine() {
-        // console.trace('DRAW DIMENSION LINE ::: ', this.__wall.id);
         let wallDirectionNormalized = this.__wall.wallDirectionNormalized();
         let wallAngle = this.__wall.wallDirectionNormalized().angle();
         let p1Start = this.__toPixels(this.__wall.start.location.clone());
@@ -118,8 +117,6 @@ export class WallDimensions2D extends Graphics {
         }
         this.lineTo(arrow2[0].x, arrow2[0].y);
         this.endFill();
-
-        // this.__textfield.rotation = -wallAngle;
     }
 
     __updateDimensionText() {
@@ -146,11 +143,6 @@ export class Edge2D extends BaseFloorplanViewElement2D {
     }
 
     __getCornerCoordinates() {
-        // let sPoint = Dimensioning.cmToPixelVector2D(this.__wall.start.location.clone());
-        // let ePoint = Dimensioning.cmToPixelVector2D(this.__wall.end.location.clone());
-
-        // return [sPoint, ePoint];
-
         let iStartPoint = Dimensioning.cmToPixelVector2D(this.__edge.interiorStart());
         let iEndPoint = Dimensioning.cmToPixelVector2D(this.__edge.interiorEnd());
 
@@ -161,14 +153,14 @@ export class Edge2D extends BaseFloorplanViewElement2D {
         let vectEnd = eEndPoint.clone().sub(iEndPoint);
 
         return [iStartPoint.add(vectStart.multiplyScalar(0.5)), iEndPoint.add(vectEnd.multiplyScalar(0.5))];
-        
+
     }
 
     __getPolygonCoordinates(forEdge) {
         let points = [
-            forEdge.exteriorStart(this.__debugMode), 
-            forEdge.exteriorEnd(this.__debugMode), 
-            forEdge.interiorEnd(this.__debugMode), 
+            forEdge.exteriorStart(this.__debugMode),
+            forEdge.exteriorEnd(this.__debugMode),
+            forEdge.interiorEnd(this.__debugMode),
             forEdge.interiorStart(this.__debugMode)];
         if (isMobile) {
             let pixelPoints = [];
@@ -213,15 +205,15 @@ export class Edge2D extends BaseFloorplanViewElement2D {
 
     __drawEdgePolygon(forEdge, color = 0xDDDDDD, alpha = 1.0) {
         let points = this.__getPolygonCoordinates(forEdge);
-        
+
         this.clear();
         let lineThickness = 2.5;
-        
+
         let pStart = points[2];
         let pEnd = points[3];
 
-        // let pStart = points[0].clone().add(points[0].clone().sub(points[3]).multiplyScalar(0.5)); 
-        // let pEnd = points[1].clone().add(points[2].clone().sub(points[3]).multiplyScalar(0.5)); 
+        // let pStart = points[0].clone().add(points[0].clone().sub(points[3]).multiplyScalar(0.5));
+        // let pEnd = points[1].clone().add(points[2].clone().sub(points[3]).multiplyScalar(0.5));
 
         this.lineStyle(lineThickness, color, 1.0);
         this.moveTo(pStart.x, pStart.y);
@@ -242,9 +234,6 @@ export class Edge2D extends BaseFloorplanViewElement2D {
 
     drawEdge(color = 0xDDDDDD, alpha = 1.0) {
         this.clear();
-        // if(!this.__edge.room){
-        //     return;
-        // }
 
         let alpha_new = (this.__debugMode) ? 0.1 : alpha;
         this.__drawEdgePolygon(this.__edge, color, alpha_new);//0.1);//
@@ -265,7 +254,7 @@ export class Edge2D extends BaseFloorplanViewElement2D {
             this.lineStyle(lineThickness, 0xF0F0F0);
             this.moveTo(cornerLine[1].x, cornerLine[1].y);
             this.lineTo(cornerLine[0].x, cornerLine[0].y);
-        }        
+        }
     }
 
     get edge() {
@@ -333,18 +322,12 @@ export class WallView2D extends BaseFloorplanViewElement2D {
     __getCornerCoordinates() {
         let sPoint = Dimensioning.cmToPixelVector2D(this.__wall.start.location.clone());
         let ePoint = Dimensioning.cmToPixelVector2D(this.__wall.end.location.clone());
-
-        // sPoint.x = Dimensioning.cmToPixel(sPoint.x);
-        // sPoint.y = Dimensioning.cmToPixel(sPoint.y);
-        // ePoint.x = Dimensioning.cmToPixel(ePoint.x);
-        // ePoint.y = Dimensioning.cmToPixel(ePoint.y);
         return [sPoint, ePoint];
     }
 
     __drawInWallItems() {
         this.lineStyle(0, 0xF0F0F0);
         let inWallItems = this.__wall.inWallItems;
-        // let depth = this.__wall.thickness * 0.5;
         let wallDirection = this.__wall.wallDirectionNormalized();
         for (let i = 0; i < inWallItems.length; i++) {
             let item = inWallItems[i];
@@ -393,31 +376,16 @@ export class WallView2D extends BaseFloorplanViewElement2D {
         if (this.__backEdge) {
             this.__backEdge.drawEdge(backColor, alpha);
         }
-        // if(!this.__frontEdge && !this.__backEdge){
-        //     console.log('NO FRONT OR BACK EDGE TO DRAW ', this.__wall.wallSize);
-        // }
         this.__drawInWallItems();
     }
 
     __drawSelectedState() {
-        // if (this.__frontEdge) {
-        //     this.__frontEdge.debugMode = true;
-        // }
-        // if (this.__backEdge) {
-        //     this.__backEdge.debugMode = true;
-        // }
         this.__drawPolygon(0x049995, 1.0);
     }
     __drawHoveredOnState() {
         this.__drawPolygon(0x04A9F5, 1.0);
     }
     __drawHoveredOffState() {
-        // if (this.__frontEdge) {
-        //     this.__frontEdge.debugMode = false;
-        // }
-        // if (this.__backEdge) {
-        //     this.__backEdge.debugMode = false;
-        // }
         this.__drawPolygon(0x000000, 1.0);
     }
 
@@ -472,7 +440,7 @@ export class WallView2D extends BaseFloorplanViewElement2D {
                 if(this.__floorplan.boundary.isValid){
                     let cornerPoints = this.__getCornerLocation(cmCo);
                     if(
-                        !this.__floorplan.boundary.containsPoint(cornerPoints.start.x, cornerPoints.start.y) || 
+                        !this.__floorplan.boundary.containsPoint(cornerPoints.start.x, cornerPoints.start.y) ||
                         !this.__floorplan.boundary.containsPoint(cornerPoints.end.x, cornerPoints.end.y))
                     {
                         return;
@@ -486,8 +454,6 @@ export class WallView2D extends BaseFloorplanViewElement2D {
                     }
                 }
             }
-
-            // this.__wall.move(cmCo.x, cmCo.y);
             this.__wall.location = cmCo; //new Vector2(cmCo.x, cmCo.y);
             evt.stopPropagation();
         }

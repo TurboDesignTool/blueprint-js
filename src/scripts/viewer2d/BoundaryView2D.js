@@ -1,14 +1,14 @@
-import { Color } from "three";
+import { Color } from 'three';
 
 import {Matrix, Texture} from 'pixi.js';
-import { BaseFloorplanViewElement2D } from "./BaseFloorplanViewElement2D";
-import { isMobile } from "detect-touch-device";
+import { BaseFloorplanViewElement2D } from './BaseFloorplanViewElement2D';
+import { isMobile } from 'detect-touch-device';
 
 export class BoundaryView2D extends BaseFloorplanViewElement2D {
 
     constructor(floorplan, options, boundary) {
         super(floorplan, options);
-        
+
         this.__options['boundary-point-radius'] = 12.5;
         this.__options['boundary-line-thickness'] = 12.5;
         this.__options['boundary-point-color'] = '#000000';
@@ -29,7 +29,7 @@ export class BoundaryView2D extends BaseFloorplanViewElement2D {
         this.interactive = false;
         this.buttonMode = false;
 
-        this.__drawHoveredOffState();        
+        this.__drawHoveredOffState();
     }
 
     __drawBoundaryRegion(pointsColor, lineColor){
@@ -52,7 +52,7 @@ export class BoundaryView2D extends BaseFloorplanViewElement2D {
 
         if(this.__boundary.style.colormap){
             let matrix = new Matrix();
-            let scale = Math.min(this.__boundary.width, this.__boundary.height) / this.__boundary.styleRepeat;            
+            let scale = Math.min(this.__boundary.width, this.__boundary.height) / this.__boundary.styleRepeat;
             matrix = matrix.scale(scale, scale);
 
             let texture = Texture.from(this.__boundary.style.colormap);
@@ -60,7 +60,7 @@ export class BoundaryView2D extends BaseFloorplanViewElement2D {
             this.fill.matrix = matrix;
         }
         this.fill.color = new Color(this.__boundary.style.color).getHex();
-        
+
         this.lineStyle(thickness, lineColor);
 
         for (let i =0;i <= this.__boundary.points.length;i++){
@@ -74,11 +74,9 @@ export class BoundaryView2D extends BaseFloorplanViewElement2D {
                 this.lineTo(pixelPoint.x, pixelPoint.y);
             }
         }
-        // this.endFill();
-
         this.beginFill(pointsColor, alpha);
         for (let i =0;i < this.__boundary.points.length;i++){
-            
+
             let cmPoint = this.__boundary.points[i];
             let pixelPoint = this.__vectorToPixels(cmPoint);
             this.drawCircle(pixelPoint.x, pixelPoint.y, radius);
@@ -88,7 +86,7 @@ export class BoundaryView2D extends BaseFloorplanViewElement2D {
     }
     __drawHoveredOffState() {
         super.__drawHoveredOffState();
-        
+
         this.__drawBoundaryRegion(this.__options['boundary-point-color'], this.__options['boundary-line-color']);
     }
 

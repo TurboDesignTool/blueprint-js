@@ -4,7 +4,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 
 import { EVENT_UPDATED, EVENT_LOADED, EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED, EVENT_GLTF_READY, EVENT_NEW_ITEM, EVENT_NEW_ROOMS_ADDED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events.js';
-// import { EVENT_NEW, EVENT_DELETED } from '../core/events.js';
 
 import { Skybox } from './skybox.js';
 import { Edge3D } from './edge3d.js';
@@ -18,14 +17,14 @@ import { BoundaryView3D } from './BoundaryView3D.js';
 export class Viewer3D extends Scene {
     constructor(model, element, opts) {
         super();
-        let options = { 
-            occludedRoofs: false, 
-            occludedWalls: false, 
-            resize: true, 
-            pushHref: false, 
-            spin: true, 
-            spinSpeed: .00002, 
-            clickPan: true, 
+        let options = {
+            occludedRoofs: false,
+            occludedWalls: false,
+            resize: true,
+            pushHref: false,
+            spin: true,
+            spinSpeed: 0.00002,
+            clickPan: true,
             canMoveFixedItems: false };
         for (let opt in options) {
             if (options.hasOwnProperty(opt) && opts.hasOwnProperty(opt)) {
@@ -103,10 +102,8 @@ export class Viewer3D extends Scene {
         scope.domElement.appendChild(scope.renderer.domElement);
 
         scope.lights = new Lights3D(this, scope.floorplan);
-        // scope.dragcontrols = new DragControls(this.physicalRoomItems, scope.camera, scope.renderer.domElement);
         scope.dragcontrols = new DragRoomItemsControl3D(this.floorplan.wallPlanesForIntersection, this.floorplan.floorPlanesForIntersection, this.physicalRoomItems, scope.camera, scope.renderer.domElement);
         scope.controls = new OrbitControls(scope.camera, scope.domElement);
-        // scope.controls.autoRotate = this.__options['spin'];
         scope.controls.enableDamping = false;
         scope.controls.dampingFactor = 0.1;
         scope.controls.maxPolarAngle = Math.PI * 0.5; //Math.PI * 0.35;//Math.PI * 1.0; //
@@ -131,12 +128,9 @@ export class Viewer3D extends Scene {
 
         scope.model.addEventListener(EVENT_NEW_ITEM, scope.__newItemEvent);
         scope.model.addEventListener(EVENT_MODE_RESET, scope.__resetDesignEvent);
-        // scope.model.addEventListener(EVENT_LOADED, (evt) => scope.addRoomItems(evt));
-        // scope.floorplan.addEventListener(EVENT_UPDATED, (evt) => scope.addWalls(evt));
 
         scope.model.addEventListener(EVENT_LOADED, scope.addRoomItems.bind(scope));
 
-        // scope.floorplan.addEventListener(EVENT_UPDATED, scope.addRoomsAndWalls.bind(scope));
         scope.floorplan.addEventListener(EVENT_NEW_ROOMS_ADDED, scope.addRoomsAndWalls.bind(scope));
         scope.floorplan.addEventListener(EVENT_EXTERNAL_FLOORPLAN_LOADED, scope.addExternalRoomsAndWalls.bind(scope));
 
@@ -236,7 +230,7 @@ export class Viewer3D extends Scene {
         if(this.floorplan.boundary){
             if(this.floorplan.boundary.isValid){
                 this.__boundaryRegion3D = new BoundaryView3D(this, this.floorplan, this.__options, this.floorplan.boundary);
-            }            
+            }
         }
     }
 

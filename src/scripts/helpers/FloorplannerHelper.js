@@ -1,5 +1,5 @@
-import { Dimensioning } from "../core/dimensioning";
-import { EVENT_CORNER_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_WALL_2D_CLICKED, EVENT_ROOM_2D_CLICKED } from "../core/events";
+import { Dimensioning } from '../core/dimensioning';
+import { EVENT_CORNER_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_WALL_2D_CLICKED, EVENT_ROOM_2D_CLICKED } from '../core/events';
 
 export class FloorPlannerHelper {
     constructor(floorplan, floorplanner) {
@@ -9,7 +9,7 @@ export class FloorPlannerHelper {
         this.__wallThickness = Dimensioning.cmToMeasureRaw(20);
         this.__cornerElevation = Dimensioning.cmToMeasureRaw(250);
         this.__roomName = 'A New Room';
-
+        this.__title = floorplan.title || 'Title';
         /**
          * Store a reference to the model entities
          */
@@ -112,4 +112,11 @@ export class FloorPlannerHelper {
         return this.__roomName;
     }
 
+    set title(value) {
+        this.__title = value;
+    }
+
+    get title() {
+        return this.__title;
+    }
 }

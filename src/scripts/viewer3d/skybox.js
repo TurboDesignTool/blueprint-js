@@ -42,12 +42,8 @@ export class Skybox extends EventDispatcher {
 
         this.skyGeo = new SphereGeometry(this.sphereRadius, this.widthSegments, this.heightSegments);
         this.sky = new Mesh(this.skyGeo, this.skyMat);
-        //		this.sky.position.x += this.sphereRadius*0.5;
-
         let axesHelper = new AxesHelper(1000);
         this.scene.add(axesHelper);
-        // axesHelper.visible = false;
-
         this.__createGridFloors();
         this.init();
         Configuration.getInstance().addEventListener(EVENT_CHANGED, this.__updateGrid.bind(this));
@@ -65,10 +61,10 @@ export class Skybox extends EventDispatcher {
 
         this.scene.add(this.__fineGridFloor);
         this.scene.add(this.__coarseGridFloor);
-        
+
         this.scene.needsUpdate = true;
     }
-    
+
 
     __updateGrid(evt) {
         this.__gridSize = Configuration.getNumericValue(viewBounds)*5.0;//10000;

@@ -132,4 +132,7 @@ export class CornerView2D extends BaseFloorplanViewElement2D {
     get corner() {
         return this.__corner;
     }
+    create() {
+        return new CornerView2D(this.__floorplan, this.__options, this.__corner);
+    }
 }

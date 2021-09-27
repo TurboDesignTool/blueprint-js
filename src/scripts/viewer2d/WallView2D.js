@@ -498,4 +498,7 @@ export class WallView2D extends BaseFloorplanViewElement2D {
         super.selected = flag;
         this.viewDimensions = flag;
     }
+    create() {
+        return new WallView2D(this.__floorplan, this.__options, this.__wall);
+    }
 }

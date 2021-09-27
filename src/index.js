@@ -433,6 +433,7 @@ if (!opts.widget) {
     settingsViewer2d.addButton('Draw Mode', switchViewer2DToDraw);
     settingsViewer2d.addButton('Move Mode', switchViewer2DToMove);
     settingsViewer2d.addButton('Transform Mode', switchViewer2DToTransform);
+    settingsViewer2d.addButton('Export Image', floorplanningHelper.exportImage.bind(floorplanningHelper));
 
     settingsViewer2d.bindBoolean('snapToGrid', configurationHelper.snapToGrid, configurationHelper);
     settingsViewer2d.bindBoolean('directionalDrag', configurationHelper.directionalDrag, configurationHelper);

@@ -446,7 +446,7 @@ export class Region {
         area *= 0.5;
 
         return area;
-    };
+    }
 
     centroid() {
         var x = 0,
@@ -468,5 +468,27 @@ export class Region {
         f = this.area() * 6;
 
         return new Vector2(x / f, y / f);
-    };
+    }
+}
+export class WindowUtils {
+    static openImageWindow(url, title) {
+        const img = new Image();
+        img.src = url;
+        const newWin = window.open('', '_blank');
+        newWin.document.write(img.outerHTML);
+        newWin.document.title = title;
+        newWin.document.close();
+    }
+}
+
+export class FileUtils {
+    // 下载图片
+    static download(url, name) {
+        const target = document.createElement('a');
+        target.href = url;
+        target.download = name;
+        const event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        target.dispatchEvent(event);
+    }
 }

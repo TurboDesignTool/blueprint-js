@@ -80,6 +80,10 @@ export class FloorPlannerHelper {
         }
     }
 
+    exportImage() {
+        this.__floorplanner.exportImg();
+    }
+
     set wallThickness(value) {
         if (this.__selectedWall) {
             let cms = Dimensioning.cmFromMeasureRaw(value);

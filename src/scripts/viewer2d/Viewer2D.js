@@ -1,4 +1,4 @@
-import { Application, Graphics, Text } from 'pixi.js';
+import { Application, Graphics, Text, Container } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import { Vector2, EventDispatcher, CompressedPixelFormat } from 'three';
 import { EVENT_NEW, EVENT_DELETED, EVENT_LOADED, EVENT_2D_SELECTED, EVENT_NEW_ROOMS_ADDED, EVENT_KEY_RELEASED, EVENT_KEY_PRESSED, EVENT_WALL_2D_CLICKED, EVENT_CORNER_2D_CLICKED, EVENT_ROOM_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_MOVED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events';
@@ -13,13 +13,14 @@ import { IS_TOUCH_DEVICE } from '../../DeviceInfo';
 import { CornerGroupTransform2D } from './CornerGroupTransform2D';
 import Room from '../model/room';
 import { BoundaryView2D } from './BoundaryView2D';
+import {WindowUtils} from '../core/utils';
 
 export const floorplannerModes = { MOVE: 0, DRAW: 1, EDIT_ISLANDS: 2 };
 
 class TemporaryWall extends Graphics {
     constructor() {
         super();
-        this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: "black", align: 'center' });
+        this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: 'black', align: 'center' });
         // this.__textfield.pivot.x = this.__textfield.pivot.y = 0.5;
         this.addChild(this.__textfield);
     }
@@ -37,7 +38,7 @@ class TemporaryWall extends Graphics {
             let pxCornerCo = this.__toPixels(corner.location.clone());
             let pxEndPoint = this.__toPixels(endPoint.clone());
             let vect = endPoint.clone().sub(corner.location);
-            let midPoint = (pxEndPoint.clone().sub(pxCornerCo).multiplyScalar(0.5)).add(pxCornerCo);;
+            let midPoint = (pxEndPoint.clone().sub(pxCornerCo).multiplyScalar(0.5)).add(pxCornerCo);
 
             this.lineStyle(10, 0x008CBA);
             this.moveTo(pxCornerCo.x, pxCornerCo.y);
@@ -69,7 +70,6 @@ export class Viewer2D extends Application {
             antialias: true,
             transparent: false,
         };
-        // super({width: 512, height: 512});
         super(Object.assign(pixiDefalultAppOpts, pixiAppOptions));
         this.__eventDispatcher = new EventDispatcher();
 
@@ -634,5 +634,14 @@ export class Viewer2D extends Application {
         this.__floorplan.removeEventListener(EVENT_LOADED, this.__redrawFloorplanEvent);
         window.removeEventListener('resize', this.__windowResizeEvent);
         window.removeEventListener('orientationchange', this.__windowResizeEvent);
+    }
+    exportImg() {
+        const c = new Container();
+        this.__entities2D.forEach(_ => {
+            if ( _.__corner || _.__room || _.__wall) {
+                c.addChild(_.create());
+            }
+        });
+        WindowUtils.openImageWindow(this.renderer.plugins.extract.base64(c), '111');
     }
 }

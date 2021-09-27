@@ -95,4 +95,7 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
     get room() {
         return this.__room;
     }
+    create() {
+        return new RoomView2D(this.__floorplan, this.__options, this.__room);
+    }
 }

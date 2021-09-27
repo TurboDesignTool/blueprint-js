@@ -78,6 +78,7 @@ export class RoomView2D extends BaseFloorplanViewElement2D {
         this.__drawPolygon(0x00BA8C, 1.0);
     }
     __drawHoveredOnState() {
+        // 先隐藏，拖拽误触闪动
         // this.__drawPolygon(0x008CBA, 1.0);
     }
     __drawHoveredOffState() {

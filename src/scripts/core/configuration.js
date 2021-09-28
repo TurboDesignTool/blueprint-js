@@ -27,29 +27,27 @@ export const boundsY = 'boundsY'; //In CMS
 export const viewBounds = 'viewBounds';//In CMS
 
 
-export var config = { dimUnit: dimCentiMeter, wallHeight: 250, 
-    wallThickness: 20, systemUI: false, 
-    scale: 1, snapToGrid: true, 
-    dragOnlyX: false, dragOnlyY: false, 
-    snapTolerance: 50, gridSpacing: 50, 
-    directionalDrag: true, 
-    boundsX: 500, boundsY: 500, 
+export var config = { dimUnit: dimCentiMeter, wallHeight: 250,
+    wallThickness: 20, systemUI: false,
+    scale: 1, snapToGrid: true,
+    dragOnlyX: false, dragOnlyY: false,
+    snapTolerance: 50, gridSpacing: 50,
+    directionalDrag: true,
+    boundsX: 200, boundsY: 200,
     viewBounds: 5000 };
 
 export var wallInformation = { exterior: false, interior: false, midline: true, labels: true, exteriorlabel: 'e:', interiorlabel: 'i:', midlinelabel: 'm:' };
 
 
-/** 
+/**
  * The tolerance in cms between corners, otherwise below this tolerance they will snap together as one corner*/
 export const cornerTolerance = 20;
 
-/** Global configuration to customize the whole system.  
+/** Global configuration to customize the whole system.
  * This is a singleton instance;
  */
 export class Configuration extends EventDispatcher {
     constructor() {
-        /** Configuration data loaded from/stored to extern. */
-        //		this.data = {dimUnit: dimCentiMeter, wallHeight: 250, wallThickness: 10};
         super();
     }
 
@@ -61,24 +59,19 @@ export class Configuration extends EventDispatcher {
     }
 
     static getData() {
-        //		return {dimUnit: dimCentiMeter,wallHeight: 250, wallThickness: 10};
         return config;
     }
 
     /** Set a configuration parameter. */
     static setValue(key, value) {
-        //		this.data[key] = value;
         config[key] = value;
-        // if(key !== viewBounds){
             Configuration.getInstance().dispatchEvent({ type: EVENT_CHANGED, item: Configuration.getInstance(), 'key': key, 'value': value });
-        // }        
     }
 
     /** Get a string configuration parameter. */
     static getStringValue(key) {
         switch (key) {
             case configDimUnit:
-                //			return String(this.data[key]);
                 return String(Configuration.getData()[key]);
             default:
                 throw new Error('Invalid string configuration parameter: ' + key);
@@ -97,7 +90,6 @@ export class Configuration extends EventDispatcher {
             case boundsX:
             case boundsY:
             case viewBounds:
-                //			return Number(this.data[key]);
                 return Number(Configuration.getData()[key]);
             default:
                 throw new Error('Invalid numeric configuration parameter: ' + key);

@@ -19,14 +19,4 @@ export class FloorItem extends Item {
         point.y = this.halfSize.y + 5;
         this.position = point;
     }
-
-    // /** */
-    // placeInRoom() {
-    //     if (!this.position_set) {
-    //         var center = this.__model.floorplan.getCenter();
-    //         this.position.x = center.x;
-    //         this.position.z = center.z;
-    //         this.position.y = 0.5 * (this.geometry.boundingBox.max.y - this.geometry.boundingBox.min.y);
-    //     }
-    // }
 }

@@ -58,7 +58,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         }
 
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
-        // this.__raycaster.intersectObjects(this.__draggableItems, false, this.__intersections);
         this.__raycaster.intersectObjects(visibleDraggableItems, false, this.__intersections);
 
         if (this.__intersections.length) {
@@ -68,7 +67,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
 
                 this.__inverseMatrix.getInverse(this.__selected.parent.matrixWorld);
                 /**
-                 * The belwo line for plane setting normal and coplanar point is necessary for touch based events (ref: DragCOntrols.js in three) 
+                 * The belwo line for plane setting normal and coplanar point is necessary for touch based events (ref: DragCOntrols.js in three)
                  */
                 this.__plane.setFromNormalAndCoplanarPoint(this.__camera.getWorldDirection(this.__plane.normal), this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
 
@@ -178,7 +177,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__domElement.addEventListener('touchmove', this.__moveListenerEvent, false);
 
         this.__domElement.addEventListener('mouseup', this.__releaseListenerEvent, false);
-        // this.__domElement.addEventListener('mouseleave', this.__releaseListenerEvent, false);//Not necessary
         this.__domElement.addEventListener('touchend', this.__releaseListenerEvent, false);
 
     }
@@ -191,7 +189,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__domElement.removeEventListener('touchmove', this.__moveListenerEvent, false);
 
         this.__domElement.removeEventListener('mouseup', this.__releaseListenerEvent, false);
-        // this.__domElement.removeEventListener('mouseleave', this.__releaseListenerEvent, false);//Not necessary
         this.__domElement.removeEventListener('touchend', this.__releaseListenerEvent, false);
 
         this.__domElement.style.cursor = '';

@@ -40,9 +40,7 @@
             "error",
             "always"
         ],
-        "no-unused-vars": [
-            "warn"
-        ],
+        "no-unused-vars": [0],
         "no-prototype-builtins": [0],
         "no-debugger": [0],
         "no-case-declarations": [0],

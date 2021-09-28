@@ -57,8 +57,6 @@ let settingsSelectedWall3D = null;
 
 let settingsViewer3d = null;
 let uxInterface = null;
-let presetInterface = null;
-
 let parametricContextInterface = null;
 let doorsData = {
     'Door Type 1': { src: 'assets/doors/DoorType1.png', type: 1 },
@@ -413,8 +411,7 @@ blueprint3d.roomplanner.addRoomplanListener(EVENT_GLTF_READY, function(evt) {
     document.body.removeChild(a);
 });
 
-blueprint3d.model.loadSerialized(default_room);
-
+blueprint3d.model.loadSerialized(parametrics_items);
 
 if (!opts.widget) {
     uxInterface = QuickSettings.create(0, 0, 'BlueprintJS', app_parent);
@@ -424,8 +421,8 @@ if (!opts.widget) {
     settingsSelectedRoom = QuickSettings.create(panelWidths, 0, 'Room', app_parent);
 
     settingsViewer3d = QuickSettings.create(0, 0, 'Viewer 3D', app_parent);
-    settingsSelectedWall3D = QuickSettings.create(panelWidths, 0, 'Wall', app_parent);
-    settingsSelectedRoom3D = QuickSettings.create(panelWidths, 0, 'Room', app_parent);
+    settingsSelectedWall3D = QuickSettings.create(0, 0, 'Wall', app_parent);
+    settingsSelectedRoom3D = QuickSettings.create(0, 0, 'Room', app_parent);
 
     uxInterface.bindText('Title', floorplanningHelper.title, floorplanningHelper);
     uxInterface.addButton('Switch Viewer', switchViewer);
@@ -516,4 +513,5 @@ if (!opts.widget) {
     settingsViewer3d.hide();
     settingsSelectedWall3D.hide();
     settingsSelectedRoom3D.hide();
+    switchViewer();
 }

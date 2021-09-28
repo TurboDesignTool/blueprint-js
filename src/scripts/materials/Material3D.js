@@ -8,8 +8,6 @@ export class Material3D extends MeshStandardMaterial {
         this.__scene = scene;
         this.__reflectsScene = reflectsScene;
         this.__mirrorCamera = null;
-
-        // this.roughness = (!textureMapPack.reflective) ? 0.5 : textureMapPack.reflective;
         this.__repeat = (!textureMapPack.repeat) ? TEXTURE_DEFAULT_REPEAT : textureMapPack.repeat;
         this.__repeatX = null;
         this.__repeatY = null;
@@ -34,8 +32,6 @@ export class Material3D extends MeshStandardMaterial {
         this.__ambientTexture = null;
         this.__bumpTexture = null;
         this.__metalTexture = null;
-        // this.__applyNewTextures();
-        // this.normalScale.set(-10, 10);
         this.textureMapPack = textureMapPack;
     }
 
@@ -136,35 +132,24 @@ export class Material3D extends MeshStandardMaterial {
         if (this.__textureMapPack.metalmap) {
             this.__metalTexture = new TextureLoader().load(this.__textureMapPack.metalmap, this.__updateMetallicMap.bind(this));
         }
-        // if (this.__textureMapPack.bumpmap) {
-        //     console.log('APPLY DISPLACEMENT MAP ::: ');
-        //     this.__bumpTexture = new TextureLoader().load(this.__textureMapPack.bumpmap, this.__updateTextures.bind(this));
-        //     this.displacementMap = this.__bumpTexture;
-        //     this.displacementBias = -0.001;
-        //     this.displacementScale = -100;
-        // }
     }
 
     __scaleUV(uRatio, vRatio) {
         this.__uRatio = uRatio;
         this.__vRatio = vRatio;
-        
+
         this.__updateColorMap();
         this.__updateNormalMap();
         this.__updateRoughnessMap();
         this.__updateMetallicMap();
         this.__updateAmbientMap();
         this.__updateBumpMap();
-
-        // this.__updateTextures();
-        // this.needsUpdate = true;
-        // this.__scene.needsUpdate = true;
     }
 
     /**
-     * 
-     * @param {Number} x - Always implies the direction of the width 
-     * @param {Number} y - Can be either length or height depending if wall or floor using this texture
+     *
+     * @param width
+     * @param height
      */
     __updateDimensions(width, height) {
         let ur = Math.max(width * this.__repeatPerCentimeter, 1.0);
@@ -211,11 +196,6 @@ export class Material3D extends MeshStandardMaterial {
     get repeat() {
             return this.__repeat;
         }
-        // set repeat(value) {
-        //     this.__repeat = value;
-        //     this.__repeatPerCentimeter = 1.0 / this.__repeat;
-        //     this.__updateDimensions(this.__dimensions.x, this.__dimensions.y);
-        // }
 
     get dimensions() {
         return this.__dimensions;

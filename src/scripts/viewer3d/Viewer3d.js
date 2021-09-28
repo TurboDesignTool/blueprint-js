@@ -144,8 +144,6 @@ export class Viewer3D extends Scene {
 
         scope.dragcontrols.addEventListener(EVENT_WALL_CLICKED, this.__wallSelectedEvent);
         scope.dragcontrols.addEventListener(EVENT_ROOM_CLICKED, this.__roomSelectedEvent);
-        // scope.controls.enabled = false;//To test the drag controls
-
         //SEt the animation loop
         scope.renderer.setAnimationLoop(scope.render.bind(this));
         scope.render();
@@ -258,7 +256,7 @@ export class Viewer3D extends Scene {
 
         // draw floors
         for (i = 0; i < rooms.length; i++) {
-            var threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
+            const threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
             scope.floors3d.push(threeFloor);
         }
 
@@ -302,7 +300,7 @@ export class Viewer3D extends Scene {
 
         // draw floors
         for (i = 0; i < rooms.length; i++) {
-            var threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
+            const threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
             scope.__externalFloors3d.push(threeFloor);
         }
 
@@ -320,7 +318,7 @@ export class Viewer3D extends Scene {
     }
 
     getARenderer() {
-        var renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new WebGLRenderer({antialias: true, alpha: true});
 
         // scope.renderer.autoClear = false;
         renderer.shadowMap.enabled = false;
@@ -352,7 +350,6 @@ export class Viewer3D extends Scene {
             return;
         }
         let scope = this;
-        // scope.controls.update();
         if (!scope.needsUpdate) {
             return;
         }

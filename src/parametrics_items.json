@@ -198,7 +198,7 @@
                 100,
                 50
             ],
-            "fixed": true,
+            "fixed": false,
             "resizable": true,
             "modelURL": "models/HollowCube.glb",
             "isParametric": false,
@@ -313,55 +313,6 @@
                 252.10994952514463,
                 105,
                 10
-            ]
-        },
-        {
-            "itemName": "Parametric Door 02",
-            "isParametric": true,
-            "baseParametricType": "DOOR",
-            "subParametricData": {
-                "type": 5,
-                "frameColor": 15198183,
-                "doorColor": 15198183,
-                "doorHandleColor": 15790320,
-                "glassColor": 8900331,
-                "frameWidth": 122,
-                "frameHeight": 208,
-                "frameSize": 10.9,
-                "frameThickness": 20,
-                "doorRatio": 0.5,
-                "openDirection": "RIGHT",
-                "handleType": "HANDLE_01"
-            },
-            "itemType": 7,
-            "position": [
-                245.9620664305963,
-                109,
-                490
-            ],
-            "rotation": [
-                0,
-                3.141592653589793,
-                0
-            ],
-            "scale": [
-                1,
-                1,
-                1
-            ],
-            "size": [
-                100,
-                200,
-                20
-            ],
-            "fixed": false,
-            "resizable": false,
-            "wall": "f90da5e3-9e0e-eba7-173d-eb0b071e838e,da026c08-d76a-a944-8e7b-096b752da9ed",
-            "wallSide": "back",
-            "wallSurfacePoint": [
-                245.9620664305963,
-                109,
-                490
             ]
         }
     ]

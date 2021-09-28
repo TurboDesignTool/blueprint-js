@@ -37,7 +37,6 @@ class TemporaryWall extends Graphics {
     constructor() {
         super();
         this.__textfield = new Text('Length: ', { fontFamily: 'Arial', fontSize: 14, fill: 'black', align: 'center' });
-        // this.__textfield.pivot.x = this.__textfield.pivot.y = 0.5;
         this.addChild(this.__textfield);
     }
 

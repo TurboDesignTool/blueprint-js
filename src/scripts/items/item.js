@@ -141,8 +141,6 @@ export class Item extends EventDispatcher {
         if (this.__currentWall && updateForWall) {
             let point = Utils.cartesianFromBarycenter(this.__currentWallEdge.vertices, this.__barycentricLocation);
             this.snapToWall(point, this.__currentWall, this.__currentWallEdge);
-            // this.position = this.__position;
-            // this.__currentWall.addItem(this);
         }
     }
 
@@ -345,8 +343,6 @@ export class Item extends EventDispatcher {
 
     set visible(flag) {
         this.__visible = flag;
-        // this.frontVisible = false;
-        // this.backVisible = false;
         this.__metaDataUpdate('visible');
     }
 

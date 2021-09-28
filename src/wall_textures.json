@@ -2,6 +2,7 @@
   "Plain_White_Wall_001": {
     "repeat": 200,
     "color": "#FFFFFF",
+    "colormap": "textures/Wall/Concrete_Wall_005_SD/Concrete_Wall_005_basecolor.jpg",
     "normalmap": "textures/Wall/Stone-Wall-015/Wall_Stone_015_normal.jpg",
     "ambientmap": "textures/Wall/Stone-Wall-015/Wall_Stone_015_ambientOcclusion.jpg",
     "roughnessmap": "textures/Wall/Stone-Wall-015/Wall_Stone_015_roughness.jpg"

@@ -677,7 +677,115 @@ export class Floorplan extends EventDispatcher {
         this.metaroomsdata = floorplan.rooms;
         this.update();
         Configuration.setValue(configDimUnit, currentUnit);
-        this.dispatchEvent({ type: EVENT_LOADED, item: this });
+        // need??
+        // this.dispatchEvent({ type: EVENT_LOADED, item: this });
+    }
+
+
+    // Load the floorplan from a previously saved json object file
+    /**
+     * @param {JSON} floorplan
+     * @return {void}
+     * @emits {EVENT_LOADED}
+     */
+    loadLockedFloorplan(floorplan) {
+        if (floorplan === null || !('corners' in floorplan) || !('walls' in floorplan)) {
+            return;
+        }
+        let currentUnit = Configuration.getStringValue(configDimUnit);
+        if (floorplan.units) {
+            switch (floorplan.units) {
+                case dimInch:
+                    Configuration.setValue(configDimUnit, dimInch);
+                    break;
+                case dimFeetAndInch:
+                    Configuration.setValue(configDimUnit, dimFeetAndInch);
+                    break;
+                case dimMeter:
+                    Configuration.setValue(configDimUnit, dimMeter);
+                    break;
+                case dimCentiMeter:
+                    Configuration.setValue(configDimUnit, dimCentiMeter);
+                    break;
+                case dimMilliMeter:
+                    Configuration.setValue(configDimUnit, dimMilliMeter);
+                    break;
+            }
+        }
+
+
+        let externalNewCorners = {};
+
+        for (let id in floorplan.corners) {
+            let cornerData = floorplan.corners[id];
+            let corner = new Corner(this, Dimensioning.cmFromMeasureRaw(cornerData.x), Dimensioning.cmFromMeasureRaw(cornerData.y));
+            corner.elevation = Dimensioning.cmFromMeasureRaw(cornerData.elevation);
+            corner.isLocked = true;
+            externalNewCorners[id] = corner;
+            this.__externalCorners.push(corner);
+        }
+        floorplan.walls.forEach((wall) => {
+            let corner1 = externalNewCorners[wall.corner1];
+            let corner2 = externalNewCorners[wall.corner2];
+            let newWall = new Wall(corner1, corner2);
+            newWall.isLocked = true;
+            if (wall.frontTexture) {
+                if (wall.frontTexture.colormap) {
+                    newWall.frontTexture = wall.frontTexture;
+                } else {
+                    newWall.frontTexture = defaultWallTexture;
+                }
+
+            }
+            if (wall.backTexture) {
+                if (wall.backTexture.colormap) {
+                    newWall.backTexture = wall.backTexture;
+                } else {
+                    newWall.backTexture = defaultWallTexture;
+                }
+
+            }
+            if (wall.thickness) {
+                newWall.thickness = Dimensioning.cmFromMeasureRaw(wall.thickness);
+            }
+            // Adding of a, b, wallType (straight, curved) for walls happened
+            // with introduction of 0.0.2a
+            if (Version.isVersionHigherThan(floorplan.version, '0.0.2a')) {
+                newWall.a = wall.a;
+                newWall.b = wall.b;
+                if (wall.wallType === 'CURVED') {
+                    newWall.wallType = WallTypes.CURVED;
+                } else {
+                    newWall.wallType = WallTypes.STRAIGHT;
+                }
+            }
+            this.__externalWalls.push(newWall);
+        });
+
+
+
+        for (let roomKey in floorplan.rooms) {
+            let cornerIds = roomKey.split(',');
+            let roomCorners = [];
+            let isValidRoom = true;
+            for (let j = 0; j < cornerIds.length; j++) {
+                let cornerId = cornerIds[j];
+                if (!externalNewCorners[cornerId]) {
+                    isValidRoom = false;
+                    break;
+                }
+                roomCorners.push(externalNewCorners[cornerId]);
+            }
+            if (isValidRoom) {
+                let newRoom = new Room(this, roomCorners);
+                newRoom.updateArea();
+                newRoom.isLocked = true;
+                this.__externalRooms.push(newRoom);
+            }
+        }
+
+        Configuration.setValue(configDimUnit, currentUnit);
+        this.dispatchEvent({ type: EVENT_EXTERNAL_FLOORPLAN_LOADED, item: this });
     }
 
     /**
@@ -935,8 +1043,8 @@ export class Floorplan extends EventDispatcher {
      *
      * @param corners The corners of the floorplan.
      * @returns The rooms, each room as an array of corners.
-     * @param {Corners[]} corners
-     * @return {Corners[][]} loops
+     * @param {Corner[]} corners
+     * @return {Corner[][]} loops
      */
     findRooms(corners) {
 

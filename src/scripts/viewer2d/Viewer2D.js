@@ -350,7 +350,7 @@ export class Viewer2D extends Application {
             // further create a newWall based on the newly inserted corners
             // (one in the above line and the other in the previous mouse action
             // of start drawing a new wall)
-            if (this.__lastNode != null) {
+            if (this.__lastNode !== null) {
                 this.__floorplan.newWall(this.__lastNode, corner);
                 this.__floorplan.newWallsForIntersections(this.__lastNode, corner);
                 // this.__tempWall.visible = false;
@@ -381,7 +381,7 @@ export class Viewer2D extends Application {
         if (this.__mode === floorplannerModes.DRAW) {
             let co = evt.data.getLocalPosition(this.__floorplanContainer);
             let cmCo = new Vector2(co.x, co.y);
-            let lastNode = undefined;
+            let lastNode;
             cmCo.x = Dimensioning.pixelToCm(cmCo.x);
             cmCo.y = Dimensioning.pixelToCm(cmCo.y);
             if (Configuration.getBooleanValue(snapToGrid) || this.__snapToGrid) {
@@ -443,14 +443,12 @@ export class Viewer2D extends Application {
         let zoom = this.__floorplanContainer.scale.x;
         let windowSize = new Vector2(this.__currentWidth, this.__currentHeight);
         let bounds = Dimensioning.cmToPixel(Configuration.getNumericValue(viewBounds)) * zoom;
-        // console.log(windowSize.x, windowSize.y);
         let x = (windowSize.x * 0.5)-(floorplanCenter.x*0.5);// - (bounds*0.5);
         let y = (windowSize.y * 0.5)-(floorplanCenter.z*0.5);// - (bounds*0.5);
         this.__floorplanContainer.x = x;
         this.__floorplanContainer.y = y;
         this.__tempWallHolder.x = x;
         this.__tempWallHolder.y = y;
-        // console.log(x, y, floorplanCenter);
     }
 
     __zoomed() {
@@ -558,8 +556,8 @@ export class Viewer2D extends Application {
         scope.__externalEntities2d.forEach((entity) => {
             entity.remove();
         });
-
-        this.__drawBoundary();
+        // need this??
+        // this.__drawBoundary();
 
         this.__externalCorners2d = [];
         this.__externalWalls2d = [];

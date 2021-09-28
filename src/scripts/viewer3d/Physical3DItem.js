@@ -1,7 +1,7 @@
-import { Mesh, Box3, Vector3, AxesHelper, Matrix4, sRGBEncoding, LinearEncoding } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { EVENT_ITEM_LOADED, EVENT_ITEM_LOADING, EVENT_UPDATED, EVENT_PARAMETRIC_GEOMETRY_UPATED } from "../core/events";
-import { BoxBufferGeometry, LineBasicMaterial, LineSegments, EdgesGeometry } from "three";
+import { Mesh, Box3, Vector3, AxesHelper, Matrix4, sRGBEncoding, LinearEncoding } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { EVENT_ITEM_LOADED, EVENT_ITEM_LOADING, EVENT_UPDATED, EVENT_PARAMETRIC_GEOMETRY_UPATED } from '../core/events';
+import { BoxBufferGeometry, LineBasicMaterial, LineSegments, EdgesGeometry } from 'three';
 import gsap from 'gsap';
 export class Physical3DItem extends Mesh {
     constructor(itemModel, opts) {

@@ -1,5 +1,5 @@
-import { BufferGeometry, DoubleSide, Mesh, Shape, ShapeGeometry, Vector2 } from "three";
-import { FloorMaterial3D } from "../materials/FloorMaterial3D";
+import { BufferGeometry, DoubleSide, Mesh, Shape, ShapeGeometry, Vector2 } from 'three';
+import { FloorMaterial3D } from '../materials/FloorMaterial3D';
 
 export class BoundaryView3D extends Mesh{
     constructor(scene, floorplan, options, boundary){

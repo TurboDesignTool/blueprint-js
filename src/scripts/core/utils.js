@@ -79,21 +79,22 @@ export class Utils {
 
     /** shifts angle to be 0 to 2pi */
     static getCyclicOrder(points, start = undefined) {
+        let i;
         if (!start) {
             start = new Vector2(0, 0);
         }
-        var angles = [];
-        for (var i = 0; i < points.length; i++) {
-            var point = points[i];
-            var vect = point.clone().sub(start);
-            var radians = Math.atan2(vect.y, vect.x);
-            var degrees = THREEMath.radToDeg(radians);
+        const angles = [];
+        for (i = 0; i < points.length; i++) {
+            const point = points[i];
+            const vect = point.clone().sub(start);
+            const radians = Math.atan2(vect.y, vect.x);
+            let degrees = THREEMath.radToDeg(radians);
             degrees = (degrees > 0) ? degrees : (degrees + 360) % 360;
             angles.push(degrees);
         }
-        var indices = Utils.argsort(angles);
-        var sortedAngles = [];
-        var sortedPoints = [];
+        const indices = Utils.argsort(angles);
+        const sortedAngles = [];
+        const sortedPoints = [];
         for (i = 0; i < indices.length; i++) {
             sortedAngles.push(angles[indices[i]]);
             sortedPoints.push(points[indices[i]]);
@@ -102,7 +103,7 @@ export class Utils {
     }
 
     static argsort(numericalValues, direction = 1) {
-        var indices = Array.from(new Array(numericalValues.length), (val, index) => index);
+        const indices = Array.from(new Array(numericalValues.length), (val, index) => index);
         return indices
             .map((item, index) => [numericalValues[index], item]) // add the clickCount to sort by
             .sort(([count1], [count2]) => (count1 - count2) * direction) // sort by the clickCount data
@@ -122,7 +123,7 @@ export class Utils {
             return p.x;
         })));
 
-        var tNewPoints = Utils.map(points, function(p) {
+        const tNewPoints = Utils.map(points, function (p) {
             return {
                 x: p.x - tSubX,
                 y: p.y - tSubY
@@ -131,10 +132,10 @@ export class Utils {
 
         // determine CW/CCW, based on:
         // http://stackoverflow.com/questions/1165647
-        var tSum = 0;
-        for (var tI = 0; tI < tNewPoints.length; tI++) {
-            var tC1 = tNewPoints[tI];
-            var tC2;
+        let tSum = 0;
+        for (let tI = 0; tI < tNewPoints.length; tI++) {
+            const tC1 = tNewPoints[tI];
+            let tC2;
             if (tI === tNewPoints.length - 1) {
                 tC2 = tNewPoints[0];
             } else {
@@ -149,7 +150,7 @@ export class Utils {
      * @returns A new Guide.
      */
     static guide() {
-        var tS4 = function() {
+        const tS4 = function () {
             return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         };
         return tS4() + tS4() + '-' + tS4() + '-' + tS4() + '-' + tS4() + '-' + tS4() + tS4() + tS4();
@@ -157,8 +158,8 @@ export class Utils {
 
     /** both arguments are arrays of corners with x,y attributes */
     static polygonPolygonIntersect(firstCorners, secondCorners) {
-        for (var tI = 0; tI < firstCorners.length; tI++) {
-            var tFirstCorner = firstCorners[tI],
+        for (let tI = 0; tI < firstCorners.length; tI++) {
+            let tFirstCorner = firstCorners[tI],
                 tSecondCorner;
             if (tI === firstCorners.length - 1) {
                 tSecondCorner = firstCorners[0];
@@ -174,8 +175,8 @@ export class Utils {
 
     /** Corners is an array of points with x,y attributes */
     static linePolygonIntersect(point, point2, corners) {
-        for (var tI = 0; tI < corners.length; tI++) {
-            var tFirstCorner = corners[tI],
+        for (let tI = 0; tI < corners.length; tI++) {
+            let tFirstCorner = corners[tI],
                 tSecondCorner;
             if (tI === corners.length - 1) {
                 tSecondCorner = corners[0];
@@ -191,7 +192,7 @@ export class Utils {
 
     /** */
     static lineLineIntersectPoint(aStart, aEnd, bStart, bEnd) {
-        var result = checkIntersection(aStart.x, aStart.y, aEnd.x, aEnd.y, bStart.x, bStart.y, bEnd.x, bEnd.y);
+        const result = checkIntersection(aStart.x, aStart.y, aEnd.x, aEnd.y, bStart.x, bStart.y, bEnd.x, bEnd.y);
         if (result.point) {
             return new Vector2(result.point.x, result.point.y);
         }
@@ -202,7 +203,7 @@ export class Utils {
     /** */
     static lineLineIntersect(lineAStart, lineAEnd, lineBStart, lineBEnd) {
         function tCCW(p1, p2, p3) {
-            var tA = p1.x,
+            const tA = p1.x,
                 tB = p1.y,
                 tC = p2.x,
                 tD = p2.y,
@@ -210,24 +211,25 @@ export class Utils {
                 tF = p3.y;
             return (tF - tB) * (tC - tA) > (tD - tB) * (tE - tA);
         }
-        var tP1 = lineAStart,
+
+        const tP1 = lineAStart,
             tP2 = lineAEnd,
             tP3 = lineBStart,
             tP4 = lineBEnd;
-        return (tCCW(tP1, tP3, tP4) != tCCW(tP2, tP3, tP4)) && (tCCW(tP1, tP2, tP3) != tCCW(tP1, tP2, tP4));
+        return (tCCW(tP1, tP3, tP4) !== tCCW(tP2, tP3, tP4)) && (tCCW(tP1, tP2, tP3) !== tCCW(tP1, tP2, tP4));
     }
 
     /**
-     @param corners Is an array of points with x,y attributes
-      @param startX X start coord for raycast
-      @param startY Y start coord for raycast
-	 */
+     * @param point
+     * @param polygon
+     */
     static pointInPolygon2(point, polygon) {
-        var x = point.x,
+        const x = point.x,
             y = point.y;
-        var inside = false;
-        for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-            var intersect = ((((polygon[i].y <= y) && (y < polygon[j].y)) || ((polygon[j].y <= y) && (y < polygon[i].y))) && (x < (polygon[j].x - polygon[i].x) * (y - polygon[i].y) / (polygon[j].y - polygon[i].y) + polygon[i].x));
+        let inside = false;
+        let i = 0, j = polygon.length - 1;
+        for (; i < polygon.length; j = i++) {
+            const intersect = ((((polygon[i].y <= y) && (y < polygon[j].y)) || ((polygon[j].y <= y) && (y < polygon[i].y))) && (x < (polygon[j].x - polygon[i].x) * (y - polygon[i].y) / (polygon[j].y - polygon[i].y) + polygon[i].x));
             if (intersect) {
                 inside = !inside;
             }
@@ -236,19 +238,19 @@ export class Utils {
     }
 
     /**
+     @param point
      @param corners Is an array of points with x,y attributes
-      @param startX X start coord for raycast
-      @param startY Y start coord for raycast
-	 */
+     @param start
+     */
     static pointInPolygon(point, corners, start) {
         start = start || new Vector2(0, 0);
         var startX = start.x || 0;
         var startY = start.y || 0;
 
         //ensure that point(startX, startY) is outside the polygon consists of corners
-        var tMinX = 0,
+        let tMinX = 0,
             tMinY = 0;
-        var tI = 0;
+        let tI = 0;
 
         if (startX === undefined || startY === undefined) {
             for (tI = 0; tI < corners.length; tI++) {
@@ -259,9 +261,9 @@ export class Utils {
             startY = tMinY - 10;
         }
 
-        var tIntersects = 0;
+        let tIntersects = 0;
         for (tI = 0; tI < corners.length; tI++) {
-            var tFirstCorner = corners[tI],
+            let tFirstCorner = corners[tI],
                 tSecondCorner;
             if (tI === corners.length - 1) {
                 tSecondCorner = corners[0];
@@ -282,7 +284,7 @@ export class Utils {
         start.x = start.x || 0;
         start.y = start.y || 0;
 
-        for (var tI = 0; tI < insideCorners.length; tI++) {
+        for (let tI = 0; tI < insideCorners.length; tI++) {
             if (!Utils.pointInPolygon(insideCorners[tI].x, insideCorners[tI].y, outsideCorners, start)) {
                 return false;
             }
@@ -295,7 +297,7 @@ export class Utils {
         start.x = start.x || 0;
         start.y = start.y || 0;
 
-        for (var tI = 0; tI < insideCorners.length; tI++) {
+        for (let tI = 0; tI < insideCorners.length; tI++) {
             if (Utils.pointInPolygon(insideCorners[tI].x, insideCorners[tI].y, outsideCorners, start)) {
                 return false;
             }
@@ -306,19 +308,19 @@ export class Utils {
     // arrays
 
     static forEach(array, action) {
-        for (var tI = 0; tI < array.length; tI++) {
+        for (let tI = 0; tI < array.length; tI++) {
             action(array[tI]);
         }
     }
 
     static forEachIndexed(array, action) {
-        for (var tI = 0; tI < array.length; tI++) {
+        for (let tI = 0; tI < array.length; tI++) {
             action(tI, array[tI]);
         }
     }
 
     static map(array, func) {
-        var tResult = [];
+        const tResult = [];
         array.forEach((element) => {
             tResult.push(func(element));
         });
@@ -327,7 +329,7 @@ export class Utils {
 
     /** Remove elements in array if func(element) returns true */
     static removeIf(array, func) {
-        var tResult = [];
+        const tResult = [];
         array.forEach((element) => {
             if (!func(element)) {
                 tResult.push(element);
@@ -338,9 +340,9 @@ export class Utils {
 
     /** Shift the items in an array by shift (positive integer) */
     static cycle(arr, shift) {
-        var tReturn = arr.slice(0);
-        for (var tI = 0; tI < shift; tI++) {
-            var tmp = tReturn.shift();
+        const tReturn = arr.slice(0);
+        for (let tI = 0; tI < shift; tI++) {
+            const tmp = tReturn.shift();
             tReturn.push(tmp);
         }
         return tReturn;
@@ -348,9 +350,9 @@ export class Utils {
 
     /** Returns in the unique elemnts in arr */
     static unique(arr, hashFunc) {
-        var tResults = [];
-        var tMap = {};
-        for (var tI = 0; tI < arr.length; tI++) {
+        const tResults = [];
+        const tMap = {};
+        for (let tI = 0; tI < arr.length; tI++) {
             if (!tMap.hasOwnProperty(arr[tI])) {
                 tResults.push(arr[tI]);
                 tMap[hashFunc(arr[tI])] = true;
@@ -361,7 +363,7 @@ export class Utils {
 
     /** Remove value from array, if it is present */
     static removeValue(array, value) {
-        for (var tI = array.length - 1; tI >= 0; tI--) {
+        for (let tI = array.length - 1; tI >= 0; tI--) {
             if (array[tI] === value) {
                 array.splice(tI, 1);
                 return tI;
@@ -371,7 +373,7 @@ export class Utils {
 
     /** Checks if value is in array */
     static hasValue(array, value) {
-        for (var tI = 0; tI < array.length; tI++) {
+        for (let tI = 0; tI < array.length; tI++) {
             if (array[tI] === value) {
                 return true;
             }
@@ -431,7 +433,7 @@ export class Region {
     }
 
     area() {
-        var area = 0,
+        let area = 0,
             i,
             j,
             point1,
@@ -449,7 +451,7 @@ export class Region {
     }
 
     centroid() {
-        var x = 0,
+        let x = 0,
             y = 0,
             i,
             j,

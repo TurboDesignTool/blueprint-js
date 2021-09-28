@@ -1,5 +1,5 @@
-import { Vector2, Matrix4, Vector3 } from "three";
-import { EVENT_MOVED } from "../core/events";
+import { Vector2, Matrix4, Vector3 } from 'three';
+import { EVENT_MOVED } from '../core/events';
 
 export class CornerGroup {
     /**

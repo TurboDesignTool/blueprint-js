@@ -10,7 +10,8 @@
         "for-git-demo-production": "parcel build src/index.html -d demo/ --no-source-maps --public-url https://aalavandhaann.github.io/blueprint-js/demo/",
         "frameworkonly-dev": "parcel build src/scripts/blueprint.js --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js  --no-minify",
         "frameworkonly-production": "parcel build src/scripts/blueprint.js  --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js",
-        "docs": "esdoc"
+        "docs": "esdoc",
+        "lint": "eslint --fix --ext .js,.ts ./"
     },
     "repository": {
         "type": "git",

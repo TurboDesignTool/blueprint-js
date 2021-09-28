@@ -1,4 +1,4 @@
-import { Material3D } from "./Material3D";
+import { Material3D } from './Material3D';
 
 export class WallMaterial3D extends Material3D {
     constructor(parameters, textureMapPack, scene) {

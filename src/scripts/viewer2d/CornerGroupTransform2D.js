@@ -1,11 +1,11 @@
-import { Graphics, utils as pixiutils, Text, Ticker, Texture, Sprite } from "pixi.js";
-import Corner from "../model/corner";
-import Wall from "../model/wall";
-import Room from "../model/room";
-import { Dimensioning } from "../core/dimensioning";
-import { Matrix4, Vector3, Vector2, EventDispatcher, Quaternion } from "three";
-import { Utils } from "../core/utils";
-import { Configuration, snapToGrid, snapTolerance } from "../core/configuration";
+import { Graphics, utils as pixiutils, Text, Ticker, Texture, Sprite } from 'pixi.js';
+import Corner from '../model/corner';
+import Wall from '../model/wall';
+import Room from '../model/room';
+import { Dimensioning } from '../core/dimensioning';
+import { Matrix4, Vector3, Vector2, EventDispatcher, Quaternion } from 'three';
+import { Utils } from '../core/utils';
+import { Configuration, snapToGrid, snapTolerance } from '../core/configuration';
 
 
 class CornerGroupRectangle extends Graphics {

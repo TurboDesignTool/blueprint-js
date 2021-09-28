@@ -835,6 +835,9 @@ export class Floorplan extends EventDispatcher {
         tmpWalls.forEach((wall) => {
             wall.remove();
         });
+        if (this.__boundary) {
+            this.__boundary.remove();
+        }
         this.corners = [];
         this.walls = [];
         this.rooms = [];

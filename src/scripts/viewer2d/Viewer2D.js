@@ -1,7 +1,23 @@
 import { Application, Graphics, Text, Container } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import { Vector2, EventDispatcher, CompressedPixelFormat } from 'three';
-import { EVENT_NEW, EVENT_DELETED, EVENT_LOADED, EVENT_2D_SELECTED, EVENT_NEW_ROOMS_ADDED, EVENT_KEY_RELEASED, EVENT_KEY_PRESSED, EVENT_WALL_2D_CLICKED, EVENT_CORNER_2D_CLICKED, EVENT_ROOM_2D_CLICKED, EVENT_NOTHING_2D_SELECTED, EVENT_MOVED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events';
+import {
+    EVENT_NEW,
+    EVENT_DELETED,
+    EVENT_LOADED,
+    EVENT_2D_SELECTED,
+    EVENT_NEW_ROOMS_ADDED,
+    EVENT_KEY_RELEASED,
+    EVENT_KEY_PRESSED,
+    EVENT_WALL_2D_CLICKED,
+    EVENT_CORNER_2D_CLICKED,
+    EVENT_ROOM_2D_CLICKED,
+    EVENT_NOTHING_2D_SELECTED,
+    EVENT_MOVED,
+    EVENT_MODE_RESET,
+    EVENT_EXTERNAL_FLOORPLAN_LOADED,
+    EVENT_BOUNDARY_DELETED
+} from '../core/events';
 import { Grid2D } from './Grid2d';
 import { CornerView2D } from './CornerView2D';
 import { WallView2D } from './WallView2D';
@@ -137,6 +153,8 @@ export class Viewer2D extends Application {
 
         this.__floorplanLoadedEvent = this.__center.bind(this);
 
+        this.__deleteBoundaryEvent = this.__deleteBoundary.bind(this);
+
         const pixiViewportDefaultOpts = {
             screenWidth: window.innerWidth,
             screenHeight: window.innerHeight,
@@ -226,7 +244,7 @@ export class Viewer2D extends Application {
         this.__floorplan.addEventListener(EVENT_NEW_ROOMS_ADDED, this.__redrawFloorplanEvent);
 
         this.__floorplan.addEventListener(EVENT_EXTERNAL_FLOORPLAN_LOADED, this.__drawExternalFloorplanEvent);
-
+        this.__floorplan.addEventListener(EVENT_BOUNDARY_DELETED, this.__deleteBoundaryEvent);
 
         window.addEventListener('resize', this.__windowResizeEvent);
         window.addEventListener('orientationchange', this.__windowResizeEvent);
@@ -235,11 +253,13 @@ export class Viewer2D extends Application {
 
         this.__center();
     }
-
-    __drawBoundary(){
+    __deleteBoundary() {
         if(this.__boundaryRegion2D){
             this.__boundaryRegion2D.remove();
         }
+    }
+    __drawBoundary(){
+        this.__deleteBoundary();
         if(this.__floorplan.boundary){
             if(this.__floorplan.boundary.isValid){
                 this.__boundaryRegion2D = new BoundaryView2D(this.__floorplan, this.__options, this.__floorplan.boundary);

@@ -2,7 +2,7 @@ import { EventDispatcher } from 'three';
 import inside from 'point-in-polygon';
 import alpha_shape from 'alpha-shape';
 
-import { EVENT_BOUNDARY_UPDATE, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events';
+import {EVENT_BOUNDARY_DELETED, EVENT_BOUNDARY_UPDATE, EVENT_EXTERNAL_FLOORPLAN_LOADED} from '../core/events';
 
 export default class Boundary extends EventDispatcher {
     constructor(floorplan, boundaryMetaData = {}) {
@@ -28,6 +28,10 @@ export default class Boundary extends EventDispatcher {
         }
         this.__isValid = true;
         this.__floorplan.addEventListener(EVENT_EXTERNAL_FLOORPLAN_LOADED, this.__externalDesignEvent);
+    }
+    remove() {
+        this.__boundaryRegions = [];
+        this.__floorplan.dispatchEvent({type: EVENT_BOUNDARY_DELETED});
     }
 
     __externalDesignBoundaries(evt) {

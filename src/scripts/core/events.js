@@ -1,5 +1,6 @@
 export const EVENT_ACTION = 'ACTION_EVENT';
 export const EVENT_DELETED = 'DELETED_EVENT';
+export const EVENT_BOUNDARY_DELETED = 'BOUNDARY_DELETED_EVENT';
 export const EVENT_MOVED = 'MOVED_EVENT';
 export const EVENT_REDRAW = 'REDRAW_EVENT';
 export const EVENT_NEW = 'NEW_EVENT';

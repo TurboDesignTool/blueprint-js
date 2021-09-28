@@ -116,6 +116,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
 
         if (this.__selected && this.__enabled && this.__selected.visible) {
+            console.log('move');
             //Check if the item has customIntersectionPlanes, otherwise move it freely
             if (!this.__selected.intersectionPlanes.length) {
                 if (this.__raycaster.ray.intersectPlane(this.__plane, this.__intersection)) {

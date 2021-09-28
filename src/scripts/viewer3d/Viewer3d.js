@@ -3,7 +3,7 @@ import { PCFSoftShadowMap, WebGLCubeRenderTarget, CubeCamera } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 
-import { EVENT_UPDATED, EVENT_LOADED, EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED, EVENT_GLTF_READY, EVENT_NEW_ITEM, EVENT_NEW_ROOMS_ADDED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events.js';
+import { EVENT_LOADED, EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED, EVENT_GLTF_READY, EVENT_NEW_ITEM, EVENT_NEW_ROOMS_ADDED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events.js';
 
 import { Skybox } from './skybox.js';
 import { Edge3D } from './edge3d.js';
@@ -106,9 +106,9 @@ export class Viewer3D extends Scene {
         scope.controls = new OrbitControls(scope.camera, scope.domElement);
         scope.controls.enableDamping = false;
         scope.controls.dampingFactor = 0.1;
-        scope.controls.maxPolarAngle = Math.PI * 0.5; //Math.PI * 0.35;//Math.PI * 1.0; //
-        scope.controls.maxDistance = Configuration.getNumericValue(viewBounds);// 7500; //2500
-        scope.controls.minDistance = 100; //1000; //1000
+        scope.controls.maxPolarAngle = Math.PI * 0.5;
+        scope.controls.maxDistance = Configuration.getNumericValue(viewBounds);
+        scope.controls.minDistance = 100;
         scope.controls.screenSpacePanning = true;
 
         scope.skybox = new Skybox(this, scope.renderer);
@@ -319,17 +319,13 @@ export class Viewer3D extends Scene {
 
     getARenderer() {
         const renderer = new WebGLRenderer({antialias: true, alpha: true});
-
-        // scope.renderer.autoClear = false;
         renderer.shadowMap.enabled = false;
         renderer.shadowMapSoft = true;
         renderer.shadowMap.type = PCFSoftShadowMap;
         renderer.setClearColor(0xFFFFFF, 1);
         renderer.localClippingEnabled = false;
-        // renderer.gammaOutput = false;
         renderer.outputEncoding = sRGBEncoding;
         renderer.setPixelRatio(window.devicePixelRatio);
-        // renderer.sortObjects = false;
         return renderer;
     }
 

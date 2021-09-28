@@ -15,7 +15,12 @@ export class Skybox extends EventDispatcher {
         this.verticalOffset = 400;
         this.exponent = 0.5;
 
-        var uniforms = { topColor: { type: 'c', value: new Color(this.topColor) }, bottomColor: { type: 'c', value: new Color(this.bottomColor) }, offset: { type: 'f', value: this.verticalOffset }, exponent: { type: 'f', value: this.exponent } };
+        const uniforms = {
+            topColor: {type: 'c', value: new Color(this.topColor)},
+            bottomColor: {type: 'c', value: new Color(this.bottomColor)},
+            offset: {type: 'f', value: this.verticalOffset},
+            exponent: {type: 'f', value: this.exponent}
+        };
 
         this.scene = scene;
         this.renderer = renderer;
@@ -90,10 +95,10 @@ export class Skybox extends EventDispatcher {
     }
 
     setEnvironmentMap(url) {
-        var scope = this;
+        const scope = this;
         scope.texture.load(url, function(t) {
-            var textureUniform = { type: 't', value: t };
-            var uniforms = { texture: textureUniform };
+            const textureUniform = {type: 't', value: t};
+            const uniforms = {texture: textureUniform};
             scope.skyMat = new ShaderMaterial({ vertexShader: scope.vertexShader, fragmentShader: scope.fragmentShader, uniforms: uniforms, side: DoubleSide });
             scope.skyMat.name = 'SkyMaterial';
             scope.toggleEnvironment(scope.useEnvironment);

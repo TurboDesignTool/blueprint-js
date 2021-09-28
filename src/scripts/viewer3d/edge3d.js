@@ -1,5 +1,4 @@
 import { EventDispatcher, Vector2, Vector3, MeshBasicMaterial, FrontSide, DoubleSide, BackSide, Shape, Path, ShapeGeometry, Mesh, Geometry, Face3, Box3 } from 'three';
-// import { SubdivisionModifier } from 'three/examples/jsm/modifiers/SubdivisionModifier';
 import { Utils } from '../core/utils.js';
 import { EVENT_REDRAW, EVENT_UPDATE_TEXTURES, EVENT_DELETED, EVENT_MODIFY_TEXTURE_ATTRIBUTE } from '../core/events.js';
 import { WallMaterial3D } from '../materials/WallMaterial3D.js';
@@ -71,7 +70,6 @@ export class Edge3D extends EventDispatcher {
             }
             this.__wallMaterial3D.textureMapPack = texturePack;
             this.__wallMaterial3D.dimensions = new Vector2(width, height);
-            // this.__wallMaterial3D.updateDimensions(width, height);
             this.redraw();
         }
         else if(evt.type === EVENT_MODIFY_TEXTURE_ATTRIBUTE){
@@ -99,7 +97,7 @@ export class Edge3D extends EventDispatcher {
     }
 
     __showAll() {
-        this.__showAll();
+        this.showAll();
     }
 
     init() {
@@ -248,7 +246,6 @@ export class Edge3D extends EventDispatcher {
         let height = Math.max(this.wall.startElevation, this.wall.endElevation);
         let width = this.edge.interiorDistance();
         this.__wallMaterial3D.dimensions = new Vector2(width, height);
-        // this.__wallMaterial3D.updateDimensions(width, height);
     }
 
     updatePlanes() {
@@ -286,8 +283,6 @@ export class Edge3D extends EventDispatcher {
         // sides
         this.planes.push(this.buildSideFillter(this.edge.interiorStart(), this.edge.exteriorStart(), extStartCorner.elevation, this.sideColor));
         this.planes.push(this.buildSideFillter(this.edge.interiorEnd(), this.edge.exteriorEnd(), extEndCorner.elevation, this.sideColor));
-        //		this.planes.push(this.buildSideFillter(this.edge.interiorStart(), this.edge.exteriorStart(), this.wall.startElevation, this.sideColor));
-        //		this.planes.push(this.buildSideFillter(this.edge.interiorEnd(), this.edge.exteriorEnd(), extEndCorner.endElevation, this.sideColor));
     }
 
     // start, end have x and y attributes (i.e. corners)
@@ -298,10 +293,6 @@ export class Edge3D extends EventDispatcher {
         let v4 = v1.clone();
         v3.y = this.edge.getEnd().elevation;
         v4.y = this.edge.getStart().elevation;
-
-        //		v3.y = this.wall.getClosestCorner(end).elevation;
-        //		v4.y = this.wall.getClosestCorner(start).elevation;
-
         let points = [v1.clone(), v2.clone(), v3.clone(), v4.clone()];
         points.forEach((p) => {
             p.applyMatrix4(transform);
@@ -353,11 +344,6 @@ export class Edge3D extends EventDispatcher {
             let y = vertex.y / height;
             return new Vector2(x, y);
         }
-
-        // let subdivider = new SubdivisionModifier(3, true);
-        // geometry = subdivider.modify(geometry);
-
-
         let mesh = new Mesh(geometry, material);
         mesh.name = 'wall';
         return mesh;

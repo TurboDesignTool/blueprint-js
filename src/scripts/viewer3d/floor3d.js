@@ -1,4 +1,4 @@
-import { EventDispatcher, TextureLoader, RepeatWrapping, MeshBasicMaterial, FrontSide, DoubleSide, Vector2, Vector3, Face3, Geometry, Shape, ShapeGeometry, Mesh } from 'three';
+import { EventDispatcher, MeshBasicMaterial, FrontSide, DoubleSide, Vector2, Vector3, Shape, ShapeGeometry, Mesh } from 'three';
 import { EVENT_CHANGED, EVENT_UPDATE_TEXTURES, EVENT_ROOM_ATTRIBUTES_CHANGED, EVENT_MODIFY_TEXTURE_ATTRIBUTE } from '../core/events.js';
 import { Configuration, configWallHeight } from '../core/configuration.js';
 import { BufferGeometry } from 'three/build/three.module';
@@ -58,7 +58,6 @@ export class Floor3D extends EventDispatcher {
                 this.__floorMaterial3D = new FloorMaterial3D({ color: texturePack.color, side: DoubleSide }, texturePack, this.scene);
             }
             this.__floorMaterial3D.textureMapPack = texturePack;
-            // this.__floorMaterial3D.updateDimensions(floorSize.x, floorSize.y);
             this.__floorMaterial3D.dimensions = floorSize;
         }
         else if(evt.type === EVENT_MODIFY_TEXTURE_ATTRIBUTE){
@@ -119,7 +118,6 @@ export class Floor3D extends EventDispatcher {
         geometry.computeVertexNormals();
         geometry.uvsNeedUpdate = true;
         let useGeometry = new BufferGeometry().fromGeometry(geometry);
-        // this.__floorMaterial3D.updateDimensions(floorSize.x, floorSize.y);
 
         this.__floorMaterial3D.dimensions = floorSize;
         if (this.__floorMaterial3D.envMapCamera) {
@@ -140,10 +138,6 @@ export class Floor3D extends EventDispatcher {
         let shape = null;
         let shapeGeometry = null;
         let roof = null;
-
-        // this.room.interiorCorners.forEach((corner) => {
-        //     spoints.push(new Vector2(corner.x, corner.y));
-        // });
 
         this.room.corners.forEach((corner) => {
             spoints.push(new Vector2(corner.x, corner.y));
@@ -166,35 +160,20 @@ export class Floor3D extends EventDispatcher {
         }
         // console.log('===================================');
         roof = new Mesh(shapeGeometry, roofMaterial);
-
-
-        // let geometry = new Geometry();
-
-        // this.room.corners.forEach((corner) => {
-        //     let vertex = new Vector3(corner.x, corner.elevation, corner.y);
-        //     geometry.vertices.push(vertex);
-        // });
-        // for (let i = 2; i < geometry.vertices.length; i++) {
-        //     let face = new Face3(0, i - 1, i);
-        //     geometry.faces.push(face);
-        // }
-        // let roof = new Mesh(geometry, roofMaterial);
-        // roof.rotation.set(Math.PI / 2, 0, 0);
-        // roof.position.y = Configuration.getNumericValue(configWallHeight);
         return roof;
     }
 
 
     buildRoofUniformHeight() {
         // setup texture
-        var roofMaterial = new MeshBasicMaterial({ side: FrontSide, color: 0xe5e5e5 });
-        var points = [];
+        const roofMaterial = new MeshBasicMaterial({ side: FrontSide, color: 0xe5e5e5 });
+        const points = [];
         this.room.interiorCorners.forEach((corner) => {
             points.push(new Vector2(corner.x, corner.y));
         });
-        var shape = new Shape(points);
-        var geometry = new ShapeGeometry(shape);
-        var roof = new Mesh(geometry, roofMaterial);
+        const shape = new Shape(points);
+        const geometry = new ShapeGeometry(shape);
+        const roof = new Mesh(geometry, roofMaterial);
         roof.rotation.set(Math.PI / 2, 0, 0);
         roof.position.y = Configuration.getNumericValue(configWallHeight);
         return roof;
@@ -203,22 +182,16 @@ export class Floor3D extends EventDispatcher {
     addToScene() {
         this.scene.add(this.floorPlane);
         this.scene.add(this.roofPlane);
-        //scene.add(roofPlane);
-        // hack so we can do intersect testing
-        // this.scene.add(this.room.floorPlane);
-        // this.scene.add(this.room.roofPlane);
     }
 
     removeFromScene() {
         this.scene.remove(this.floorPlane);
         this.scene.remove(this.roofPlane);
-        // this.scene.remove(this.room.floorPlane);
-        // this.scene.remove(this.room.roofPlane);
     }
 
     showRoof(flag) {
         console.log(flag);
-        // this.roofPlane.visible = flag;
+        this.roofPlane.visible = flag;
     }
 
     destroy() {

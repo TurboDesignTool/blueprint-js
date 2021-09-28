@@ -47,7 +47,7 @@ export class Physical3DItem extends Mesh {
         this.parent.needsUpdate = true;
 
 
-        this.__box = this.__loadedItem.geometry.boundingBox.clone(); //new Box3().setFromObject(this.__loadedItem);
+        this.__box = this.__loadedItem.geometry.boundingBox.clone();
         this.__center = this.__box.getCenter(new Vector3());
         this.__size = this.__box.getSize(new Vector3());
         let localCenter = this.__center.clone().applyMatrix4(mLocal);
@@ -74,9 +74,11 @@ export class Physical3DItem extends Mesh {
 
         }
         if (!this.__itemModel.offlineUpdate) {
+            // move
             if (evt.property === 'position') {
                 this.position.set(this.__itemModel.position.x, this.__itemModel.position.y, this.__itemModel.position.z);
             }
+            // rotate
             if (evt.property === 'rotation') {
                 gsap.to(this.__loadedItem.rotation, { duration: duration, x: this.__itemModel.rotation.x, onUpdate: __tinyUpdate });
                 gsap.to(this.__loadedItem.rotation, { duration: duration, y: this.__itemModel.rotation.y });

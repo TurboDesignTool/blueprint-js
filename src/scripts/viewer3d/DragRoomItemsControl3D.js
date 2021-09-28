@@ -27,6 +27,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__mouse = new Vector2();
         this.__offset = new Vector3();
         this.__intersection = new Vector3();
+        this.__intersectionStart = new Vector3();
 
         this.__worldPosition = new Vector3();
         this.__inverseMatrix = new Matrix4();
@@ -72,6 +73,10 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                 this.__plane.setFromNormalAndCoplanarPoint(this.__camera.getWorldDirection(this.__plane.normal), this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
 
                 this.__offset.copy(this.__intersection).sub(this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
+
+                this.__intersectionStart = this.__intersection.clone();
+
+                this.__selectedStartPostion = this.__selected.position.clone();
             }
             this.__domElement.style.cursor = 'move';
             this.dispatchEvent({ type: EVENT_ITEM_SELECTED, item: this.__selected });
@@ -116,7 +121,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
 
         if (this.__selected && this.__enabled && this.__selected.visible) {
-            console.log('move');
             //Check if the item has customIntersectionPlanes, otherwise move it freely
             if (!this.__selected.intersectionPlanes.length) {
                 if (this.__raycaster.ray.intersectPlane(this.__plane, this.__intersection)) {
@@ -124,6 +128,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     this.__selected.location = location;
                 }
             } else {
+                // TODO 当前根据光标位置更新选中物体位置, 期望：移动位置
                 let customIntersectingPlanes = this.__selected.intersectionPlanes;
                 let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, false);
                 if (customPlanesThatIntersect.length) {
@@ -132,7 +137,9 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     let location = intersectionData.point;
                     let normal = intersectionData.face.normal;
                     let intersectingPlane = intersectionData.object;
-                    this.__selected.snapToPoint(location, normal, intersectingPlane);
+                    const newLocation = this.__selected.location.clone();
+                    newLocation.set(this.__selectedStartPostion.x+ location.x - this.__intersectionStart.x,this.__selectedStartPostion.y+ location.y - this.__intersectionStart.y,this.__selectedStartPostion.z+ location.z - this.__intersectionStart.z);
+                    this.__selected.snapToPoint(newLocation, normal, intersectingPlane);
                 }
             }
             this.dispatchEvent({ type: EVENT_ITEM_MOVE, item: this.__selected });

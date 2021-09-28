@@ -253,7 +253,6 @@ export class Item extends EventDispatcher {
 
     set metadata(mdata) {
         this.__metadata = mdata;
-        this.__applyMetaData();
     }
 
     get position2d() {

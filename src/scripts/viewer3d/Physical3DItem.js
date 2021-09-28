@@ -1,4 +1,4 @@
-import { Mesh, Box3, Vector3, AxesHelper, Matrix4, sRGBEncoding, LinearEncoding } from 'three';
+import { Mesh, Box3, Vector3, Matrix4 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { EVENT_ITEM_LOADED, EVENT_ITEM_LOADING, EVENT_UPDATED, EVENT_PARAMETRIC_GEOMETRY_UPATED } from '../core/events';
 import { BoxBufferGeometry, LineBasicMaterial, LineSegments, EdgesGeometry } from 'three';
@@ -12,7 +12,7 @@ export class Physical3DItem extends Mesh {
         this.__size = null;
         this.__selected = false;
 
-        
+
         this.__options = opts;
 
         this.__selectedMaterial = new LineBasicMaterial({ color: 0x0000F0, linewidth: 5 });
@@ -55,8 +55,6 @@ export class Physical3DItem extends Mesh {
         m = m.makeTranslation(-localCenter.x, -localCenter.y, -localCenter.z);
 
         this.__boxhelper.geometry = new EdgesGeometry(new BoxBufferGeometry(this.__size.x, this.__size.y, this.__size.z));
-        // this.__boxhelper.geometry.applyMatrix4(m);
-
         this.__boxhelper.rotation.x = this.__itemModel.rotation.x;
         this.__boxhelper.rotation.y = this.__itemModel.rotation.y;
         this.__boxhelper.rotation.z = this.__itemModel.rotation.z;
@@ -78,9 +76,6 @@ export class Physical3DItem extends Mesh {
         if (!this.__itemModel.offlineUpdate) {
             if (evt.property === 'position') {
                 this.position.set(this.__itemModel.position.x, this.__itemModel.position.y, this.__itemModel.position.z);
-                // gsap.to(this.position, { duration: duration, x: this.__itemModel.position.x, onUpdate: __tinyUpdate });
-                // gsap.to(this.position, { duration: duration, y: this.__itemModel.position.y });
-                // gsap.to(this.position, { duration: duration, z: this.__itemModel.position.z });
             }
             if (evt.property === 'rotation') {
                 gsap.to(this.__loadedItem.rotation, { duration: duration, x: this.__itemModel.rotation.x, onUpdate: __tinyUpdate });
@@ -125,7 +120,7 @@ export class Physical3DItem extends Mesh {
     }
 
     __loadItemModel() {
-        if (!this.__itemModel.modelURL || this.__itemModel.modelURL === undefined || this.__itemModel.modelURL === 'undefined') {
+        if (!this.__itemModel.modelURL || this.__itemModel.modelURL === 'undefined') {
             return;
         }
 
@@ -138,13 +133,6 @@ export class Physical3DItem extends Mesh {
 
     __gltfLoaded(gltfModel) {
         this.__loadedItem = gltfModel.scene;
-        // this.__loadedItem.children.forEach((child) => {
-        //     if (child.material) {
-        //         if (child.material.map) {
-        //             child.material.map.encoding = sRGBEncoding;
-        //         }
-        //     }
-        // });
         this.__initializeChildItem();
         this.dispatchEvent({ type: EVENT_ITEM_LOADED });
     }
@@ -155,16 +143,10 @@ export class Physical3DItem extends Mesh {
 
     __createParametricItem() {
         let parametricData = this.__itemModel.parametricClass;
-
-        // let parametricClass = ParametricFactory.getParametricClass(this.__itemModel.baseParametricType.description);
-        // parametricData = new(parametricClass.getClass(this.__itemModel.subParametricData.type))(this.__itemModel.subParametricData);
-
         if (parametricData) {
             this.__loadedItem = new Mesh(parametricData.geometry, parametricData.material);
             this.__itemModel.parametricClass.addEventListener(EVENT_PARAMETRIC_GEOMETRY_UPATED, this.__parametricGeometryUpdateEvent);
             this.__initializeChildItem();
-            // let axes = new AxesHelper(1000);
-            // this.add(axes);
             this.dispatchEvent({ type: EVENT_ITEM_LOADED });
         }
     }
@@ -208,26 +190,3 @@ export class Physical3DItem extends Mesh {
         return this.__itemModel;
     }
 }
-
-/**
-export class Physical3DItem {
-    constructor(itemModel) {
-        console.log(this);
-        return new Proxy(new Physical3DItemNonProxy(itemModel), {
-            get(target, name, receiver) {
-                console.log('USING REFLECT.GET ', target);
-                if (!Reflect.has(target, name) && !Reflect.has(target.itemModel, name)) {
-                    return undefined;
-                }
-                if (Reflect.has(target, name)) {
-                    return Reflect.get(target, name);
-                }
-                if (Reflect.has(target.itemModel, name)) {
-                    return Reflect.get(target.itemModel, name);
-                }
-                return undefined;
-            }
-        });
-    }
-}
- */

@@ -10,8 +10,8 @@ export class Skybox extends EventDispatcher {
 
         this.defaultEnvironment = 'rooms/textures/envs/Garden.png';
         this.useEnvironment = false;
-        this.topColor = 0x92b2ce; //0xe9e9e9; //0xf9f9f9;//0x565e63
-        this.bottomColor = 0xffffff; //0xD8ECF9
+        this.topColor = 0x92b2ce;
+        this.bottomColor = 0xffffff;
         this.verticalOffset = 400;
         this.exponent = 0.5;
 
@@ -26,7 +26,7 @@ export class Skybox extends EventDispatcher {
         this.renderer = renderer;
 
         this.sphereRadius = 4000;
-        this.__gridSize = Configuration.getNumericValue(viewBounds)*5.0;//10000;
+        this.__gridSize = Configuration.getNumericValue(viewBounds)*5.0;
         this.widthSegments = 32;
         this.heightSegments = 15;
         this.sky = null;

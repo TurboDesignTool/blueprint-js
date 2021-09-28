@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, TextureLoader, RepeatWrapping, Color, Vector2, sRGBEncoding, CubeReflectionMapping } from 'three';
+import { MeshStandardMaterial, TextureLoader, ImageUtils, RepeatWrapping, Color, Vector2, sRGBEncoding, CubeReflectionMapping } from 'three';
 import { TEXTURE_DEFAULT_REPEAT } from '../core/constants';
 
 export class Material3D extends MeshStandardMaterial {
@@ -75,7 +75,6 @@ export class Material3D extends MeshStandardMaterial {
             this.__ambientTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__ambientTexture.needsUpdate = true;
             this.aoMap = this.__ambientTexture;
-            // this.aoMapIntensity = 1.0;
         }
         this.__updateTextures();
     }
@@ -116,7 +115,7 @@ export class Material3D extends MeshStandardMaterial {
         this.metalnessMap = this.__metalTexture = null;
         this.displacementMap = this.__bumpTexture = null;
 
-
+        // TODO three warning 'Texture marked for update but image is undefined'
         if (this.__textureMapPack.colormap) {
             this.__colorTexture = new TextureLoader().load(this.__textureMapPack.colormap, this.__updateColorMap.bind(this));
         }

@@ -95,7 +95,8 @@ export class Model extends EventDispatcher {
     }
 
     /** Removes a non-item, basically a mesh, from the scene.
-     * @param mesh The mesh to be removed.
+     * @param roomItem
+     * @param keepInList
      */
     remove(roomItem, keepInList) {
         keepInList = keepInList || false;
@@ -107,17 +108,9 @@ export class Model extends EventDispatcher {
 
     /**
      * Creates an item and adds it to the scene.
-     * @param itemType The type of the item given by an enumerator.
-     * @param fileName The name of the file to load.
      * @param metadata TODO
-     * @param position The initial position.
-     * @param rotation The initial rotation around the y axis.
-     * @param scale The initial scaling.
-     * @param fixed True if fixed.
-     * @param newItemDefinitions - Object with position and 'edge' attribute if it is a wall item
      */
     addItemByMetaData(metadata) {
-        //TODO
         this.dispatchEvent({ type: EVENT_NEW_ITEM, item: null });
     }
     addItem(item) {

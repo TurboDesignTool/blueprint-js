@@ -4,8 +4,8 @@
     "description": "This is the core framework of Blueprint-js for creating floorplans in 2d and 3d",
     "main": "src/scripts/blueprint.js",
     "scripts": {
-        "app-dev": "parcel src/index.html -d app/",
-        "app-production": "parcel build src/index.html -d app/ --no-source-maps   --experimental-scope-hoisting",
+        "dev": "parcel src/index.html",
+        "prod": "parcel build src/index.html --no-source-maps   --experimental-scope-hoisting",
         "for-git-demo-dev": "parcel build src/index.html -d demo/ --public-url https://aalavandhaann.github.io/blueprint-js/demo/  --no-minify",
         "for-git-demo-production": "parcel build src/index.html -d demo/ --no-source-maps --public-url https://aalavandhaann.github.io/blueprint-js/demo/",
         "frameworkonly-dev": "parcel build src/scripts/blueprint.js --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js  --no-minify",
@@ -23,10 +23,9 @@
         "url": "https://github.com/aalavandhaann/blueprint-js/issues"
     },
     "devDependencies": {
+        "@babel/core": "^7.15.5",
         "@babel/plugin-transform-runtime": "^7.12.1",
-        "babel-core": "^6.26.3",
-        "babel-plugin-external-helpers": "^6.22.0",
-        "babel-preset-latest": "^6.24.1",
+        "@babel/preset-env": "^7.15.6",
         "cssnano": "^4.1.10",
         "esdoc": "^1.0.4",
         "esdoc-standard-plugin": "^1.0.0",
@@ -34,9 +33,12 @@
         "eslint-plugin-import": "^2.22.0",
         "event-stream": ">4.0.0",
         "livereload": "^0.9.1",
-        "npm-run-all": "^4.0.2"
+        "npm-run-all": "^4.0.2",
+        "parcel-bundler": "^1.12.5",
+        "parcel-plugin-static-files-copy": "^2.6.0"
     },
     "dependencies": {
+        "@babel/runtime-corejs3": "^7.15.4",
         "@thi.ng/geom-hull": "0.0.27",
         "alpha-shape": "^1.0.0",
         "bezier-js": "^2.4.0",
@@ -50,7 +52,6 @@
         "gsap": "^3.5.0",
         "jszip": "^3.5.0",
         "line-intersect": "^2.2.1",
-        "parcel-bundler": "^1.12.4",
         "pixi-viewport": "^4.18.0",
         "pixi.js": "^5.3.3",
         "point-in-polygon": "^1.1.0",
@@ -59,5 +60,11 @@
         "three-gltf-exporter": "0.0.1",
         "three-reflector": "^1.0.2",
         "three-reflector2": "0.0.6"
+    },
+    "staticFiles": {
+        "staticPath": [
+            "app"
+        ],
+        "watcherGlob": "**"
     }
 }

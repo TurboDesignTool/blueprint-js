@@ -144,7 +144,7 @@ export class Viewer3D extends Scene {
 
         scope.dragcontrols.addEventListener(EVENT_WALL_CLICKED, this.__wallSelectedEvent);
         scope.dragcontrols.addEventListener(EVENT_ROOM_CLICKED, this.__roomSelectedEvent);
-        //SEt the animation loop
+        //Set the animation loop
         scope.renderer.setAnimationLoop(scope.render.bind(this));
         scope.render();
     }

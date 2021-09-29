@@ -22,16 +22,16 @@ export class DragRoomItemsControl3D extends EventDispatcher {
 
         this.__intersections = [];
 
-        this.__plane = new Plane();
+        this.__plane = new Plane();// plane of the selected object, which is perpendicular to the camera's world space direction
         this.__raycaster = new Raycaster();
-        this.__mouse = new Vector2();
-        this.__offset = new Vector3();
+        this.__mouse = new Vector2();// normalized device coordinates of the mouse
+        this.__offset = new Vector3(); // offset between the mouse and the center of selected object
+        this.__offset2 = new Vector3(); // offset between the mouse and the center of selected object y fixed
         this.__intersection = new Vector3();
-        this.__intersectionStart = new Vector3();
 
         this.__worldPosition = new Vector3();
         this.__inverseMatrix = new Matrix4();
-        this.__selected = null;
+        this.__selected = null;// selected object
         this.__hovered = null;
 
         this.__timestamp = Date.now();
@@ -48,6 +48,9 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__timestamp = time;
         evt.preventDefault();
         evt = (evt.changedTouches !== undefined) ? evt.changedTouches[0] : evt;
+        let rect = this.__domElement.getBoundingClientRect();
+        this.__mouse.x = ((evt.clientX - rect.left) / rect.width) * 2 - 1;
+        this.__mouse.y = -((evt.clientY - rect.top) / rect.height) * 2 + 1;
 
         this.__intersections.length = 0;
 
@@ -57,7 +60,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                 visibleDraggableItems.push(this.__draggableItems[i]);
             }
         }
-
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
         this.__raycaster.intersectObjects(visibleDraggableItems, false, this.__intersections);
 
@@ -71,12 +73,14 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                  * The belwo line for plane setting normal and coplanar point is necessary for touch based events (ref: DragCOntrols.js in three)
                  */
                 this.__plane.setFromNormalAndCoplanarPoint(this.__camera.getWorldDirection(this.__plane.normal), this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
-
                 this.__offset.copy(this.__intersection).sub(this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
-
-                this.__intersectionStart = this.__intersection.clone();
-
-                this.__selectedStartPostion = this.__selected.position.clone();
+                let customIntersectingPlanes = this.__selected.intersectionPlanes;
+                let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, true);
+                if (customPlanesThatIntersect.length) {
+                    let intersectionData = customPlanesThatIntersect[0];
+                    this.__intersection = intersectionData.point;
+                    this.__offset2.copy(this.__intersection).sub(this.__selected.position);
+                }
             }
             this.__domElement.style.cursor = 'move';
             this.dispatchEvent({ type: EVENT_ITEM_SELECTED, item: this.__selected });
@@ -128,18 +132,15 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     this.__selected.location = location;
                 }
             } else {
-                // TODO 当前根据光标位置更新选中物体位置, 期望：移动位置
                 let customIntersectingPlanes = this.__selected.intersectionPlanes;
-                let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, false);
+                let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, true);
                 if (customPlanesThatIntersect.length) {
                     let intersectionData = customPlanesThatIntersect[0];
                     this.__intersection = intersectionData.point;
                     let location = intersectionData.point;
                     let normal = intersectionData.face.normal;
                     let intersectingPlane = intersectionData.object;
-                    const newLocation = this.__selected.location.clone();
-                    newLocation.set(this.__selectedStartPostion.x+ location.x - this.__intersectionStart.x,this.__selectedStartPostion.y+ location.y - this.__intersectionStart.y,this.__selectedStartPostion.z+ location.z - this.__intersectionStart.z);
-                    this.__selected.snapToPoint(newLocation, normal, intersectingPlane);
+                    this.__selected.snapToPoint(location.clone().sub(this.__offset2), normal, intersectingPlane);
                 }
             }
             this.dispatchEvent({ type: EVENT_ITEM_MOVE, item: this.__selected });

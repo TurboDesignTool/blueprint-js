@@ -235,6 +235,7 @@
             ],
             "fixed": false,
             "resizable": false,
+            "allowRotate": true,
             "modelURL": "models/TableTennisTable.glb",
             "isParametric": false
         },

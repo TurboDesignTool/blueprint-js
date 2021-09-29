@@ -62,7 +62,6 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         }
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
         this.__raycaster.intersectObjects(visibleDraggableItems, false, this.__intersections);
-
         if (this.__intersections.length) {
             this.__selected = (this.__transformGroup) ? this.__draggableItems[0] : this.__intersections[0].object;
 

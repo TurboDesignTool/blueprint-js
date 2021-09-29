@@ -78,8 +78,9 @@ export class Item extends EventDispatcher {
     }
 
     __initializeMetaData() {
-        this.__fixed = (this.__metadata.fixed) ? this.__metadata.fixed : true;
-        this.__resizable = (this.__metadata.resizable) ? this.__metadata.resizable : true;
+        this.__fixed = !!this.__metadata.fixed;
+        this.__allowRotate = !!this.__metadata.allowRotate;
+        this.__resizable = !!this.__metadata.resizable;
         if (this.__metadata.position.length) {
             this.__position = new Vector3().fromArray(this.__metadata.position).clone();
         }
@@ -318,6 +319,15 @@ export class Item extends EventDispatcher {
     set fixed(flag) {
         this.__fixed = flag;
         this.__metaDataUpdate('fixed');
+    }
+
+    get allowRotate() {
+        return this.__allowRotate;
+    }
+
+    set allowRotate(flag) {
+        this.__allowRotate = flag;
+        this.__metaDataUpdate('allowRotate');
     }
 
     get frontVisible() {

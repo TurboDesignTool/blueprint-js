@@ -18,8 +18,6 @@ export class Physical3DItem extends Mesh {
         this.__selectedMaterial = new LineBasicMaterial({ color: 0x0000F0, linewidth: 5 });
 
         this.__boxhelper = new LineSegments(new EdgesGeometry(new BoxBufferGeometry(1, 1, 1)), this.__selectedMaterial);
-
-
         this.__customIntersectionPlanes = []; // Useful for intersecting only wall planes, only floorplanes, only ceiling planes etc
 
         this.__gltfLoader = new GLTFLoader();

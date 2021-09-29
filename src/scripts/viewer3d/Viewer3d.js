@@ -13,7 +13,6 @@ import { Physical3DItem } from './Physical3DItem.js';
 import { DragRoomItemsControl3D } from './DragRoomItemsControl3D.js';
 import { Configuration, viewBounds } from '../core/configuration.js';
 import { BoundaryView3D } from './BoundaryView3D.js';
-
 export class Viewer3D extends Scene {
     constructor(model, element, opts) {
         super();
@@ -48,6 +47,7 @@ export class Viewer3D extends Scene {
 
         this.cameraNear = 10;
         this.cameraFar = 100000;
+        this.hud = null;
 
         this.controls = null;
 
@@ -116,7 +116,6 @@ export class Viewer3D extends Scene {
         scope.controls.update();
 
         scope.axes = new AxesHelper(500);
-
 
         // handle window resizing
         scope.updateWindowSize();

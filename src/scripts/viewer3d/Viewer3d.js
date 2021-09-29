@@ -1,6 +1,7 @@
 import { WebGLRenderer, ImageUtils, PerspectiveCamera, AxesHelper, Scene, RGBFormat, LinearMipmapLinearFilter, sRGBEncoding } from 'three';
 import { PCFSoftShadowMap, WebGLCubeRenderTarget, CubeCamera } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 
 import { EVENT_LOADED, EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED, EVENT_GLTF_READY, EVENT_NEW_ITEM, EVENT_NEW_ROOMS_ADDED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events.js';
@@ -49,7 +50,7 @@ export class Viewer3D extends Scene {
         this.cameraFar = 100000;
         this.hud = null;
 
-        this.controls = null;
+        this.orbitControl = null;
 
         this.renderer = null;
         this.controller = null;
@@ -102,18 +103,17 @@ export class Viewer3D extends Scene {
         scope.domElement.appendChild(scope.renderer.domElement);
 
         scope.lights = new Lights3D(this, scope.floorplan);
-        scope.dragcontrols = new DragRoomItemsControl3D(this.floorplan.wallPlanesForIntersection, this.floorplan.floorPlanesForIntersection, this.physicalRoomItems, scope.camera, scope.renderer.domElement);
-        scope.controls = new OrbitControls(scope.camera, scope.domElement);
-        scope.controls.enableDamping = false;
-        scope.controls.dampingFactor = 0.1;
-        scope.controls.maxPolarAngle = Math.PI * 0.5;
-        scope.controls.maxDistance = Configuration.getNumericValue(viewBounds);
-        scope.controls.minDistance = 100;
-        scope.controls.screenSpacePanning = true;
-
+        scope.dragControls = new DragRoomItemsControl3D(this.floorplan.wallPlanesForIntersection, this.floorplan.floorPlanesForIntersection, this.physicalRoomItems, scope.camera, scope.renderer.domElement);
+        scope.orbitControl = new OrbitControls(scope.camera, scope.domElement);
+        scope.orbitControl.enableDamping = false;
+        scope.orbitControl.dampingFactor = 0.1;
+        scope.orbitControl.maxPolarAngle = Math.PI * 0.5;
+        scope.orbitControl.maxDistance = Configuration.getNumericValue(viewBounds);
+        scope.orbitControl.minDistance = 100;
+        scope.orbitControl.screenSpacePanning = true;
         scope.skybox = new Skybox(this, scope.renderer);
         scope.camera.position.set(0, 600, 1500);
-        scope.controls.update();
+        scope.orbitControl.update();
 
         scope.axes = new AxesHelper(500);
 
@@ -133,16 +133,16 @@ export class Viewer3D extends Scene {
         scope.floorplan.addEventListener(EVENT_NEW_ROOMS_ADDED, scope.addRoomsAndWalls.bind(scope));
         scope.floorplan.addEventListener(EVENT_EXTERNAL_FLOORPLAN_LOADED, scope.addExternalRoomsAndWalls.bind(scope));
 
-        this.controls.addEventListener('change', () => { scope.needsUpdate = true; });
+        this.orbitControl.addEventListener('change', () => { scope.needsUpdate = true; });
 
 
-        scope.dragcontrols.addEventListener(EVENT_ITEM_SELECTED, this.__roomItemSelectedEvent);
-        scope.dragcontrols.addEventListener(EVENT_ITEM_MOVE, this.__roomItemDraggedEvent);
-        scope.dragcontrols.addEventListener(EVENT_ITEM_MOVE_FINISH, this.__roomItemDragFinishEvent);
-        scope.dragcontrols.addEventListener(EVENT_NO_ITEM_SELECTED, this.__roomItemUnselectedEvent);
+        scope.dragControls.addEventListener(EVENT_ITEM_SELECTED, this.__roomItemSelectedEvent);
+        scope.dragControls.addEventListener(EVENT_ITEM_MOVE, this.__roomItemDraggedEvent);
+        scope.dragControls.addEventListener(EVENT_ITEM_MOVE_FINISH, this.__roomItemDragFinishEvent);
+        scope.dragControls.addEventListener(EVENT_NO_ITEM_SELECTED, this.__roomItemUnselectedEvent);
 
-        scope.dragcontrols.addEventListener(EVENT_WALL_CLICKED, this.__wallSelectedEvent);
-        scope.dragcontrols.addEventListener(EVENT_ROOM_CLICKED, this.__roomSelectedEvent);
+        scope.dragControls.addEventListener(EVENT_WALL_CLICKED, this.__wallSelectedEvent);
+        scope.dragControls.addEventListener(EVENT_ROOM_CLICKED, this.__roomSelectedEvent);
         //Set the animation loop
         scope.renderer.setAnimationLoop(scope.render.bind(this));
         scope.render();
@@ -168,16 +168,16 @@ export class Viewer3D extends Scene {
     }
 
     __roomItemDragged(evt) {
-        this.controls.enabled = false;
+        this.orbitControl.enabled = false;
         this.needsUpdate = true;
     }
 
     __roomItemDragFinish(evt) {
-        this.controls.enabled = true;
+        this.orbitControl.enabled = true;
     }
 
     __roomItemUnselected(evt) {
-        this.controls.enabled = true;
+        this.orbitControl.enabled = true;
         if (this.__currentItemSelected) {
             this.__currentItemSelected.selected = false;
             this.__currentItemSelected = null;
@@ -255,21 +255,21 @@ export class Viewer3D extends Scene {
 
         // draw floors
         for (i = 0; i < rooms.length; i++) {
-            const threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
+            const threeFloor = new Floor3D(scope, rooms[i], scope.orbitControl, this.__options);
             scope.floors3d.push(threeFloor);
         }
 
         for (i = 0; i < wallEdges.length; i++) {
-            let edge3d = new Edge3D(scope, wallEdges[i], scope.controls, this.__options);
+            let edge3d = new Edge3D(scope, wallEdges[i], scope.orbitControl, this.__options);
             scope.edges3d.push(edge3d);
         }
 
         scope.shouldRender = true;
 
         let floorplanCenter = scope.floorplan.getDimensions(true);
-        scope.controls.target = floorplanCenter.clone();
+        scope.orbitControl.target = floorplanCenter.clone();
         scope.camera.position.set(floorplanCenter.x, 300, floorplanCenter.z * 5);
-        scope.controls.update();
+        scope.orbitControl.update();
     }
 
 
@@ -299,21 +299,21 @@ export class Viewer3D extends Scene {
 
         // draw floors
         for (i = 0; i < rooms.length; i++) {
-            const threeFloor = new Floor3D(scope, rooms[i], scope.controls, this.__options);
+            const threeFloor = new Floor3D(scope, rooms[i], scope.orbitControl, this.__options);
             scope.__externalFloors3d.push(threeFloor);
         }
 
         for (i = 0; i < wallEdges.length; i++) {
-            let edge3d = new Edge3D(scope, wallEdges[i], scope.controls, this.__options);
+            let edge3d = new Edge3D(scope, wallEdges[i], scope.orbitControl, this.__options);
             scope.__externalEdges3d.push(edge3d);
         }
 
         scope.shouldRender = true;
 
         let floorplanCenter = scope.floorplan.getDimensions(true);
-        scope.controls.target = floorplanCenter.clone();
+        scope.orbitControl.target = floorplanCenter.clone();
         scope.camera.position.set(floorplanCenter.x, 300, floorplanCenter.z * 5);
-        scope.controls.update();
+        scope.orbitControl.update();
     }
 
     getARenderer() {
@@ -389,11 +389,11 @@ export class Viewer3D extends Scene {
 
     set enabled(flag) {
         this.__enabled = flag;
-        this.controls.enabled = flag;
+        this.orbitControl.enabled = flag;
         if (!flag) {
-            this.dragcontrols.deactivate();
+            this.dragControls.deactivate();
         } else {
-            this.dragcontrols.activate();
+            this.dragControls.activate();
         }
     }
 

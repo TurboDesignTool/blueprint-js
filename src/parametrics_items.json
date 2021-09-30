@@ -235,6 +235,7 @@
             ],
             "fixed": false,
             "resizable": false,
+            "allowRotate": true,
             "modelURL": "models/DoubleChairWithPillow.glb",
             "isParametric": false
         },

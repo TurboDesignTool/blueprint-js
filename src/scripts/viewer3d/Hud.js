@@ -2,9 +2,7 @@ import {EventDispatcher, Scene as ThreeScene, Geometry, Vector3, LineBasicMateri
 
 import {EVENT_ITEM_SELECTED, EVENT_ITEM_UNSELECTED} from '../core/events.js';
 
-//As far as I understand the HUD is here to show a rotation control on every item
-//If this idea is correct then it seriously sucks. A whole rendering to show just cones and lines as arrows?
-export class HUD extends Object3D
+export class RotationHelper extends Object3D
 {
 	constructor(item)
 	{

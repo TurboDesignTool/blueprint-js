@@ -15,7 +15,7 @@ export class ParametricBaseDoor extends EventDispatcher {
     constructor(parameters) {
         super();
         let opts = { frameSize: 5, frameColor: '#FF0000', doorColor: '#E0E0EE', frameWidth: 100, frameHeight: 200, frameThickness: 20, doorRatio: 0.5, openDirection: DOOR_OPEN_DIRECTIONS.RIGHT.description, handleType: DOOR_HANDLE_TYPES.HANDLE_01.description, doorHandleColor: '#F0F0F0', glassColor: '#87CEEB' };
-        for (var opt in opts) {
+        for (const opt in opts) {
             if (opt === 'frameColor' || opt === 'doorColor' || opt === 'doorHandleColor' || opt === 'glassColor') {
                 opts[opt] = new Color(parameters[opt]);
             } else if (opts.hasOwnProperty(opt) && parameters.hasOwnProperty(opt)) {

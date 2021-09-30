@@ -2,7 +2,7 @@ import { EventDispatcher, Vector2 } from 'three';
 import { Plane, Raycaster, Vector3, Matrix4 } from 'three/build/three.module';
 import { EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_HOVERON, EVENT_ITEM_HOVEROFF, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_FLOOR_CLICKED, EVENT_ROOM_CLICKED } from '../core/events';
 import { IS_TOUCH_DEVICE } from '../../DeviceInfo';
-import {HUD} from './hud';
+import {RotationHelper} from './Hud';
 
 /**
  * This is a custom implementation of the DragControls class
@@ -32,7 +32,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__intersection = new Vector3();
         this.__intersection2 = new Vector3();
 
-        this.__hud = null;
+        this.__rotationHelper = null;
         this.__enableRotation = false;
 
         this.__worldPosition = new Vector3();
@@ -62,8 +62,8 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__intersections.length = 0;
 
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
-        if (this.__hud) {
-            const hudIntersects = this.__raycaster.intersectObject(this.__hud, true);
+        if (this.__rotationHelper) {
+            const hudIntersects = this.__raycaster.intersectObject(this.__rotationHelper, true);
             if (hudIntersects.length) {
                 this.enabled = false;
                 this.enableRotation = true;
@@ -119,19 +119,21 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         }
     }
     __updateSelected() {
-        if (this.__hud) {
-            this.__view3d.remove(this.__hud);
-            this.__hud = null;
+        if (this.__rotationHelper) {
+            this.__view3d.remove(this.__rotationHelper);
+            this.__rotationHelper = null;
         }
         this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
     }
 
     __updateHub() {
-        if (!this.__hud) {
-            this.__hud = new HUD(this.__selected.itemModel);
-            this.__view3d.add(this.__hud);
+        if (!this.__rotationHelper) {
+            if (this.__selected.itemModel.allowRotate) {
+                this.__rotationHelper = new RotationHelper(this.__selected.itemModel);
+                this.__view3d.add(this.__rotationHelper);
+            }
         } else {
-            this.__hud.update(this.__selected.itemModel);
+            this.__rotationHelper.update(this.__selected.itemModel);
         }
     }
 
@@ -156,7 +158,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
 
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
 
-        if (this.__hud && this.enableRotation) {
+        if (this.__rotationHelper && this.enableRotation) {
             const customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
             if (customPlanesThatIntersect.length) {
                 this.__selected.rotate(customPlanesThatIntersect[0].point);

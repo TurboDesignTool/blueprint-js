@@ -1,7 +1,7 @@
 name=room3d
 ip=$1
 port=$2
-cp -r room3d ${name}
+cp -r room3d-dist ${name}
 tar -czf ${name}.tar ${name}
 scp ${name}.tar root@${ip}:/usr/share/nginx/html/${name}.tar
 ssh root@${ip} "cd /usr/share/nginx/html  && tar -xzf ${name}.tar && rm -rf ${name}.tar && exit"

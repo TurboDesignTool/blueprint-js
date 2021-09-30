@@ -5,7 +5,7 @@
     "main": "src/scripts/blueprint.js",
     "scripts": {
         "dev": "parcel src/index.html",
-        "build": "parcel build src/index.html -d room3d --public-url ./ --no-source-maps",
+        "build": "parcel build src/index.html -d room3d-dist --public-url ./ --no-source-maps",
         "for-git-demo-dev": "parcel build src/index.html -d demo/ --public-url https://aalavandhaann.github.io/blueprint-js/demo/  --no-minify",
         "for-git-demo-production": "parcel build src/index.html -d demo/ --no-source-maps --public-url https://aalavandhaann.github.io/blueprint-js/demo/",
         "frameworkonly-dev": "parcel build src/scripts/blueprint.js --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js  --no-minify",

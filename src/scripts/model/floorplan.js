@@ -814,8 +814,10 @@ export class Floorplan extends EventDispatcher {
      * @deprecated
      */
     updateFloorTextures() {
-        var uuids = Utils.map(this.rooms, function(room) { return room.getUuid(); });
-        for (var uuid in this.floorTextures) {
+        const uuids = Utils.map(this.rooms, function (room) {
+            return room.getUuid();
+        });
+        for (const uuid in this.floorTextures) {
             if (!Utils.hasValue(uuids, uuid)) {
                 delete this.floorTextures[uuid];
             }
@@ -1158,17 +1160,10 @@ export class Floorplan extends EventDispatcher {
         return uniqueCCWLoops;
     }
 
-    /**
-     * @param {CarbonSheet} val
-     */
     set carbonSheet(val) {
         this._carbonSheet = val;
     }
 
-    /**
-     * @return {CarbonSheet} _carbonSheet reference to the instance of
-     *         {@link CarbonSheet}
-     */
     get carbonSheet() {
         return this._carbonSheet;
     }

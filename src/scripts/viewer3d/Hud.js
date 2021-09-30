@@ -10,8 +10,7 @@ export class RotationHelper extends Object3D
 
 		this.selectedItem = item;
 
-		this.rotating = false;
-		this.mouseover = false;
+		this.highlight = false;
 
 		this.tolerance = 10;
 		this.height = 5;
@@ -24,7 +23,7 @@ export class RotationHelper extends Object3D
 
 	getColor()
 	{
-		return (this.mouseover || this.rotating) ? this.hoverColor : this.color;
+		return this.highlight ? this.hoverColor : this.color;
 	}
 
 	update(item = this.selectedItem)
@@ -83,5 +82,18 @@ export class RotationHelper extends Object3D
 		this.position.x = item.position.x;
 		this.position.z = item.position.z;
 		this.position.y = this.height;
+	}
+	 setColor() {
+		 this.children.forEach((obj) => {
+			 obj.material.color.set(this.getColor());
+		 });
+	}
+	press() {
+		this.highlight = true;
+		this.setColor();
+	}
+	release() {
+		this.highlight = false;
+		this.setColor();
 	}
 }

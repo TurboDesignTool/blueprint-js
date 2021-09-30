@@ -67,10 +67,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
             if (hudIntersects.length) {
                 this.enabled = false;
                 this.enableRotation = true;
-                const customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
-                let intersectionData = customPlanesThatIntersect[0];
-                this.__intersection = intersectionData.point;
-                this.__offset2.copy(this.__intersection).sub(this.__selected.position);
+                this.__rotationHelper.press();
                 return;
             }
         }
@@ -93,11 +90,11 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     let intersectionData = customPlanesThatIntersect[0];
                     this.__intersection = intersectionData.point;
                     this.__offset2.copy(this.__intersection).sub(this.__selected.position);
-                    this.__updateHub();
                 }
             }
             this.__domElement.style.cursor = 'move';
             this.dispatchEvent({ type: EVENT_ITEM_SELECTED, item: this.__selected });
+            this.__updateHub();
             return;
         }
         //
@@ -118,29 +115,14 @@ export class DragRoomItemsControl3D extends EventDispatcher {
             this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
         }
     }
-    __updateSelected() {
-        if (this.__rotationHelper) {
-            this.__view3d.remove(this.__rotationHelper);
-            this.__rotationHelper = null;
-        }
-        this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
-    }
-
-    __updateHub() {
-        if (!this.__rotationHelper) {
-            if (this.__selected.itemModel.allowRotate) {
-                this.__rotationHelper = new RotationHelper(this.__selected.itemModel);
-                this.__view3d.add(this.__rotationHelper);
-            }
-        } else {
-            this.__rotationHelper.update(this.__selected.itemModel);
-        }
-    }
 
     __releaseListener(evt) {
         this.enabled = false;
         this.enableRotation = false;
         evt.preventDefault();
+        if (this.__rotationHelper) {
+            this.__rotationHelper.release();
+        }
         if (this.__selected) {
             this.dispatchEvent({ type: EVENT_ITEM_MOVE_FINISH, item: this.__selected });
         }
@@ -213,6 +195,27 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                 this.__domElement.style.cursor = 'auto';
                 this.dispatchEvent({ type: EVENT_ITEM_HOVEROFF, item: this.__hovered });
                 this.__hovered = null;
+            }
+        }
+    }
+    __updateSelected() {
+        this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
+        this.__selected = null;
+        this.__updateHub();
+    }
+
+    __updateHub() {
+        if (this.__selected && this.__selected.itemModel.allowRotate) {
+            if (!this.__rotationHelper) {
+                this.__rotationHelper = new RotationHelper(this.__selected.itemModel);
+                this.__view3d.add(this.__rotationHelper);
+            } else {
+                this.__rotationHelper.update(this.__selected.itemModel);
+            }
+        } else {
+            if (this.__rotationHelper) {
+                this.__view3d.remove(this.__rotationHelper);
+                this.__rotationHelper = null;
             }
         }
     }

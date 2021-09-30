@@ -174,6 +174,7 @@ export class Viewer3D extends Scene {
 
     __roomItemDragFinish(evt) {
         this.orbitControl.enabled = true;
+        this.needsUpdate = true;
     }
 
     __roomItemUnselected(evt) {

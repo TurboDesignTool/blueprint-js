@@ -407,7 +407,7 @@ blueprint3d.roomplanner.addRoomplanListener(EVENT_GLTF_READY, function(evt) {
 blueprint3d.model.loadSerialized(parametrics_items);
 
 if (!opts.widget) {
-    uxInterface = QuickSettings.create(0, 0, 'BlueprintJS', app_parent);
+    uxInterface = QuickSettings.create(0, 0, 'Room3d', app_parent);
     settingsViewer2d = QuickSettings.create(0, 0, 'Viewer 2D', app_parent);
     settingsSelectedCorner = QuickSettings.create(panelWidths, 0, 'Corner', app_parent);
     settingsSelectedWall = QuickSettings.create(panelWidths, 0, 'Wall', app_parent);

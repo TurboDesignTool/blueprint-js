@@ -376,14 +376,7 @@ blueprint3d.roomplanner.addRoomplanListener(EVENT_ITEM_SELECTED, function(evt) {
     }
 });
 
-blueprint3d.roomplanner.addRoomplanListener(EVENT_NO_ITEM_SELECTED, function() {
-    settingsSelectedWall3D.hide();
-    settingsSelectedRoom3D.hide();
-    if (parametricContextInterface) {
-        parametricContextInterface.destroy();
-        parametricContextInterface = null;
-    }
-});
+blueprint3d.roomplanner.addRoomplanListener(EVENT_NO_ITEM_SELECTED, function() {});
 blueprint3d.roomplanner.addRoomplanListener(EVENT_WALL_CLICKED, function(evt) {
     settingsSelectedWall3D.show();
     settingsSelectedRoom3D.hide();

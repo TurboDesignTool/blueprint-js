@@ -108,7 +108,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         } else if (floorPlanesThatIntersect.length) {
             this.dispatchEvent({ type: EVENT_ROOM_CLICKED, item: floorPlanesThatIntersect[0].object.room, point: floorPlanesThatIntersect[0].point, normal: floorPlanesThatIntersect[0].face.normal });
         }
-        this.__updateSelected();
+        this.__unSelected();
         this.enabled = false;
         //
         if (deltaTime < 300) {
@@ -198,7 +198,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
             }
         }
     }
-    __updateSelected() {
+    __unSelected() {
         this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
         this.__selected = null;
         this.__updateHub();

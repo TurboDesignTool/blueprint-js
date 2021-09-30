@@ -5,13 +5,14 @@
     "main": "src/scripts/blueprint.js",
     "scripts": {
         "dev": "parcel src/index.html",
-        "prod": "parcel build src/index.html --no-source-maps   --experimental-scope-hoisting",
+        "build": "parcel build src/index.html -d room3d --public-url ./ --no-source-maps",
         "for-git-demo-dev": "parcel build src/index.html -d demo/ --public-url https://aalavandhaann.github.io/blueprint-js/demo/  --no-minify",
         "for-git-demo-production": "parcel build src/index.html -d demo/ --no-source-maps --public-url https://aalavandhaann.github.io/blueprint-js/demo/",
         "frameworkonly-dev": "parcel build src/scripts/blueprint.js --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js  --no-minify",
         "frameworkonly-production": "parcel build src/scripts/blueprint.js  --global BP3DJS --no-source-maps -d bin/ --target browser --out-file bp3djs.js",
         "docs": "esdoc",
-        "lint": "eslint --fix --ext .js,.ts ./"
+        "lint": "eslint --fix --ext .js,.ts ./",
+        "deploy:dev": "./deploy.sh 139.196.102.55"
     },
     "repository": {
         "type": "git",

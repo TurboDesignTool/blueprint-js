@@ -3,7 +3,7 @@ gitpush.sh~
 /.babelrc~
 *.blend1
 dist/*
-room3d/*
+room3d-dist/*
 .cache/*
 3D-Models-Internet/*
 

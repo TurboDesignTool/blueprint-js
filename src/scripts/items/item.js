@@ -226,6 +226,21 @@ export class Item extends EventDispatcher {
         this.__currentWallEdge = wallEdge;
     }
 
+    rotate(point) {
+        let angle = Utils.angle(new Vector2(0, 1), new Vector2(point.x - this.position.x, point.z - this.position.z));
+        const snapTolerance = Math.PI / 16.0;
+        // snap to intervals near Math.PI/2
+        for (let i = -4; i <= 4; i++) {
+            if (Math.abs(angle - (i * (Math.PI / 2))) < snapTolerance) {
+                angle = i * (Math.PI / 2);
+                break;
+            }
+        }
+        const rotation = new Vector3();
+        rotation.y = angle;
+        this.rotation = rotation;
+    }
+
     dispose() {
         if (this.isParametric && this.__parametricClass) {
             this.__parametricClass.removeEventListener(EVENT_PARAMETRIC_GEOMETRY_UPATED, this.__parametricGeometryUpdateEvent);

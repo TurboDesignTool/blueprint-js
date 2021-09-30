@@ -62,15 +62,15 @@ export class Utils {
      * @returns The angle.
      */
     static angle(start, end) {
-        var tDot = start.x * end.x + start.y * end.y;
-        var tDet = start.x * end.y - start.y * end.x;
-        var tAngle = -Math.atan2(tDet, tDot);
+        const tDot = start.x * end.x + start.y * end.y;
+        const tDet = start.x * end.y - start.y * end.x;
+        const tAngle = -Math.atan2(tDet, tDot);
         return tAngle;
     }
 
     /** shifts angle to be 0 to 2pi */
     static angle2pi(start, end) {
-        var tTheta = Utils.angle(start, end);
+        let tTheta = Utils.angle(start, end);
         if (tTheta < 0) {
             tTheta += 2.0 * Math.PI;
         }

@@ -2,6 +2,7 @@ import { EventDispatcher, Vector2 } from 'three';
 import { Plane, Raycaster, Vector3, Matrix4 } from 'three/build/three.module';
 import { EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_HOVERON, EVENT_ITEM_HOVEROFF, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_FLOOR_CLICKED, EVENT_ROOM_CLICKED } from '../core/events';
 import { IS_TOUCH_DEVICE } from '../../DeviceInfo';
+import {HUD} from './hud';
 
 /**
  * This is a custom implementation of the DragControls class
@@ -10,8 +11,9 @@ import { IS_TOUCH_DEVICE } from '../../DeviceInfo';
  * a invisible box geometry based on the loaded gltf
  */
 export class DragRoomItemsControl3D extends EventDispatcher {
-    constructor(walls, floors, items, camera, domElement) {
+    constructor(walls, floors, items, camera, domElement, view3d) {
         super();
+        this.__view3d = view3d;
         this.__walls = walls;
         this.__floors = floors;
         this.__draggableItems = items;
@@ -28,6 +30,10 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__offset = new Vector3(); // offset between the mouse and the center of selected object
         this.__offset2 = new Vector3(); // offset between the mouse and the center of selected object y fixed
         this.__intersection = new Vector3();
+        this.__intersection2 = new Vector3();
+
+        this.__hud = null;
+        this.__enableRotation = false;
 
         this.__worldPosition = new Vector3();
         this.__inverseMatrix = new Matrix4();
@@ -43,6 +49,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
     }
 
     __pressListener(evt) {
+        this.enabled = true;
         let time = Date.now();
         let deltaTime = time - this.__timestamp;
         this.__timestamp = time;
@@ -54,14 +61,22 @@ export class DragRoomItemsControl3D extends EventDispatcher {
 
         this.__intersections.length = 0;
 
-        let visibleDraggableItems = [];
-        for (let i = 0; i < this.__draggableItems.length; i++) {
-            if (this.__draggableItems[i].visible) {
-                visibleDraggableItems.push(this.__draggableItems[i]);
+        this.__raycaster.setFromCamera(this.__mouse, this.__camera);
+        if (this.__hud) {
+            const hudIntersects = this.__raycaster.intersectObject(this.__hud, true);
+            if (hudIntersects.length) {
+                this.enabled = false;
+                this.enableRotation = true;
+                const customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
+                let intersectionData = customPlanesThatIntersect[0];
+                this.__intersection = intersectionData.point;
+                this.__offset2.copy(this.__intersection).sub(this.__selected.position);
+                return;
             }
         }
-        this.__raycaster.setFromCamera(this.__mouse, this.__camera);
-        this.__raycaster.intersectObjects(visibleDraggableItems, false, this.__intersections);
+
+
+        this.__raycaster.intersectObjects(this.visibleDraggableItems, false, this.__intersections);
         if (this.__intersections.length) {
             this.__selected = (this.__transformGroup) ? this.__draggableItems[0] : this.__intersections[0].object;
 
@@ -73,41 +88,59 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                  */
                 this.__plane.setFromNormalAndCoplanarPoint(this.__camera.getWorldDirection(this.__plane.normal), this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
                 this.__offset.copy(this.__intersection).sub(this.__worldPosition.setFromMatrixPosition(this.__selected.matrixWorld));
-                let customIntersectingPlanes = this.__selected.intersectionPlanes;
-                let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, true);
+                let customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
                 if (customPlanesThatIntersect.length) {
                     let intersectionData = customPlanesThatIntersect[0];
                     this.__intersection = intersectionData.point;
                     this.__offset2.copy(this.__intersection).sub(this.__selected.position);
+                    this.__updateHub();
                 }
             }
             this.__domElement.style.cursor = 'move';
             this.dispatchEvent({ type: EVENT_ITEM_SELECTED, item: this.__selected });
             return;
         }
+        //
+        evt = (evt.changedTouches !== undefined) ? evt.changedTouches[0] : evt;
+        this.__raycaster.setFromCamera(this.__mouse, this.__camera);
+
+        let wallPlanesThatIntersect = this.__raycaster.intersectObjects(this.__walls, false);
+        let floorPlanesThatIntersect = this.__raycaster.intersectObjects(this.__floors, false);
+        if (wallPlanesThatIntersect.length) {
+            this.dispatchEvent({ type: EVENT_WALL_CLICKED, item: wallPlanesThatIntersect[0].object.edge, point: wallPlanesThatIntersect[0].point, normal: wallPlanesThatIntersect[0].face.normal });
+        } else if (floorPlanesThatIntersect.length) {
+            this.dispatchEvent({ type: EVENT_ROOM_CLICKED, item: floorPlanesThatIntersect[0].object.room, point: floorPlanesThatIntersect[0].point, normal: floorPlanesThatIntersect[0].face.normal });
+        }
+        this.__updateSelected();
+        this.enabled = false;
+        //
         if (deltaTime < 300) {
             this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
         }
     }
+    __updateSelected() {
+        if (this.__hud) {
+            this.__view3d.remove(this.__hud);
+            this.__hud = null;
+        }
+        this.dispatchEvent({ type: EVENT_NO_ITEM_SELECTED, item: this.__selected });
+    }
+
+    __updateHub() {
+        if (!this.__hud) {
+            this.__hud = new HUD(this.__selected.itemModel);
+            this.__view3d.add(this.__hud);
+        } else {
+            this.__hud.update(this.__selected.itemModel);
+        }
+    }
 
     __releaseListener(evt) {
-
+        this.enabled = false;
+        this.enableRotation = false;
         evt.preventDefault();
         if (this.__selected) {
             this.dispatchEvent({ type: EVENT_ITEM_MOVE_FINISH, item: this.__selected });
-            this.__selected = null;
-        } else {
-
-            evt = (evt.changedTouches !== undefined) ? evt.changedTouches[0] : evt;
-            this.__raycaster.setFromCamera(this.__mouse, this.__camera);
-
-            let wallPlanesThatIntersect = this.__raycaster.intersectObjects(this.__walls, false);
-            let floorPlanesThatIntersect = this.__raycaster.intersectObjects(this.__floors, false);
-            if (wallPlanesThatIntersect.length) {
-                this.dispatchEvent({ type: EVENT_WALL_CLICKED, item: wallPlanesThatIntersect[0].object.edge, point: wallPlanesThatIntersect[0].point, normal: wallPlanesThatIntersect[0].face.normal });
-            } else if (floorPlanesThatIntersect.length) {
-                this.dispatchEvent({ type: EVENT_ROOM_CLICKED, item: floorPlanesThatIntersect[0].object.room, point: floorPlanesThatIntersect[0].point, normal: floorPlanesThatIntersect[0].face.normal });
-            }
         }
         this.__domElement.style.cursor = (this.__hovered) ? 'pointer' : 'auto';
 
@@ -123,6 +156,16 @@ export class DragRoomItemsControl3D extends EventDispatcher {
 
         this.__raycaster.setFromCamera(this.__mouse, this.__camera);
 
+        if (this.__hud && this.enableRotation) {
+            const customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
+            if (customPlanesThatIntersect.length) {
+                this.__selected.rotate(customPlanesThatIntersect[0].point);
+                this.dispatchEvent({ type: EVENT_ITEM_MOVE, item: this.__selected });
+                this.__updateHub();
+                return;
+            }
+        }
+
         if (this.__selected && this.__enabled && this.__selected.visible) {
             //Check if the item has customIntersectionPlanes, otherwise move it freely
             if (!this.__selected.intersectionPlanes.length) {
@@ -131,8 +174,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     this.__selected.location = location;
                 }
             } else {
-                let customIntersectingPlanes = this.__selected.intersectionPlanes;
-                let customPlanesThatIntersect = this.__raycaster.intersectObjects(customIntersectingPlanes, true);
+                let customPlanesThatIntersect = this.__raycaster.intersectObjects(this.__selected.intersectionPlanes, true);
                 if (customPlanesThatIntersect.length) {
                     let intersectionData = customPlanesThatIntersect[0];
                     this.__intersection = intersectionData.point;
@@ -140,6 +182,7 @@ export class DragRoomItemsControl3D extends EventDispatcher {
                     let normal = intersectionData.face.normal;
                     let intersectingPlane = intersectionData.object;
                     this.__selected.snapToPoint(location.clone().sub(this.__offset2), normal, intersectingPlane);
+                    this.__updateHub();
                 }
             }
             this.dispatchEvent({ type: EVENT_ITEM_MOVE, item: this.__selected });
@@ -211,11 +254,22 @@ export class DragRoomItemsControl3D extends EventDispatcher {
         this.__enabled = flag;
     }
 
+    set enableRotation(flag) {
+        this.__enableRotation = flag;
+    }
+
+    get enableRotation() {
+        return  this.__enableRotation;
+    }
+
     get draggableItems() {
         return this.__draggableItems;
     }
 
     set draggableItems(items) {
         this.__draggableItems = items;
+    }
+    get visibleDraggableItems() {
+        return  this.__draggableItems.filter(_ => _.visible);
     }
 }

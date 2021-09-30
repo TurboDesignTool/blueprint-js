@@ -64,7 +64,6 @@ export class Physical3DItem extends Mesh {
         if (!scope.parent) {
             return;
         }
-
         function __tinyUpdate() {
             if (scope.parent) {
                 scope.parent.needsUpdate = true;
@@ -163,6 +162,10 @@ export class Physical3DItem extends Mesh {
 
     snapToWall(coordinate3d, wall, wallEdge) {
         this.__itemModel.snapToWall(coordinate3d, wall, wallEdge);
+    }
+
+    rotate(point1, point2) {
+        this.__itemModel.rotate(point1, point2);
     }
 
     get selected() {

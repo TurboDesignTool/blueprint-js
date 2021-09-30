@@ -211,7 +211,7 @@
             ]
         },
         {
-            "itemName": "Tennis Table",
+            "itemName": "DoubleChairWithPillow",
             "itemType": 1,
             "position": [
                 209.43984621295914,
@@ -220,36 +220,7 @@
             ],
             "rotation": [
                 0,
-                0,
-                0
-            ],
-            "scale": [
-                1,
-                1,
-                1
-            ],
-            "size": [
-                281.598,
-                98.1,
-                172.4
-            ],
-            "fixed": false,
-            "resizable": false,
-            "allowRotate": true,
-            "modelURL": "models/TableTennisTable.glb",
-            "isParametric": false
-        },
-        {
-            "itemName": "DoubleChairWithPillow",
-            "itemType": 9,
-            "position": [
-                209.43984621295914,
-                49.05,
-                270.9912269855666
-            ],
-            "rotation": [
-                0,
-                0,
+                100,
                 0
             ],
             "scale": [

@@ -103,7 +103,7 @@ export class Viewer3D extends Scene {
         scope.domElement.appendChild(scope.renderer.domElement);
 
         scope.lights = new Lights3D(this, scope.floorplan);
-        scope.dragControls = new DragRoomItemsControl3D(this.floorplan.wallPlanesForIntersection, this.floorplan.floorPlanesForIntersection, this.physicalRoomItems, scope.camera, scope.renderer.domElement);
+        scope.dragControls = new DragRoomItemsControl3D(this.floorplan.wallPlanesForIntersection, this.floorplan.floorPlanesForIntersection, this.physicalRoomItems, scope.camera, scope.renderer.domElement, this);
         scope.orbitControl = new OrbitControls(scope.camera, scope.domElement);
         scope.orbitControl.enableDamping = false;
         scope.orbitControl.dampingFactor = 0.1;

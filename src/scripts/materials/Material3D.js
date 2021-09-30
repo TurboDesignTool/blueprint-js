@@ -114,8 +114,6 @@ export class Material3D extends MeshStandardMaterial {
         this.aoMap = this.__ambientTexture = null;
         this.metalnessMap = this.__metalTexture = null;
         this.displacementMap = this.__bumpTexture = null;
-
-        // TODO three warning 'Texture marked for update but image is undefined'
         if (this.__textureMapPack.colormap) {
             this.__colorTexture = new TextureLoader().load(this.__textureMapPack.colormap, this.__updateColorMap.bind(this));
         }

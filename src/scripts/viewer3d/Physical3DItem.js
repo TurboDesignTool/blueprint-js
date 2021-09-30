@@ -140,8 +140,8 @@ export class Physical3DItem extends Mesh {
         this.__itemModel.snapToWall(coordinate3d, wall, wallEdge);
     }
 
-    rotate(point1, point2) {
-        this.__itemModel.rotate(point1, point2);
+    rotate(point) {
+        this.__itemModel.rotate(point);
     }
 
     get selected() {

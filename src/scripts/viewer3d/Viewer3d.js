@@ -1,15 +1,14 @@
 import { WebGLRenderer, ImageUtils, PerspectiveCamera, AxesHelper, Scene, RGBFormat, LinearMipmapLinearFilter, sRGBEncoding } from 'three';
 import { PCFSoftShadowMap, WebGLCubeRenderTarget, CubeCamera } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 
 import { EVENT_LOADED, EVENT_ITEM_SELECTED, EVENT_ITEM_MOVE, EVENT_ITEM_MOVE_FINISH, EVENT_NO_ITEM_SELECTED, EVENT_WALL_CLICKED, EVENT_ROOM_CLICKED, EVENT_GLTF_READY, EVENT_NEW_ITEM, EVENT_NEW_ROOMS_ADDED, EVENT_MODE_RESET, EVENT_EXTERNAL_FLOORPLAN_LOADED } from '../core/events.js';
 
-import { Skybox } from './skybox.js';
-import { Edge3D } from './edge3d.js';
-import { Floor3D } from './floor3d.js';
-import { Lights3D } from './lights3d.js';
+import { Skybox } from './Skybox.js';
+import { Edge3D } from './Edge3d.js';
+import { Floor3D } from './Floor3d.js';
+import { Lights3D } from './Lights3d.js';
 import { Physical3DItem } from './Physical3DItem.js';
 import { DragRoomItemsControl3D } from './DragRoomItemsControl3D.js';
 import { Configuration, viewBounds } from '../core/configuration.js';

@@ -41,7 +41,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__colorTexture.wrapS = this.__colorTexture.wrapT = RepeatWrapping;
             this.__colorTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__colorTexture.needsUpdate = true;
-            this.map = this.__colorTexture;
+            this.map = texture;
         }
         this.__updateTextures();
     }
@@ -52,7 +52,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__normalTexture.wrapS = this.__normalTexture.wrapT = RepeatWrapping;
             this.__normalTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__normalTexture.needsUpdate = true;
-            this.normalMap = this.__normalTexture;
+            this.normalMap = texture;
         }
         this.__updateTextures();
     }
@@ -63,7 +63,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__roughnessTexture.wrapS = this.__roughnessTexture.wrapT = RepeatWrapping;
             this.__roughnessTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__roughnessTexture.needsUpdate = true;
-            this.roughnessMap = this.__roughnessTexture;
+            this.roughnessMap = texture;
         }
         this.__updateTextures();
     }
@@ -74,7 +74,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__ambientTexture.wrapS = this.__ambientTexture.wrapT = RepeatWrapping;
             this.__ambientTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__ambientTexture.needsUpdate = true;
-            this.aoMap = this.__ambientTexture;
+            this.aoMap = texture;
         }
         this.__updateTextures();
     }
@@ -85,7 +85,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__metalTexture.wrapS = this.__metalTexture.wrapT = RepeatWrapping;
             this.__metalTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__metalTexture.needsUpdate = true;
-            this.metalnessMap = this.__metalTexture;
+            this.metalnessMap = texture;
         }
         this.__updateTextures();
     }
@@ -96,7 +96,7 @@ export class Material3D extends MeshStandardMaterial {
             this.__bumpTexture.wrapS = this.__bumpTexture.wrapT = RepeatWrapping;
             this.__bumpTexture.repeat.set(this.__uRatio, this.__vRatio);
             this.__bumpTexture.needsUpdate = true;
-            this.displacementMap = this.__bumpTexture;
+            this.displacementMap = texture;
             this.displacementMap.needsUpdate = true;
         }
         this.__updateTextures();

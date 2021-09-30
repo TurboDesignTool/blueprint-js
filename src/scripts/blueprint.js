@@ -12,7 +12,7 @@ class BlueprintJS {
     /**
      * Creates an instance of BlueprintJS. This is the entry point for the application
      *
-     * @param {Object} - options The initialization options.
+     * @param {Object} options - The initialization options.
      * @param {string} options.floorplannerElement - Id of the html element to use as canvas. Needs to exist in the html
      * @param {string} options.threeElement - Id of the html element to use as canvas. Needs to exist in the html and should be #idofhtmlelement
      * @param {string} options.threeCanvasElement - Id of the html element to use as threejs-canvas. This is created automatically

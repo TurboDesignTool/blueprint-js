@@ -47,8 +47,6 @@ export class Viewer3D extends Scene {
 
         this.cameraNear = 10;
         this.cameraFar = 100000;
-        this.hud = null;
-
         this.orbitControl = null;
 
         this.renderer = null;
@@ -390,6 +388,7 @@ export class Viewer3D extends Scene {
     set enabled(flag) {
         this.__enabled = flag;
         this.orbitControl.enabled = flag;
+        this.needsUpdate = false;
         if (!flag) {
             this.dragControls.deactivate();
         } else {

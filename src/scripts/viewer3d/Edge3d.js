@@ -34,14 +34,14 @@ export class Edge3D extends EventDispatcher {
         //Debug wall intersection planes. Edge.plane is the plane used for intersection
         //		this.phantomPlanes.push(this.edge.plane);//Enable this line to see the wall planes
 
-        this.fillerColor = 0x000000; //0xdddddd;
-        this.sideColor = 0x333333; //0xcccccc;
-        this.baseColor = 0x666666; //0xdddddd;
+        this.fillerColor = 0x000000;
+        this.sideColor = 0x333333;
+        this.baseColor = 0x666666;
         this.visible = false;
 
-        this.redrawevent = this.__redraw.bind(this); //() => { scope.redraw(); };
-        this.visibilityevent = this.__visibility.bind(this); //() => { scope.updateVisibility(); };
-        this.showallevent = this.__showAll.bind(this); //() => { scope.showAll(); };
+        this.redrawevent = this.__redraw.bind(this);
+        this.visibilityevent = this.__visibility.bind(this);
+        this.showallevent = this.__showAll.bind(this);
         this.__edgeDeletedEvent = this.__edgeDeleted.bind(this);
 
 
@@ -122,9 +122,6 @@ export class Edge3D extends EventDispatcher {
     }
 
     removeFromScene() {
-        // if (this.wall.isLocked) {
-        //     console.trace('REMOVE MYSELF FROM SCENE');
-        // }
         let scope = this;
         scope.planes.forEach((plane) => {
             scope.scene.remove(plane);
@@ -211,8 +208,6 @@ export class Edge3D extends EventDispatcher {
         scope.visible = (dot >= 0);
         // show or hide planes
         scope.planes.forEach((plane) => {
-            // plane.material.transparent = !scope.visible;
-            // plane.material.opacity = (scope.visible) ? 1.0 : 0.1;
             plane.visible = scope.visible;
         });
         scope.updateObjectVisibility();
@@ -270,13 +265,11 @@ export class Edge3D extends EventDispatcher {
             this.planes.push(exteriorWall);
         }
         // interior plane
-        // this.planes.push(this.makeWall(interiorStart, interiorEnd, this.edge.interiorTransform, this.edge.invInteriorTransform, wallMaterial));
         this.__wallPlaneMesh = this.makeWall(interiorStart, interiorEnd, this.edge.interiorTransform, this.edge.invInteriorTransform, this.__wallMaterial3D);
         this.planes.push(this.__wallPlaneMesh);
         // bottom
         // put into basePlanes since this is always visible
         this.basePlanes.push(this.buildFillerUniformHeight(this.edge, 0, BackSide, this.baseColor));
-        // if (this.edge.wall.start.getAttachedRooms().length < 2 || this.edge.wall.end.getAttachedRooms().length < 2) {
         this.planes.push(this.buildFillerVaryingHeights(this.edge, DoubleSide, this.fillerColor));
         // }
 
@@ -323,7 +316,7 @@ export class Edge3D extends EventDispatcher {
         });
 
         // make UVs
-        let totalDistance = this.edge.interiorDistance(); //Utils.distance(new Vector2(v1.x, v1.z), new Vector2(v2.x, v2.z));
+        let totalDistance = this.edge.interiorDistance();
 
         let height = Math.max(this.wall.startElevation, this.wall.endElevation);
         geometry.faceVertexUvs[0] = [];

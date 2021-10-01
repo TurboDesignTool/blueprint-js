@@ -14,7 +14,8 @@ import { DragRoomItemsControl3D } from './DragRoomItemsControl3D.js';
 import { Configuration, viewBounds } from '../core/configuration.js';
 import { BoundaryView3D } from './BoundaryView3D.js';
 export class Viewer3D extends Scene {
-    constructor(model, element, opts) {
+    constructor(model, element, opts
+    ) {
         super();
         let options = {
             occludedRoofs: false,
@@ -104,15 +105,17 @@ export class Viewer3D extends Scene {
         scope.orbitControl = new OrbitControls(scope.camera, scope.domElement);
         scope.orbitControl.enableDamping = false;
         scope.orbitControl.dampingFactor = 0.1;
-        scope.orbitControl.maxPolarAngle = Math.PI * 0.5;
+        scope.orbitControl.maxPolarAngle = Math.PI * 0.5; // only see top
         scope.orbitControl.maxDistance = Configuration.getNumericValue(viewBounds);
         scope.orbitControl.minDistance = 100;
         scope.orbitControl.screenSpacePanning = true;
+        scope.orbitControl.autoRotate = true;
         scope.skybox = new Skybox(this, scope.renderer);
         scope.camera.position.set(0, 600, 1500);
         scope.orbitControl.update();
 
         scope.axes = new AxesHelper(500);
+        // scope.controls = new Controls(scope.camera, scope.domElement);
 
         // handle window resizing
         scope.updateWindowSize();
@@ -143,6 +146,17 @@ export class Viewer3D extends Scene {
         //Set the animation loop
         scope.renderer.setAnimationLoop(scope.render.bind(this));
         scope.render();
+        this.mouseOver = false;
+        this.hasClicked = false;
+        scope.renderer.domElement.onmouseenter =()=> {
+            this.mouseOver = true;
+        };
+        scope.renderer.domElement.onmouseleave =()=> {
+            this.mouseOver = false;
+        };
+        scope.renderer.domElement.onclick = ()=> {
+            this.hasClicked = true;
+        };
     }
 
     __wallSelected(evt) {
@@ -339,16 +353,26 @@ export class Viewer3D extends Scene {
     }
 
     render() {
+        this.spin();
+        let scope = this;
         if (!this.enabled) {
             return;
         }
-        let scope = this;
         if (!scope.needsUpdate) {
             return;
         }
         scope.renderer.render(scope, scope.camera);
         scope.lastRender = Date.now();
         this.needsUpdate = false;
+    }
+
+    spin() {
+        const options = this.__options;
+        const mouseOver = this.mouseOver;
+        const  hasClicked = this.hasClicked;
+        if (options.spin && (!mouseOver || !hasClicked)) {
+            this.orbitControl.update();
+        }
     }
 
     exportSceneAsGTLF() {
